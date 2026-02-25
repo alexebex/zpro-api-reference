@@ -227,7 +227,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    // Texto da mensagem que acompanhará o arquivo\n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Arquivo codificado em base64\n    \"base64Data\": \"iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\",\n    \n    // Tipo MIME do arquivo (ex: image/png, application/pdf)\n    \"mimeType\": \"image/png\",\n    \n    // Nome do arquivo que será exibido\n    \"fileName\": \"exemplo_imagem\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"raw": "{\n    // Texto da mensagem que acompanhará o arquivo \n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999) \n    \"number\": \"5515998566622\",\n    \n    // Arquivo codificado em base64\n    \"base64Data\": \"iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\",\n    \n    // Tipo MIME do arquivo (ex: image/png, application/pdf)\n    \"mimeType\": \"image/png\",\n    \n    // Nome do arquivo que será exibido\n    \"fileName\": \"exemplo_imagem\",\n    \n    // Define se o ticket será fechado após o envio \n    \"isClosed\": false\n}",
 							"options": {
 								"raw": {
 									"language": "json"
