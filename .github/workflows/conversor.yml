@@ -13,8 +13,8 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Converter para YAML
-        # Usando o nome completo do pacote para não confundir o robô
-        run: npx postman-to-openapi "./Postman Collections/zproapi.json" -f ./openapi.yaml
+        # Aqui está o truque: dizemos qual pacote baixar e qual comando rodar
+        run: npx --package postman-to-openapi p2o "./Postman Collections/zproapi.json" -f ./openapi.yaml
         
       - name: Salvar o YAML no GitHub
         run: |
