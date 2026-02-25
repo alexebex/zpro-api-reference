@@ -4,16 +4,18 @@ on:
   push:
     paths:
       - 'Postman Collections/zproapi.json'
+  workflow_dispatch:
 
 jobs:
   convert:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Instalar conversor
-        run: npm install -g postman-to-openapi
+      
       - name: Converter para YAML
-        run: npx p2o "./Postman Collections/zproapi.json" -f ./openapi.yaml
+        # Usando o nome completo do pacote para não confundir o robô
+        run: npx postman-to-openapi "./Postman Collections/zproapi.json" -f ./openapi.yaml
+        
       - name: Salvar o YAML no GitHub
         run: |
           git config --global user.name "Robô de Conversão"
