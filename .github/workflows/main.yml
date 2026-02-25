@@ -1,0 +1,23 @@
+name: Converter Postman para OpenAPI
+
+on:
+  push:
+    paths:
+      - 'collection.json' # Observa quando o Postman atualiza a coleção
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Instalar conversor
+        run: npm install -g postman-to-openapi
+      - name: Converter para YAML
+        run: p2o ./collection.json -f ./openapi.yaml
+      - name: Salvar o YAML no GitHub
+        run: |
+          git config --global user.name "Robô de Conversão"
+          git config --global user.email "action@github.com"
+          git add openapi.yaml
+          git commit -m "Auto-convertendo Postman para OpenAPI" || exit 0
+          git push
