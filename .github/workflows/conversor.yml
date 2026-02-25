@@ -12,13 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Instalar conversor localmente
-        # Instalamos sem o -g. Ele vai criar uma pasta invisível chamada node_modules
+      - name: Instalar biblioteca
         run: npm install postman-to-openapi
         
-      - name: Converter para YAML
-        # Chamamos o arquivo executável p2o apontando o caminho físico exato dele! Zero confusão.
-        run: ./node_modules/.bin/p2o "./Postman Collections/zproapi.json" -f ./openapi.yaml
+      - name: Converter usando script Node.js
+        run: |
+          node -e "
+          const p2o = require('postman-to-openapi');
+          p2o('./Postman Collections/zproapi.json', './openapi.yaml')
+            .then(() => console.log('Conversão realizada com sucesso!'))
+            .catch(err => { console.error('Erro na conversão:', err); process.exit(1); });
+          "
         
       - name: Salvar o YAML no GitHub
         run: |
