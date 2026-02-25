@@ -1,0 +1,2371 @@
+{
+	"info": {
+		"_postman_id": "882fc3a3-a9bc-48a2-9b3e-e0ea7952702f",
+		"name": "Postman v3",
+		"description": "Postman v3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "📨 Mensagens",
+			"item": [
+				{
+					"name": "SendMessageParams",
+					"id": "22c7501e-d5ee-4a41-ba4f-ea3db0fd28e4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/params/?body=A%20mensagem%20desejadaa&number=5515998566622&externalKey={{SecretKey}}&bearertoken={{BearerToken}}&isClosed=false",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"params",
+								""
+							],
+							"query": [
+								{
+									"key": "body",
+									"value": "A%20mensagem%20desejadaa",
+									"description": "Texto da mensagem que será enviada"
+								},
+								{
+									"key": "number",
+									"value": "5515998566622",
+									"description": "Número do WhatsApp do destinatário (formato: 5511999999999)"
+								},
+								{
+									"key": "externalKey",
+									"value": "{{SecretKey}}",
+									"description": "Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)"
+								},
+								{
+									"key": "bearertoken",
+									"value": "{{BearerToken}}",
+									"description": "Token de autenticação"
+								},
+								{
+									"key": "isClosed",
+									"value": "false",
+									"description": "Define se o ticket será fechado após o envio"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIText",
+					"id": "f2300e72-4763-4031-9559-f612d6a9532c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem que será enviada\n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIFile",
+					"id": "194755b3-e2a8-4cf2-aa08-87aa39eb273b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "media",
+									"description": "Arquivo a ser enviado (imagem, documento, etc)",
+									"type": "file",
+									"src": "/C:/Users/Pedro/Downloads/cps_vanderlei.docx"
+								},
+								{
+									"key": "body",
+									"value": "Mensagem de teste 2",
+									"description": "Texto da mensagem que acompanhará o arquivo",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5515998566622",
+									"description": "Número do WhatsApp do destinatário (formato: 5511999999999)",
+									"type": "text"
+								},
+								{
+									"key": "externalKey",
+									"value": "{{SecretKey}}",
+									"description": "Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)",
+									"type": "text"
+								},
+								{
+									"key": "isClosed",
+									"value": "false",
+									"description": "Define se o ticket será fechado após o envio",
+									"type": "text"
+								}
+							]
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIFileURL",
+					"id": "7c81202c-c6f7-4f3b-8bd4-11b7e79b5fad",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // URL do arquivo que será enviado (imagem, documento, etc)\r\n    \"mediaUrl\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png\",\r\n    \r\n    // Texto da mensagem que acompanhará o arquivo\r\n    \"body\": \"A mensagem desejada\",\r\n    \r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\r\n    \"externalKey\": \"{{SecretKey}}\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/url"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIVoice",
+					"id": "e08e01c7-3bbc-4dd0-9a46-6e18d8351275",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // URL do arquivo de áudio que será enviado\n    \"audio\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/12/audio.ogg\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/voice"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPITextBase64",
+					"id": "79506473-5292-48a1-8e36-f402c62cdd7f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem que acompanhará o arquivo\n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Arquivo codificado em base64\n    \"base64Data\": \"iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\",\n    \n    // Tipo MIME do arquivo (ex: image/png, application/pdf)\n    \"mimeType\": \"image/png\",\n    \n    // Nome do arquivo que será exibido\n    \"fileName\": \"exemplo_imagem\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/base64"
+					},
+					"response": []
+				},
+				{
+					"name": "GetMessageByMessageId",
+					"id": "614fcd0b-7d85-457f-88ae-654cfb604789",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/getMessageByMessageId?messageId=wamid.xxxxx",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"getMessageByMessageId"
+							],
+							"query": [
+								{
+									"key": "messageId",
+									"value": "wamid.xxxxx",
+									"description": "ID da mensagem retornado pela Meta (ex: wamid.xxxxx)"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "7321ae84-b082-45b0-8d58-b4529ad7bddf"
+		},
+		{
+			"name": "👥 Mensagens em Grupo",
+			"item": [
+				{
+					"name": "SendGroupMessageAPIText",
+					"id": "43fdf5a7-0369-438d-a7ba-a42e123a218a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem que será enviada\n    \"body\": \"A mensagem desejada\",\n    \n    // ID do grupo do WhatsApp\n    \"number\": \"12356818915189153\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group"
+					},
+					"response": []
+				},
+				{
+					"name": "SendGroupMessageAPIFile",
+					"id": "ad2938d7-df95-46ef-be36-663c4e5d590f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "media",
+									"description": "Arquivo(s) a ser enviado (imagem, documento, etc)",
+									"type": "file",
+									"src": [
+										"/C:/Users/Pedro/Downloads/cps_vanderlei.docx",
+										"/C:/Users/pedro/OneDrive/Desktop/izing-passaporte/frontend/public/bg-wchats.png"
+									]
+								},
+								{
+									"key": "body",
+									"value": "Mensagem de teste 2",
+									"description": "Texto da mensagem que acompanhará o arquivo",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "12356818915189153",
+									"description": "ID do grupo do WhatsApp",
+									"type": "text"
+								},
+								{
+									"key": "externalKey",
+									"value": "{{SecretKey}}",
+									"description": "Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)",
+									"type": "text"
+								},
+								{
+									"key": "isClosed",
+									"value": "false",
+									"description": "Define se o ticket será fechado após o envio",
+									"type": "text"
+								}
+							]
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIFileURLGroup",
+					"id": "b0871327-4a81-4fe2-8dc1-3db8d3bdd139",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // URL do arquivo que será enviado (imagem, documento, etc)\r\n    \"mediaUrl\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png\",\r\n    \r\n    // Texto da mensagem que acompanhará o arquivo\r\n    \"body\": \"A mensagem desejada\",\r\n    \r\n    // ID do grupo do WhatsApp\r\n    \"number\": \"12356818915189153\",\r\n    \r\n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\r\n    \"externalKey\": \"{{SecretKey}}\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/groupMediaUrl"
+					},
+					"response": []
+				}
+			],
+			"id": "e341cec7-e584-4299-88fd-3a277088c852"
+		},
+		{
+			"name": "📋 Templates WABA",
+			"item": [
+				{
+					"name": "SendTemplateWaba",
+					"id": "c60069f8-0e7b-4114-81f8-37db1dca8f0b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false,\r\n    \r\n    // Dados do template do WhatsApp Business API\r\n    \"templateData\": {\r\n        // Produto de mensageria (sempre whatsapp)\r\n        \"messaging_product\": \"whatsapp\",\r\n        \r\n        // Número do destinatário (mesmo do campo number)\r\n        \"to\": \"5515998566622\",\r\n        \r\n        // Tipo da mensagem (sempre template)\r\n        \"type\": \"template\",\r\n        \r\n        // Configurações do template\r\n        \"template\": {\r\n            // Nome do template aprovado\r\n            \"name\": \"hello_world\",\r\n            \r\n            // Configurações de idioma\r\n            \"language\": {\r\n                // Código do idioma (ex: en_US, pt_BR)\r\n                \"code\": \"en_US\"\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/template"
+					},
+					"response": []
+				},
+				{
+					"name": "SendTemplateWabaBody",
+					"id": "d7bf9188-9a9d-43bf-9810-14396af9147b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false,\r\n    \r\n    // Dados do template do WhatsApp Business API\r\n    \"templateData\": {\r\n        // Produto de mensageria (sempre whatsapp)\r\n        \"messaging_product\": \"whatsapp\",\r\n        \r\n        // Número do destinatário (mesmo do campo number)\r\n        \"to\": \"5515998566622\",\r\n        \r\n        // Tipo da mensagem (sempre template)\r\n        \"type\": \"template\",\r\n        \r\n        // Configurações do template\r\n        \"template\": {\r\n            // Nome do template aprovado\r\n            \"name\": \"hello_world\",\r\n            \r\n            // Configurações de idioma\r\n            \"language\": {\r\n                // Código do idioma (ex: en_US, pt_BR)\r\n                \"code\": \"en_US\"\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/templateBody"
+					},
+					"response": []
+				},
+				{
+					"name": "SendTemplateWabaMarketing",
+					"id": "e6a10d9a-145d-4cf6-bc96-1bd363bc8802",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false,\r\n    \r\n    // Dados do template do WhatsApp Business API\r\n    \"templateData\": {\r\n        // Produto de mensageria (sempre whatsapp)\r\n        \"messaging_product\": \"whatsapp\",\r\n        \r\n        // Número do destinatário (mesmo do campo number)\r\n        \"to\": \"5515998566622\",\r\n        \r\n        // Tipo da mensagem (sempre template)\r\n        \"type\": \"template\",\r\n        \r\n        // Configurações do template\r\n        \"template\": {\r\n            // Nome do template aprovado\r\n            \"name\": \"hello_world\",\r\n            \r\n            // Configurações de idioma\r\n            \"language\": {\r\n                // Código do idioma (ex: en_US, pt_BR)\r\n                \"code\": \"en_US\"\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/templateMarketingBody"
+					},
+					"response": []
+				}
+			],
+			"id": "702a80a0-14e9-4927-b81b-9f79bde8c864"
+		},
+		{
+			"name": "🔘 WABA Interativo",
+			"item": [
+				{
+					"name": "SendButtonWABA",
+					"id": "a964b1ab-0592-4bcc-85b7-a54376a255bb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Mensagem que acompanhará os botões\n    \"message\": \"Escolha uma opção:\",\n    \n    // Texto do primeiro botão\n    \"button1\": \"Opção 1\",\n    \n    // Texto do segundo botão\n    \"button2\": \"Opção 2\",\n    \n    // Texto do terceiro botão (opcional)\n    \"button3\": \"Opção 3\",\n    \n    // ID do ticket \n    \"ticketId\": 1262\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendButtonWABA"
+					},
+					"response": []
+				},
+				{
+					"name": "SendListWABA",
+					"id": "f9931e51-d9b2-430a-b2cd-d9b33eb89f9d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Cabeçalho da lista\n    \"header\": \"Menu Principal\",\n    \n    // Corpo da lista\n    \"body\": \"Escolha uma opção da lista:\",\n    \n    // Rodapé da lista\n    \"footer\": \"Selecione uma opção\",\n    \n    // Texto do botão\n    \"button_text\": \"Ver opções\",\n    \n    // Seções da lista (array de objetos)\n    \"sections\": [\n        {\n            \"title\": \"Seção 1\",\n            \"rows\": [\n                {\n                    \"id\": \"1\",\n                    \"title\": \"Opção 1\",\n                    \"description\": \"Descrição da opção 1\"\n                },\n                {\n                    \"id\": \"2\",\n                    \"title\": \"Opção 2\",\n                    \"description\": \"Descrição da opção 2\"\n                }\n            ]\n        }\n    ],\n    \n    // ID do ticket\n    \"ticketId\": 1262\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendListWABA"
+					},
+					"response": []
+				}
+			],
+			"id": "f0d272b4-a486-4eb1-b9a0-0a4ad5adc950"
+		},
+		{
+			"name": "👤 Contatos",
+			"item": [
+				{
+					"name": "CreateContact",
+					"id": "0722d9ae-5fb5-4975-8730-544be58a8be5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Nome completo do contato\n    \"name\": \"Nome\", \n    \n    // Número do WhatsApp (formato: 5511999999999)\n    \"number\": \"5515998566622\", \n    \n    // Email do contato\n    \"email\": \"contato@email.com\",\n    \n    // CPF do contato (formato: 000.000.000-00)\n    \"cpf\": \"012.345.678.91\",\n    \n    // Primeiro nome do contato\n    \"firstName\": \"Nome Principal\",\n    \n    // Sobrenome do contato\n    \"lastName\": \"Sobrenome\",\n    \n    // Nome da empresa do contato\n    \"businessName\": \"Empresa\",\n    \n    // Data de nascimento (formato: DD/MM/AAAA)\n    \"birthdayDate\": \"01/01/1990\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createContact"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowContact",
+					"id": "cae9a8c6-9b91-4d49-98ee-93241dec60da",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do contato (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showcontact"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContact",
+					"id": "c94de55f-d642-43b7-a84f-231049502e35",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Nome completo do contato\n    \"name\": \"Nome\", \n    \n    // Número do WhatsApp (formato: 5511999999999)\n    \"number\": \"5515998566622\", \n    \n    // Email do contato\n    \"email\": \"contato@email.com\",\n    \n    // CPF do contato (formato: 000.000.000-00)\n    \"cpf\": \"012.345.678.91\",\n    \n    // Primeiro nome do contato\n    \"firstName\": \"Nome Principal\",\n    \n    // Sobrenome do contato\n    \"lastName\": \"Sobrenome\",\n    \n    // Nome da empresa do contato\n    \"businessName\": \"Empresa\",\n    \n    // Data de nascimento (formato: DD/MM/AAAA)\n    \"birthdayDate\": \"01/01/1990\",\n    \n    // ID do kanban do contato\n    \"kanban\": 2,\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"externalKey\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateContact"
+					},
+					"response": []
+				},
+				{
+					"name": "BlockContact",
+					"id": "4599a409-445d-4c51-be85-80f1e3eafa8f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do contato que será bloqueado/desbloqueado\n    \"contactId\": 1,\n    \n    // true para bloquear, false para desbloquear\n    \"blocked\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/blockContact"
+					},
+					"response": []
+				},
+				{
+					"name": "SearchContacts",
+					"id": "b03e0f7c-f2dc-433e-ae16-562fe1856ece",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Parâmetro de busca textual (opcional) - busca em nome, número, CPF, etc\n    \"searchParam\": \"\",\n    \n    // Número da página (padrão: 1)\n    \"page\": 1,\n    \n    // Limite de resultados por página (padrão: 40)\n    \"limit\": 40,\n    \n    // ID de uma tag para filtrar (opcional)\n    \"tagId\": 1,\n    \n    // OU array de IDs de tags para filtrar por múltiplas tags (opcional)\n    // \"tagIds\": [1, 2, 3],\n    \n    // ID da wallet para filtrar (opcional)\n    // \"walletId\": 1,\n    \n    // Filtrar por contatos bloqueados (opcional: true/false)\n    // \"blocked\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/contacts/search"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContactKanban",
+					"id": "1e03ed86-2930-431c-8122-a59403ae664d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do contato que terá o kanban (carteira) alterado\n    \"contactId\": 1,\n    \n    // ID do kanban (carteira) que será atribuído ao contato\n    \"kanban\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateContactKanban"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContactWallet",
+					"id": "41ce9fbb-bcfd-407c-98f3-ef1e200bff07",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do contato que será carteirizado\n    \"contactId\": 1,\n    \n    // ID da wallet que será atribuída ao contato (pode usar walletId ou walletIds)\n    \"walletId\": 2,\n    \n    // OU array de IDs de wallets para atribuir múltiplas wallets de uma vez\n    // \"walletIds\": [1, 2, 3]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateContactWallet"
+					},
+					"response": []
+				},
+				{
+					"name": "GetContactExtraInfo",
+					"id": "ef4887eb-422f-4455-b72c-9775ad7d8e99",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/getContactExtraInfo?contactId=1",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"getContactExtraInfo"
+							],
+							"query": [
+								{
+									"key": "contactId",
+									"value": "1",
+									"description": "ID do contato"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContactExtraInfo",
+					"id": "909eac98-a0b7-447e-86bf-2757227fce6b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do contato que terá as informações adicionais atualizadas\n    \"contactId\": 1,\n    \n    // Array de campos personalizados (extraInfo)\n    \"extraInfo\": [\n        {\n            \"name\": \"Campo Personalizado 1\",\n            \"value\": \"Valor do campo 1\"\n        },\n        {\n            \"name\": \"Campo Personalizado 2\",\n            \"value\": \"Valor do campo 2\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateContactExtraInfo"
+					},
+					"response": []
+				}
+			],
+			"id": "2eb77f82-3a3d-4c11-8da4-0dd2de651bfc"
+		},
+		{
+			"name": "🎫 Tickets",
+			"item": [
+				{
+					"name": "CreateTicket",
+					"id": "b5b49e3b-3720-4131-aae4-2087ec3768f7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem inicial do ticket\n    \"body\": \"A mensagem desejada\",\n    \n    // Para canais WhatsApp/outros: número do contato (formato: 5511999999999)\n    \"number\": \"5535988754197\",\n    \n    // Para canal WEBMAIL: email do contato (obrigatório quando channelId for de um canal webmail)\n    // \"email\": \"contato@exemplo.com\",\n    \n    // ID do canal (opcional). Para webmail: envie o id do canal webmail (não vem do APIConfig)\n    // \"channelId\": 17841443941506797,\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // ID do usuário que está criando o ticket\n    \"userId\": 3,\n    \n    // Status inicial do ticket (pending ou open)\n    \"status\": \"pending\",\n    \n    // ID do kanban (opcional)\n    // \"kanbanId\": 1,\n    \n    // ID do fluxo de chat (opcional)\n    // \"chatFlowId\": 16,\n    \n    // ID da fila (opcional)\n    // \"queueId\": 1,\n    \n    // ID da demanda (opcional)\n    // \"reasonId\": 1,\n    \n    // Valor do ticket (opcional)\n    // \"value\": 10.25,\n    \n    // Para webmail: nome do contato (opcional, usado na criação do contato)\n    // \"name\": \"Nome do Contato\",\n    // \"firstName\": \"Nome\",\n    // \"lastName\": \"Sobrenome\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createTicket"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTicketWebmail",
+					"id": "797ef3a4-5423-41a4-a2c9-6ee81cb5a19e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem inicial do ticket\n    \"body\": \"Mensagem inicial do ticket por email\",\n    \n    // Email do contato (obrigatório para webmail)\n    \"email\": \"contato@exemplo.com\",\n    \n    // ID do canal webmail (opcional; se não enviar, usa canal da APIConfig)\n    \"channelId\": 17841443941506797,\n    \n    \"externalKey\": \"{{SecretKey}}\",\n    \"userId\": 3,\n    \"status\": \"pending\",\n    \n    // Opcionais: nome do contato (usado ao criar contato se não existir)\n    \"name\": \"Nome do Contato\",\n    \"firstName\": \"Nome\",\n    \"lastName\": \"Sobrenome\",\n    \n    // \"kanbanId\": 1,\n    // \"chatFlowId\": 16,\n    // \"queueId\": 1,\n    // \"reasonId\": 1,\n    // \"value\": 10.25\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createTicket"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTicketFile",
+					"id": "4ac04db1-cd26-4bcf-ba0d-2d0d019cd737",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "media",
+									"description": "Arquivo a ser enviado (imagem, documento, etc)",
+									"type": "file",
+									"src": "/C:/Users/Pedro/Downloads/cps_vanderlei.docx"
+								},
+								{
+									"key": "body",
+									"value": "Mensagem de teste 2",
+									"description": "Texto da mensagem inicial do ticket",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5515998566622",
+									"description": "Número do WhatsApp do contato (formato: 5511999999999)",
+									"type": "text"
+								},
+								{
+									"key": "externalKey",
+									"value": "{{SecretKey}}",
+									"description": "Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "3",
+									"description": "ID do usuário que está criando o ticket",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "pending",
+									"description": "Status inicial do ticket (pending, open, closed)",
+									"type": "text"
+								},
+								{
+									"key": "kanbanId",
+									"value": "1",
+									"description": "ID do kanban (opcional)",
+									"type": "text"
+								},
+								{
+									"key": "chatFlowId",
+									"value": "10",
+									"description": "ID do fluxo de chat (opcional)",
+									"type": "text"
+								},
+								{
+									"key": "queueId",
+									"value": "1",
+									"description": "ID da fila (opcional)",
+									"type": "text"
+								},
+								{
+									"key": "channelId",
+									"value": "",
+									"description": "ID do canal (opcional). Para webmail: envie o id do canal webmail",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "",
+									"description": "Para canal webmail: email do contato (obrigatório quando usar channelId de webmail)",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "Para webmail: nome do contato (opcional)",
+									"type": "text"
+								}
+							]
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createTicket"
+					},
+					"response": []
+				},
+				{
+					"name": "SetQueue",
+					"id": "8ec9ba82-ebc9-4570-a016-fc8481e3aac1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá a fila alterada\n    \"ticketId\": 4,\n    \n    // ID da fila que será atribuída ao ticket\n    \"queueId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updatequeue"
+					},
+					"response": []
+				},
+				{
+					"name": "SetTag",
+					"id": "f0979e58-21f1-4d06-9dd0-d0919ab03639",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá a tag alterada\n    \"ticketId\": 4,\n    \n    // ID da tag que será atribuída ao ticket\n    \"tag\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updatetag"
+					},
+					"response": []
+				},
+				{
+					"name": "SetTicketInfo",
+					"id": "fc459122-6c87-460f-8508-4a06a797ef0c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que será atualizado\n    \"ticketId\": 1262,\n    \n    // ID do usuário que está fazendo a atualização\n    \"userId\": 1,\n    \n    // Status do ticket (pending, open, closed)\n    \"status\": \"pending\",\n    \n    // ID da fila do ticket (null para remover)\n    \"queueId\": null,\n    \n    // Status de integração com Typebot\n    \"typebotStatus\": false,\n    \n    // Status de integração com ChatGPT\n    \"chatgptStatus\": false,\n    \n    // Status de integração com Dialogflow\n    \"dialogflowStatus\": false,\n    \n    // Status de integração com Dify\n    \"difyStatus\": false,\n    \n    // Status de integração com N8N\n    \"n8nStatus\": false,\n    \n    // ID do fluxo de chat (null para remover)\n    \"chatFlowId\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateticketinfo"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowTicketInformation",
+					"id": "42e7ccf8-4d75-4c7a-a429-aa5c438b25bd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do contato (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showticket"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowTicketInformationChatBot",
+					"id": "b9311dfb-9a6a-41f2-9536-b75119c48ea6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do contato (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showticketchatbot"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowAllTicketInformation",
+					"id": "a3b43ee3-b458-4079-afde-7b7b90d9cb7a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do contato (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showallticket"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowAllMessages",
+					"id": "4a0e0249-9c42-42a6-ace3-e57f37b7230d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá as mensagens listadas\n    \"ticket\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showAllMessages"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTicketChannel",
+					"id": "38c679e6-e048-4bfc-b1cd-a8213d6cf912",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá o canal alterado\n    \"ticketId\": 1262,\n    \n    // ID do novo canal (WhatsApp)\n    \"whatsappId\": 1,\n    \n    // Tipo do canal (whatsapp, baileys, waba, etc)\n    \"channel\": \"whatsapp\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateTicketChannel"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateNotes",
+					"id": "24d77405-6a53-4b95-a16d-cd8509226c69",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da nota que será adicionada ao ticket\n    \"notes\": \"Mensagem da nota\", \n    \n    // ID do ticket que receberá a nota\n    \"ticketId\": 1262, \n    \n    // ID do usuário que está criando a nota\n    \"userId\": 1,\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"idFront\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createNotes"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateNote",
+					"id": "7349a9d3-d5ee-4f5b-b4cc-d5a395d1671e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da nota que será atualizada\n    \"noteId\": 1,\n    \n    // Novo conteúdo da nota\n    \"notes\": \"Conteúdo atualizado da nota\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateNote"
+					},
+					"response": []
+				},
+				{
+					"name": "ListNotes",
+					"id": "43b5deca-70c4-4232-bb56-6a55ac0f0125",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listNotes?ticketId=1262",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listNotes"
+							],
+							"query": [
+								{
+									"key": "ticketId",
+									"value": "1262",
+									"description": "ID do ticket"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddTag",
+					"id": "9b929e2f-e207-4674-90dd-1deab01de061",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que receberá a tag\n    \"ticketId\": 4,\n    \n    // ID da tag que será adicionada (pode usar tagId ou tagIds)\n    \"tagId\": 1,\n    \n    // OU array de IDs de tags para adicionar múltiplas tags de uma vez\n    // \"tagIds\": [1, 2, 3]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/addTag"
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveTag",
+					"id": "be7a3de2-79d8-4190-ab0f-e398765d451d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá a tag removida\n    \"ticketId\": 4,\n    \n    // ID da tag que será removida (pode usar tagId ou tagIds)\n    \"tagId\": 1,\n    \n    // OU array de IDs de tags para remover múltiplas tags de uma vez\n    // \"tagIds\": [1, 2, 3]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/removeTag"
+					},
+					"response": []
+				},
+				{
+					"name": "SendPresence",
+					"id": "7ba9710c-1a1c-455a-896d-967dfa767606",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket associado\n    \"ticketId\": 1262,\n    \n    // Estado de presence: \"typing\" (digitando), \"paused\" (pausado) ou \"recording\" (gravando)\n    \"state\": \"typing\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendPresence"
+					},
+					"response": []
+				}
+			],
+			"id": "c622c740-b4e7-4def-b5da-ae94a5d18c4b"
+		},
+		{
+			"name": "💼 Oportunidades",
+			"item": [
+				{
+					"name": "CreateOpportunity",
+					"id": "65c741e3-4156-446a-bc3c-f196f58b5e38",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  // Campos do contato\n  \"number\": \"5535912345678\",  // número do WhatsApp\n  \"contactName\": \"Nome do Contato\",   // nome do contato\n  \"email\": \"contato@email.com\", // email do contato\n\n  // Campos da oportunidade\n  \"name\": \"Nome da Oportunidade 2\", // nome da oportunidade\n  \"value\": 10000.00,              // valor da oportunidade\n  \"status\": \"open\",              // pode ser: \"open\", \"win\", \"lose\"\n  \"pipelineId\": 16,               // ID do pipeline\n  \"stageId\": 7,                  // ID do estágio\n  \"responsibleId\": 1,            // ID do responsável\n  \"closingForecast\": \"2024-12-31\", // data esperada de fechamento\n  \"description\": \"Descrição da oportunidade\" // descrição da oportunidade\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createOpportunity"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteOpportunity",
+					"id": "4983c9cf-7b11-47fe-8535-68396b65edff",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  // Campos da oportunidade\n  \"opportunityId\": 19 // id da oportunidade\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/deleteOpportunity"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateOpportunity",
+					"id": "f4cbc295-5b18-4d97-b074-7f40303bcd91",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  // Campos da oportunidade\n  \"opportunityId\": 30, // id da oportunidade\n  \"name\": \"Nome da Oportunidade 2 API\", // nome da oportunidade\n  \"value\": 500.00,              // valor da oportunidade\n  \"status\": \"open\",              // pode ser: \"open\", \"win\", \"lose\"\n  \"pipelineId\": 16,               // ID do pipeline\n  \"stageId\": 7,                  // ID do estágio\n  \"responsibleId\": 1,            // ID do responsável\n  \"closingForecast\": \"2024-12-31\", // data esperada de fechamento\n  \"description\": \"Descrição da oportunidade\" // descrição da oportunidade\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateOpportunity"
+					},
+					"response": []
+				}
+			],
+			"id": "5e04377b-af51-4231-8570-2de21955340c"
+		},
+		{
+			"name": "👥 Usuários",
+			"item": [
+				{
+					"name": "CreateUser",
+					"id": "887dcb56-bea8-4763-9ce1-9d9e35c58c8a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Email do usuário\n    \"email\": \"usuario@example.com\",\n    \n    // Senha do usuário (mínimo 8 caracteres)\n    \"password\": \"senha123\",\n    \n    // Nome completo do usuário\n    \"name\": \"Nome do Usuário\",\n    \n    // Perfil do usuário (admin, user)\n    \"profile\": \"user\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createUser"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser",
+					"id": "1096df7e-6f8f-4c32-912d-8bf320cfea42",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do usuário que será atualizado\n    \"userId\": 1,\n    \n    // Nome completo do usuário (opcional)\n    \"name\": \"Nome Atualizado\",\n    \n    // Email do usuário (opcional)\n    \"email\": \"novoemail@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateUser"
+					},
+					"response": []
+				},
+				{
+					"name": "ListUsers",
+					"id": "e0f30bd3-b75c-4299-92b0-32940276890a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listUsers?pageNumber=1",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listUsers"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1",
+									"description": "Número da página"
+								},
+								{
+									"key": "searchParam",
+									"value": "",
+									"description": "Parâmetro de busca (opcional)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserStatus",
+					"id": "4a278322-c3b7-4faa-903b-221438a4aaa6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/getUserStatus?userId=1",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"getUserStatus"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1",
+									"description": "ID do usuário"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "8a687305-44e6-478b-a667-d7fe48a62b2e"
+		},
+		{
+			"name": "📊 Listagens",
+			"item": [
+				{
+					"name": "ListChannels",
+					"id": "7f664780-e134-4afb-a998-e12d9d77d62f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listChannels"
+					},
+					"response": []
+				},
+				{
+					"name": "ListSessions",
+					"id": "569217f8-9777-4129-8265-4e1e85865f8b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listSessions"
+					},
+					"response": []
+				},
+				{
+					"name": "ListTickets",
+					"id": "aa692f1e-d12a-4df6-9fd6-88a697d43bb3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listTickets?pageNumber=1&status=open",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listTickets"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1",
+									"description": "Número da página"
+								},
+								{
+									"key": "status",
+									"value": "open",
+									"description": "Status do ticket (open, pending, closed)"
+								},
+								{
+									"key": "searchParam",
+									"value": "",
+									"description": "Parâmetro de busca (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "queuesIds",
+									"value": "",
+									"description": "IDs das filas (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "whatsappIds",
+									"value": "",
+									"description": "IDs dos canais (opcional)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListOpportunities",
+					"id": "a060b93e-de2c-47de-b0b2-06a26ad3cbf6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listOpportunities?page=1&limit=40",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listOpportunities"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Número da página"
+								},
+								{
+									"key": "limit",
+									"value": "40",
+									"description": "Limite de resultados por página"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"description": "Status da oportunidade (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "pipelineId",
+									"value": "",
+									"description": "ID do pipeline (opcional)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListContacts",
+					"id": "4d98f9dd-8142-4733-8b57-e39abc99444a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listContacts?pageNumber=1",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listContacts"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1",
+									"description": "Número da página"
+								},
+								{
+									"key": "searchParam",
+									"value": "",
+									"description": "Parâmetro de busca (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "walletId",
+									"value": "",
+									"description": "ID da wallet (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "tagId",
+									"value": "",
+									"description": "ID da tag (opcional)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListTags",
+					"id": "34d33b31-6d9d-4c2c-be85-d35ed652081e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listTags?isActive=true",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listTags"
+							],
+							"query": [
+								{
+									"key": "isActive",
+									"value": "true",
+									"description": "Filtrar por tags ativas (true/false)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListQueues",
+					"id": "7db689a5-a663-41ea-85b3-812e8e97b302",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listQueues"
+					},
+					"response": []
+				}
+			],
+			"id": "fef3745b-53bb-4706-9337-dd9d41551038"
+		},
+		{
+			"name": "🔌 Canais e Sessões",
+			"item": [
+				{
+					"name": "ShowChannelInformation",
+					"id": "59ae9b7d-6bc1-44d9-b100-29a18ea693dc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do canal (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showChannel"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowChannelInformationById",
+					"id": "90c96a57-1ef7-4aa4-b7ff-9748e9978ce3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do canal que será consultado\n    \"id\": 43\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showChannelById"
+					},
+					"response": []
+				},
+				{
+					"name": "ListGroupsInfo",
+					"id": "13556e01-68b8-447c-886c-88a613c00c82",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    //lista todos os grupos\n    \"listGroups\": true, \n    \n    //lista todos os grupos e adiciona o array de participantes\n    \"listParticipants\": true \n\n    // opicional (lista dados de um grupo específico ex: idDoGrupo@g.us)\n    // \"groupId\": \"46211553263266@g.us\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listGroupInfo"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateSession",
+					"id": "2f34bc03-f9e9-46d3-8e93-6925cde028a7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Nome da instância do WhatsApp\n    \"name\": \"My WhatsApp Instance\",\n    \n    // Status inicial da sessão (DISCONNECTED, CONNECTED)\n    \"status\": \"DISCONNECTED\",\n    \n    // Tipo da sessão\n    \"type\": \"baileys\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createtSession"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteSession",
+					"id": "42da0b77-6e63-4cf5-8b83-7c7c57eb53c4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp que será deletada\n    \"whatsappId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/deleteSession"
+					},
+					"response": []
+				},
+				{
+					"name": "StartSession",
+					"id": "532c2430-4c1b-433d-9a44-f345c1a6f209",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp que será iniciada\n    \"whatsappId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/startSession"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowQrCode",
+					"id": "30dd56f5-fb9e-40bc-a9de-c9117894fbb0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp que terá o QR Code gerado\n    \"whatsappId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/qrCodeSession"
+					},
+					"response": []
+				},
+				{
+					"name": "RequestNewQrCode",
+					"id": "1ae7a91a-7d74-46bb-a1f5-38750473951b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp que terá um novo QR Code gerado\n    \"whatsappId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/requestNewQrCodeSession"
+					},
+					"response": []
+				}
+			],
+			"id": "941aa769-06e4-44e1-a3fe-ccd2cac8e5d9"
+		},
+		{
+			"name": "🏢 Tenant API",
+			"item": [
+				{
+					"name": "CreateApi",
+					"id": "b9cf4eae-4f7b-49ec-8bae-8568e523a169",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Nome da API que será criada\n    \"name\": \"API 1\",\n    \n    // ID da sessão do WhatsApp associada\n    \"sessionId\": 1,\n    \n    // URL para receber atualizações de status do serviço (opcional)\n    \"urlServiceStatus\": null,\n    \n    // URL para receber atualizações de status das mensagens (opcional)\n    \"urlMessageStatus\": null,\n    \n    // ID do usuário que está criando a API\n    \"userId\": 1,\n    \n    // Token de autenticação para a API\n    \"authToken\": \"123456\",\n    \n    // ID do tenant que terá a API\n    \"tenant\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantCreateApi"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteApi",
+					"id": "0f2bd6e0-f05e-47bc-8c8a-3dfdac59b909",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp associada à API\n    \"sessionId\": 43,\n    \n    // ID do usuário que está deletando a API\n    \"userId\": 1,\n    \n    // ID do tenant que possui a API\n    \"tenant\": 1,\n    \n    // ID da API que será deletada\n    \"apiId\": \"5ec32c80-4549-4256-8ed1-ed57b86396c3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantDeleteApi"
+					},
+					"response": []
+				},
+				{
+					"name": "StoreTenant",
+					"id": "c09db18f-b5b2-4e6f-9409-b91df9deeed1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Status do tenant (active, inactive)\n    \"status\": \"active\",\n    \n    // Nome da empresa/tenant\n    \"name\": \"Empresa Exemplo\",\n    \n    // Número máximo de usuários permitidos\n    \"maxUsers\": 3,\n    \n    // Número máximo de conexões WhatsApp permitidas\n    \"maxConnections\": 3,\n    \n    // Confirmação de aceite dos termos\n    \"acceptTerms\": true,\n    \n    // Email do administrador do tenant\n    \"email\": \"user@example.com\",\n    \n    // Senha do administrador (mínimo 8 caracteres, incluindo números e caracteres especiais)\n    \"password\": \"securePassword123!\",\n    \n    // Nome completo do administrador\n    \"userName\": \"Pedro Bastos\",\n    \n    // Perfil do administrador (admin, user)\n    \"profile\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantApiStoreTenant"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateSessionTenant",
+					"id": "36086562-886a-4aab-9134-1766fd265ac7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Tenant\n    \"tenant\": 1,\n\n    // Nome da instância do WhatsApp\n    \"name\": \"My WhatsApp Instance\",\n    \n    // Status inicial da sessão (DISCONNECTED, CONNECTED)\n    \"status\": \"DISCONNECTED\",\n    \n    // Tipo da sessão (whatsapp, baileys, meow, evo, uazapi, zapi)\n    \"type\": \"baileys\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantApiCreateSession"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowTenant",
+					"id": "f7dd17bd-d815-4fd5-b8b6-75d872f7db17",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do tenant que será consultado\n    \"id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantApiShowTenant"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTenant",
+					"id": "db9e34df-f724-4eaf-9953-9f8a680b0379",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Status do tenant (active, inactive)\n    \"status\": \"active\",\n    \n    // Identidade do tenant (CPF/CNPJ) - indentificador usado para reconhecer qual tenant será atualizado\n    \"identity\": \"07122989674\",\n    \n    // Número máximo de usuários permitidos\n    \"maxUsers\": 100,\n    \n    // Número máximo de conexões WhatsApp permitidas\n    \"maxConnections\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantApiUpdateTenant"
+					},
+					"response": []
+				},
+				{
+					"name": "ListTenants",
+					"id": "69a7f9b8-06af-4afc-b3fa-e94d802d1a5e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://{{BaseUrl}}/tenantApiListTenants"
+					},
+					"response": []
+				}
+			],
+			"id": "a2277a7d-cfc8-4052-b811-2ff063b7c4e7"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{vault:authorization-secret}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "9ce7ea44-05e1-4fe0-b4c5-54d9ff3de737"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "4d76e8c9-fae4-4fdb-85e6-680f2956b5bd"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BaseUrl",
+			"value": "backend_url_here"
+		},
+		{
+			"key": "BearerToken",
+			"value": "your_token_here"
+		},
+		{
+			"key": "SecretKey",
+			"value": "unique_id"
+		},
+		{
+			"key": "SuperAdminToken",
+			"value": "your_superadmin_token_here"
+		},
+		{
+			"key": "ApiID",
+			"value": "your_api_id_here"
+		}
+	]
+}
