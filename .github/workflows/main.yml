@@ -3,7 +3,7 @@ name: Converter Postman para OpenAPI
 on:
   push:
     paths:
-      - 'collection.json' # Observa quando o Postman atualiza a coleção
+      - 'Postman Collections/zproapi.json' # Observa o arquivo correto
 
 jobs:
   convert:
@@ -13,7 +13,7 @@ jobs:
       - name: Instalar conversor
         run: npm install -g postman-to-openapi
       - name: Converter para YAML
-        run: p2o ./collection.json -f ./openapi.yaml
+        run: p2o "./Postman Collections/zproapi.json" -f ./openapi.yaml
       - name: Salvar o YAML no GitHub
         run: |
           git config --global user.name "Robô de Conversão"
