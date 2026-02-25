@@ -171,7 +171,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    // URL do arquivo que será enviado (imagem, documento, etc)\r\n    \"mediaUrl\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png\",\r\n    \r\n    // Texto da mensagem que acompanhará o arquivo\r\n    \"body\": \"A mensagem desejada\",\r\n    \r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\r\n    \"externalKey\": \"{{SecretKey}}\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false\r\n}",
+							"raw": "{\r\n    // URL do arquivo que será enviado (imagem, documento, etc) \r\n    \"mediaUrl\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png\",\r\n    \r\n    // Texto da mensagem que acompanhará o arquivo\r\n    \"body\": \"A mensagem desejada\",\r\n    \r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\r\n    \"externalKey\": \"{{SecretKey}}\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
