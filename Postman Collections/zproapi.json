@@ -199,7 +199,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    // URL do arquivo de áudio que será enviado\n    \"audio\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/12/audio.ogg\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"raw": "{\n    // URL do arquivo de áudio que será enviado\n    \"audio\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/12/audio.ogg\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // Define se o ticket será fechado após o envio ()\n    \"isClosed\": false\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -227,7 +227,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    // Texto da mensagem que acompanhará o arquivo\n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Arquivo codificado em base64\n    \"base64Data\": \"iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\",\n    \n    // Tipo MIME do arquivo (ex: image/png, application/pdf)\n    \"mimeType\": \"image/png\",\n    \n    // Nome do arquivo que será exibido\n    \"fileName\": \"exemplo_imagem\",\n    \n    // Define se o ticket será fechado após o envio /\n    \"isClosed\": false\n}",
+							"raw": "{\n    // Texto da mensagem que acompanhará o arquivo\n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Arquivo codificado em base64\n    \"base64Data\": \"iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\",\n    \n    // Tipo MIME do arquivo (ex: image/png, application/pdf)\n    \"mimeType\": \"image/png\",\n    \n    // Nome do arquivo que será exibido\n    \"fileName\": \"exemplo_imagem\",\n    \n    // Define se o ticket será fechado após o envio ()\n    \"isClosed\": false\n}",
 							"options": {
 								"raw": {
 									"language": "json"
