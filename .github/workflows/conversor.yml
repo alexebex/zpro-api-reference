@@ -62,4 +62,3 @@
             console.error('Erro ao processar o arquivo:', err);
             process.exit(1);
           }
-          "
