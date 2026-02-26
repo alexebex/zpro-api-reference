@@ -1,33 +1,65 @@
-name: Converter Postman para OpenAPI
-
-on:
-  push:
-    paths:
-      - 'Postman Collections/zproapi.json'
-  workflow_dispatch:
-
-jobs:
-  convert:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Instalar biblioteca
-        run: npm install postman-to-openapi
-        
-      - name: Converter usando script Node.js
+- name: Converter usando script Node.js
         run: |
           node -e "
+          const fs = require('fs');
           const p2o = require('postman-to-openapi');
-          p2o('./Postman Collections/zproapi.json', './openapi.yaml')
-            .then(() => console.log('Conversão realizada com sucesso!'))
-            .catch(err => { console.error('Erro na conversão:', err); process.exit(1); });
+          
+          try {
+            const inputFile = './Postman Collections/zproapi.json';
+            const tempFile = './temp_zproapi.json';
+            
+            // 1. Lê o arquivo original gerado pelo Postman
+            const collection = JSON.parse(fs.readFileSync(inputFile, 'utf8'));
+            
+            // 2. Função que procura e conserta JSONs quebrados/vazios
+            function forceValidJson(obj) {
+              if (!obj || typeof obj !== 'object') return;
+              
+              // Verifica se é uma requisição com corpo marcado como JSON
+              if (obj.body && obj.body.mode === 'raw' && obj.body.options && obj.body.options.raw && obj.body.options.raw.language === 'json') {
+                try {
+                  if (!obj.body.raw || obj.body.raw.trim() === '') throw new Error('Vazio');
+                  JSON.parse(obj.body.raw);
+                } catch(e) {
+                  // Se quebrar, força um JSON vazio válido
+                  obj.body.raw = '{}';
+                }
+              }
+              
+              // Verifica se é uma resposta salva (Example) com corpo marcado como JSON
+              if (obj._postman_previewlanguage === 'json' && typeof obj.body === 'string') {
+                try {
+                  if (obj.body.trim() === '') throw new Error('Vazio');
+                  JSON.parse(obj.body);
+                } catch(e) {
+                  // Se quebrar, força um JSON vazio válido
+                  obj.body = '{}';
+                }
+              }
+              
+              // Continua procurando recursivamente dentro de outros objetos/arrays
+              Object.values(obj).forEach(forceValidJson);
+            }
+            
+            // 3. Aplica a correção de força bruta na collection original
+            forceValidJson(collection);
+            
+            // Salva um arquivo temporário com os erros corrigidos
+            fs.writeFileSync(tempFile, JSON.stringify(collection));
+            
+            // 4. Executa o conversor no arquivo corrigido
+            p2o(tempFile, './openapi.yaml')
+              .then(() => {
+                console.log('Conversão forçada com sucesso!');
+                fs.unlinkSync(tempFile); // Apaga o arquivo temporário
+              })
+              .catch(err => {
+                console.error('Erro na conversão:', err);
+                process.exit(1);
+              });
+              
+          } catch(err) {
+            console.error('Erro ao processar o arquivo:', err);
+            process.exit(1);
+          }
           "
-        
-      - name: Salvar o YAML no GitHub
-        run: |
-          git config --global user.name "Robô de Conversão"
-          git config --global user.email "action@github.com"
-          git add openapi.yaml
-          git commit -m "Auto-convertendo Postman para OpenAPI" || exit 0
-          git push
