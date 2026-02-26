@@ -868,7 +868,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    // Texto da mensagem inicial do ticket\n    \"body\": \"Mensagem inicial do ticket por email\",\n    \n    // Email do contato (obrigatório para webmail)\n    \"email\": \"contato@exemplo.com\",\n    \n    // ID do canal webmail (opcional; se não enviar, usa canal da APIConfig)\n    \"channelId\": 17841443941506797,\n    \n    \"externalKey\": \"{{SecretKey}}\",\n    \"userId\": 3,\n    \"status\": \"pending\",\n    \n    // Opcionais: nome do contato (usado ao criar contato se não existir) //\n    \"name\": \"Nome do Contato\",\n    \"firstName\": \"Nome\",\n    \"lastName\": \"Sobrenome\",\n    \n    // \"kanbanId\": 1,\n    // \"chatFlowId\": 16,\n    // \"queueId\": 1,\n    // \"reasonId\": 1,\n    // \"value\": 10.25\n}",
+							"raw": "{\n    // Texto da mensagem inicial do ticket.\n    \"body\": \"Mensagem inicial do ticket por email\",\n    \n    // Email do contato (obrigatório para webmail)\n    \"email\": \"contato@exemplo.com\",\n    \n    // ID do canal webmail (opcional; se não enviar, usa canal da APIConfig)\n    \"channelId\": 17841443941506797,\n    \n    \"externalKey\": \"{{SecretKey}}\",\n    \"userId\": 3,\n    \"status\": \"pending\",\n    \n    // Opcionais: nome do contato (usado ao criar contato se não existir)\n    \"name\": \"Nome do Contato\",\n    \"firstName\": \"Nome\",\n    \"lastName\": \"Sobrenome\",\n    \n    // \"kanbanId\": 1,\n    // \"chatFlowId\": 16,\n    // \"queueId\": 1,\n    // \"reasonId\": 1,\n    // \"value\": 10.25\n}",
 							"options": {
 								"raw": {
 									"language": "json"
