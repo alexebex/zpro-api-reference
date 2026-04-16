@@ -185,7 +185,12 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Lembrete 24h antes
+                hoursBeforeEvent: 24
+                messageType: message
+                messageContent: Olá {nome}, lembrete da sua reunião amanhã!
+                active: true
       parameters:
         - name: ApiID
           in: path
