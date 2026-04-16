@@ -49,13 +49,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                title: Reunião de Vendas
-                description: Reunião sobre proposta
-                contactId: '{{contactId}}'
-                startAt: '2026-04-15T14:00:00.000Z'
-                endAt: '2026-04-15T15:00:00.000Z'
-                status: pending
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -156,9 +150,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                status: confirmed
-                notes: Cliente confirmou presença
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -185,12 +177,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Lembrete 24h antes
-                hoursBeforeEvent: 24
-                messageType: message
-                messageContent: Olá {nome}, lembrete da sua reunião amanhã!
-                active: true
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -282,9 +269,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Lembrete 48h antes
-                hoursBeforeEvent: 48
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -338,11 +323,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                - name: Contato 1
-                  number: '5511999990001'
-                - name: Contato 2
-                  number: '5511999990002'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -449,14 +430,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Campanha Teste
-                start: '2026-04-10T10:00:00.000Z'
-                message1: Olá {nome}!
-                message2: Como vai?
-                message3: Até logo!
-                sessionId: '{{sessionId}}'
-                delay: '5'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -687,13 +661,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Campanha Atualizada
-                start: '2026-04-15T10:00:00.000Z'
-                message1: Olá!
-                message2: Tudo bem?
-                message3: Até logo!
-                sessionId: '{{sessionId}}'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1094,9 +1062,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Funil de Vendas
-                description: Pipeline principal
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1192,8 +1158,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Funil Atualizado
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1220,10 +1185,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Prospecção
-                pipelineId: '{{pipelineId}}'
-                order: 1
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1324,8 +1286,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Qualificação
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1612,8 +1573,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                success: true
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1687,9 +1647,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                status: cancelled
-                cancellationReason: Cancelado pelo usuário
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1716,15 +1674,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                whatsappType: baileys
-                arrayNumbers:
-                  - '5511999990001'
-                  - '5511999990002'
-                message: Olá, mensagem rápida!
-                min: 3
-                max: 8
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1746,11 +1696,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                number: '5511999990001'
-                message: Olá, mensagem individual!
-                externalKey: '{{SecretKey}}'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1772,14 +1718,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                arrayNumbers:
-                  - '5511999990001'
-                  - '5511999990002'
-                message: Olá, tudo bem?
-                min: 3
-                max: 8
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1801,14 +1740,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                message: Olá {nome}, seu código é {codigo}
-                dataInput: |-
-                  5511999990001,João,ABC123
-                  5511999990002,Maria,DEF456
-                min: 3
-                max: 8
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1883,8 +1815,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                description: Arquivo de marketing
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1906,12 +1837,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupIds:
-                  - '{{groupId}}'
-                participants:
-                  - '5511999990001'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1933,11 +1859,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupIds:
-                  - '{{groupId}}'
-                description: Nova descrição do grupo
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1959,11 +1881,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupIds:
-                  - '{{groupId}}'
-                picture: https://exemplo.com/foto.jpg
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -1985,11 +1903,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupIds:
-                  - '{{groupId}}'
-                title: Novo Título do Grupo
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2011,11 +1925,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                titles:
-                  - Meu Grupo 1
-                number: '5511999990001'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2037,12 +1947,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupIds:
-                  - '{{groupId}}'
-                participants:
-                  - '5511999990001'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2064,9 +1969,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupId: '{{groupId}}'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2088,8 +1991,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2111,10 +2013,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupIds:
-                  - '{{groupId}}'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2136,12 +2035,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupIds:
-                  - '{{groupId}}'
-                participants:
-                  - '5511999990001'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2163,12 +2057,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupIds:
-                  - '{{groupId}}'
-                participants:
-                  - '5511999990001'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2190,11 +2079,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupIds:
-                  - '{{groupId}}'
-                adminsOnly: true
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2216,9 +2101,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                whatsappId: '{{whatsappId}}'
-                groupId: '{{groupId}}'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2240,8 +2123,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Coluna 1
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2263,9 +2145,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                queue: Suporte
-                isActive: true
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2287,8 +2167,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Resolvido
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2310,10 +2189,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                tag: Urgente
-                color: '#FF0000'
-                isActive: true
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2475,8 +2351,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Coluna Atualizada
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2503,9 +2378,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                queue: Suporte v2
-                isActive: true
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2532,8 +2405,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Resolvido com sucesso
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -2560,9 +2432,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                tag: Urgente v2
-                color: '#CC0000'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -3057,9 +2927,7 @@ paths:
           in: query
           schema:
             type: string
-          description: >-
-            Chave única do sistema para identificação (valor gerado do seu lado
-            para controle do envio)
+          description: Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)
           example: '{{SecretKey}}'
         - name: bearertoken
           in: query
@@ -3129,14 +2997,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                number: '5511999990001'
-                latitude: -23.5505
-                longitude: -46.6333
-                name: São Paulo
-                address: Av. Paulista, 1000
-                ticketId: null
-                externalKey: '{{SecretKey}}'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -3158,14 +3019,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                number: '5511999990001'
-                contact:
-                  - fullName: João Silva
-                    wuid: 5511999990002@s.whatsapp.net
-                    phoneNumber: '5511999990002'
-                ticketId: null
-                externalKey: '{{SecretKey}}'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -3873,8 +3727,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                ticketId: '{{ticketId}}'
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -3896,8 +3749,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                pauseReason: Aguardando cliente
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -3924,9 +3776,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                ticketId: '{{ticketId}}'
-                inviteUrl: https://app.example.com/shared
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -3969,13 +3819,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                name: Ligar para cliente
-                description: Confirmar proposta
-                owner: João
-                ownerId: '{{userId}}'
-                status: pending
-                priority: high
+              example: {}
       parameters:
         - name: ApiID
           in: path
@@ -4061,8 +3905,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                status: finished
+              example: {}
       parameters:
         - name: ApiID
           in: path
