@@ -16,14 +16,14 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Instalar bibliotecas
-        run: npm install postman-to-openapi strip-json-comments js-yaml
+        run: npm install postman-to-openapi json5 js-yaml
         
       - name: Converter usando script Node.js
         run: |
           node -e "
           const fs = require('fs');
           const p2o = require('postman-to-openapi');
-          const stripJsonComments = require('strip-json-comments');
+          const JSON5 = require('json5');
           const yaml = require('js-yaml');
           
           try {
@@ -32,17 +32,19 @@ jobs:
             
             const collection = JSON.parse(fs.readFileSync(inputFile, 'utf8'));
             
-            // Função mais inteligente para limpar o JSON sem apagá-lo
+            // Função infalível para salvar qualquer JSON do Postman (comentários, vírgulas sobrando, etc)
             function cleanJsonString(str) {
               if (!str || str.trim() === '') return undefined;
               try {
-                let cleaned = stripJsonComments(str);
-                // Arruma variáveis do postman sem aspas
-                cleaned = cleaned.replace(/:\s*(\{\{[^}]+\}\})\s*(,?)/g, function(m, p1, p2) { return ': \"' + p1 + '\"' + p2; });
-                JSON.parse(cleaned);
-                return cleaned;
+                // Previne erros em variáveis do Postman (ex: {{ApiID}} )
+                let cleaned = str.replace(/:\s*(\{\{[^}]+\}\})\s*(,?)/g, ': \'$1\'$2');
+                // O JSON5 lê o texto bagunçado e transforma num objeto limpo
+                const parsed = JSON5.parse(cleaned);
+                // Retornamos o formato estrito exigido pela ferramenta
+                return JSON.stringify(parsed, null, 2);
               } catch (e) {
-                return '{}'; // Só em último caso apaga
+                console.error('Erro ignorado ao limpar JSON:', e.message);
+                return '{}';
               }
             }
             
@@ -65,13 +67,12 @@ jobs:
             forceValidJson(collection);
             fs.writeFileSync(tempFile, JSON.stringify(collection));
             
-            // Converte e depois aplica a Mágica dos Schemas
             p2o(tempFile, './openapi.yaml')
               .then(() => {
                 const openapiStr = fs.readFileSync('./openapi.yaml', 'utf8');
                 const openapi = yaml.load(openapiStr);
                 
-                // Transforma o exemplo do Postman em uma Tabela de Parâmetros pro GitBook
+                // Mapeia os dados do Exemplo para a Tabela do GitBook
                 function inferSchema(example) {
                   if (example === null) return { type: 'string', nullable: true };
                   if (Array.isArray(example)) {
@@ -89,10 +90,45 @@ jobs:
                   for (const path in openapi.paths) {
                     for (const method in openapi.paths[path]) {
                       const operation = openapi.paths[path][method];
+                      
+                      // Processa as requisições (Corpo / Body)
                       if (operation.requestBody && operation.requestBody.content && operation.requestBody.content['application/json']) {
                         const content = operation.requestBody.content['application/json'];
-                        if (content.example && content.schema && content.schema.type === 'object' && !content.schema.properties) {
-                          content.schema = inferSchema(content.example);
+                        
+                        let exampleData = content.example;
+                        if (exampleData === undefined && content.schema && content.schema.example !== undefined) {
+                          exampleData = content.schema.example;
+                        }
+                        
+                        if (exampleData && typeof exampleData === 'object' && Object.keys(exampleData).length > 0) {
+                          const inferred = inferSchema(exampleData);
+                          if (!content.schema) content.schema = {};
+                          content.schema.type = inferred.type;
+                          content.schema.properties = inferred.properties;
+                          if (inferred.items) content.schema.items = inferred.items;
+                        }
+                      }
+                      
+                      // Processa as Respostas (Isso deixará as abas de resposta do Gitbook lindas!)
+                      if (operation.responses) {
+                        for (const status in operation.responses) {
+                          const res = operation.responses[status];
+                          if (res.content && res.content['application/json']) {
+                            const resContent = res.content['application/json'];
+                            
+                            let resExample = resContent.example;
+                            if (resExample === undefined && resContent.schema && resContent.schema.example !== undefined) {
+                              resExample = resContent.schema.example;
+                            }
+                            
+                            if (resExample && typeof resExample === 'object' && Object.keys(resExample).length > 0) {
+                              const inferredRes = inferSchema(resExample);
+                              if (!resContent.schema) resContent.schema = {};
+                              resContent.schema.type = inferredRes.type;
+                              resContent.schema.properties = inferredRes.properties;
+                              if (inferredRes.items) resContent.schema.items = inferredRes.items;
+                            }
+                          }
                         }
                       }
                     }
@@ -101,7 +137,7 @@ jobs:
                 
                 fs.writeFileSync('./openapi.yaml', yaml.dump(openapi, { lineWidth: -1 }));
                 fs.unlinkSync(tempFile);
-                console.log('Conversão e criação de schemas concluídas com sucesso!');
+                console.log('Conversão e criação de tabelas GitBook concluídas com sucesso!');
               })
               .catch(err => {
                 console.error('Erro na conversão:', err);
@@ -119,5 +155,5 @@ jobs:
           git config --global user.name "Robô de Conversão"
           git config --global user.email "action@github.com"
           git add openapi.yaml
-          git commit -m "Auto-convertendo Postman e Gerando Schemas" || exit 0
+          git commit -m "Auto-convertendo e Gerando Schemas GitBook" || exit 0
           git push
