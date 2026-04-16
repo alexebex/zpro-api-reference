@@ -49,7 +49,26 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                title: Reunião de Vendas
+                description: Reunião sobre proposta
+                contactId: '{{contactId}}'
+                startAt: '2026-04-15T14:00:00.000Z'
+                endAt: '2026-04-15T15:00:00.000Z'
+                status: pending
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                contactId:
+                  type: string
+                startAt:
+                  type: string
+                endAt:
+                  type: string
+                status:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -150,7 +169,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                status: confirmed
+                notes: Cliente confirmou presença
+              properties:
+                status:
+                  type: string
+                notes:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -177,7 +203,23 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Lembrete 24h antes
+                hoursBeforeEvent: 24
+                messageType: message
+                messageContent: Olá {nome}, lembrete da sua reunião amanhã!
+                active: true
+              properties:
+                name:
+                  type: string
+                hoursBeforeEvent:
+                  type: number
+                messageType:
+                  type: string
+                messageContent:
+                  type: string
+                active:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -269,7 +311,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Lembrete 48h antes
+                hoursBeforeEvent: 48
+              properties:
+                name:
+                  type: string
+                hoursBeforeEvent:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -322,8 +371,19 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              example: {}
+              type: array
+              example:
+                - name: Contato 1
+                  number: '5511999990001'
+                - name: Contato 2
+                  number: '5511999990002'
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  number:
+                    type: string
       parameters:
         - name: ApiID
           in: path
@@ -430,7 +490,29 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Campanha Teste
+                start: '2026-04-10T10:00:00.000Z'
+                message1: Olá {nome}!
+                message2: Como vai?
+                message3: Até logo!
+                sessionId: '{{sessionId}}'
+                delay: '5'
+              properties:
+                name:
+                  type: string
+                start:
+                  type: string
+                message1:
+                  type: string
+                message2:
+                  type: string
+                message3:
+                  type: string
+                sessionId:
+                  type: string
+                delay:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -661,7 +743,26 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Campanha Atualizada
+                start: '2026-04-15T10:00:00.000Z'
+                message1: Olá!
+                message2: Tudo bem?
+                message3: Até logo!
+                sessionId: '{{sessionId}}'
+              properties:
+                name:
+                  type: string
+                start:
+                  type: string
+                message1:
+                  type: string
+                message2:
+                  type: string
+                message3:
+                  type: string
+                sessionId:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -688,7 +789,17 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: My WhatsApp Instance
+                status: DISCONNECTED
+                type: baileys
+              properties:
+                name:
+                  type: string
+                status:
+                  type: string
+                type:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -710,7 +821,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: 1
+              properties:
+                whatsappId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -732,7 +847,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                listGroups: true
+                listParticipants: true
+              properties:
+                listGroups:
+                  type: boolean
+                listParticipants:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -754,7 +876,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: 1
+              properties:
+                whatsappId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -776,7 +902,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -798,7 +928,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                id: 43
+              properties:
+                id:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -820,7 +954,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: 1
+              properties:
+                whatsappId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -842,7 +980,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: 1
+              properties:
+                whatsappId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -864,7 +1006,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                contactId: 1
+                blocked: true
+              properties:
+                contactId:
+                  type: number
+                blocked:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -886,7 +1035,35 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Nome
+                number: '5515998566622'
+                email: contato@email.com
+                cpf: 012.345.678.91
+                firstName: Nome Principal
+                lastName: Sobrenome
+                businessName: Empresa
+                birthdayDate: 01/01/1990
+                externalKey: '{{SecretKey}}'
+              properties:
+                name:
+                  type: string
+                number:
+                  type: string
+                email:
+                  type: string
+                cpf:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                businessName:
+                  type: string
+                birthdayDate:
+                  type: string
+                externalKey:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -930,7 +1107,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                searchParam: ''
+                page: 1
+                limit: 40
+                tagId: 1
+              properties:
+                searchParam:
+                  type: string
+                page:
+                  type: number
+                limit:
+                  type: number
+                tagId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -952,7 +1142,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -974,7 +1168,38 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Nome
+                number: '5515998566622'
+                email: contato@email.com
+                cpf: 012.345.678.91
+                firstName: Nome Principal
+                lastName: Sobrenome
+                businessName: Empresa
+                birthdayDate: 01/01/1990
+                kanban: 2
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
+              properties:
+                name:
+                  type: string
+                number:
+                  type: string
+                email:
+                  type: string
+                cpf:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                businessName:
+                  type: string
+                birthdayDate:
+                  type: string
+                kanban:
+                  type: number
+                externalKey:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -996,7 +1221,25 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                contactId: 1
+                extraInfo:
+                  - name: Campo Personalizado 1
+                    value: Valor do campo 1
+                  - name: Campo Personalizado 2
+                    value: Valor do campo 2
+              properties:
+                contactId:
+                  type: number
+                extraInfo:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      value:
+                        type: string
       parameters:
         - name: ApiID
           in: path
@@ -1018,7 +1261,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                contactId: 1
+                kanban: 2
+              properties:
+                contactId:
+                  type: number
+                kanban:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -1040,7 +1290,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                contactId: 1
+                walletId: 2
+              properties:
+                contactId:
+                  type: number
+                walletId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -1062,7 +1319,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Funil de Vendas
+                description: Pipeline principal
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1158,7 +1422,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Funil Atualizado
+              properties:
+                name:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1185,7 +1453,17 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Prospecção
+                pipelineId: '{{pipelineId}}'
+                order: 1
+              properties:
+                name:
+                  type: string
+                pipelineId:
+                  type: string
+                order:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -1286,7 +1564,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Qualificação
+              properties:
+                name:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1573,7 +1855,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                success: true
+              properties:
+                success:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -1647,7 +1933,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                status: cancelled
+                cancellationReason: Cancelado pelo usuário
+              properties:
+                status:
+                  type: string
+                cancellationReason:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1674,7 +1967,30 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                whatsappType: baileys
+                arrayNumbers:
+                  - '5511999990001'
+                  - '5511999990002'
+                message: Olá, mensagem rápida!
+                min: 3
+                max: 8
+              properties:
+                whatsappId:
+                  type: string
+                whatsappType:
+                  type: string
+                arrayNumbers:
+                  type: array
+                  items:
+                    type: string
+                message:
+                  type: string
+                min:
+                  type: number
+                max:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -1696,7 +2012,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                number: '5511999990001'
+                message: Olá, mensagem individual!
+                externalKey: '{{SecretKey}}'
+              properties:
+                whatsappId:
+                  type: string
+                number:
+                  type: string
+                message:
+                  type: string
+                externalKey:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1718,7 +2047,27 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                arrayNumbers:
+                  - '5511999990001'
+                  - '5511999990002'
+                message: Olá, tudo bem?
+                min: 3
+                max: 8
+              properties:
+                whatsappId:
+                  type: string
+                arrayNumbers:
+                  type: array
+                  items:
+                    type: string
+                message:
+                  type: string
+                min:
+                  type: number
+                max:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -1740,7 +2089,25 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                message: Olá {nome}, seu código é {codigo}
+                dataInput: |-
+                  5511999990001,João,ABC123
+                  5511999990002,Maria,DEF456
+                min: 3
+                max: 8
+              properties:
+                whatsappId:
+                  type: string
+                message:
+                  type: string
+                dataInput:
+                  type: string
+                min:
+                  type: number
+                max:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -1815,7 +2182,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                description: Arquivo de marketing
+              properties:
+                description:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1837,7 +2208,23 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                participants:
+                  - '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                participants:
+                  type: array
+                  items:
+                    type: string
       parameters:
         - name: ApiID
           in: path
@@ -1859,7 +2246,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                description: Nova descrição do grupo
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                description:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1881,7 +2281,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                picture: https://exemplo.com/foto.jpg
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                picture:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1903,7 +2316,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                title: Novo Título do Grupo
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                title:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1925,7 +2351,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                titles:
+                  - Meu Grupo 1
+                number: '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                titles:
+                  type: array
+                  items:
+                    type: string
+                number:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1947,7 +2386,23 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                participants:
+                  - '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                participants:
+                  type: array
+                  items:
+                    type: string
       parameters:
         - name: ApiID
           in: path
@@ -1969,7 +2424,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupId: '{{groupId}}'
+              properties:
+                whatsappId:
+                  type: string
+                groupId:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1991,7 +2453,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+              properties:
+                whatsappId:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -2013,7 +2479,17 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
       parameters:
         - name: ApiID
           in: path
@@ -2035,7 +2511,23 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                participants:
+                  - '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                participants:
+                  type: array
+                  items:
+                    type: string
       parameters:
         - name: ApiID
           in: path
@@ -2057,7 +2549,23 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                participants:
+                  - '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                participants:
+                  type: array
+                  items:
+                    type: string
       parameters:
         - name: ApiID
           in: path
@@ -2079,7 +2587,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                adminsOnly: true
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                adminsOnly:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -2101,7 +2622,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupId: '{{groupId}}'
+              properties:
+                whatsappId:
+                  type: string
+                groupId:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -2123,7 +2651,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Coluna 1
+              properties:
+                name:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -2145,7 +2677,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                queue: Suporte
+                isActive: true
+              properties:
+                queue:
+                  type: string
+                isActive:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -2167,7 +2706,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Resolvido
+              properties:
+                name:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -2189,7 +2732,17 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                tag: Urgente
+                color: '#FF0000'
+                isActive: true
+              properties:
+                tag:
+                  type: string
+                color:
+                  type: string
+                isActive:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -2351,7 +2904,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Coluna Atualizada
+              properties:
+                name:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -2378,7 +2935,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                queue: Suporte v2
+                isActive: true
+              properties:
+                queue:
+                  type: string
+                isActive:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -2405,7 +2969,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Resolvido com sucesso
+              properties:
+                name:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -2432,7 +3000,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                tag: Urgente v2
+                color: '#CC0000'
+              properties:
+                tag:
+                  type: string
+                color:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -2827,7 +3402,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                body: A mensagem desejada
+                number: '5515998566622'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                body:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -2849,7 +3437,23 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                mediaUrl: https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png
+                body: A mensagem desejada
+                number: '5515998566622'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                mediaUrl:
+                  type: string
+                body:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -2871,7 +3475,26 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                body: A mensagem desejada
+                number: '5515998566622'
+                base64Data: iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==
+                mimeType: image/png
+                fileName: exemplo_imagem
+                isClosed: false
+              properties:
+                body:
+                  type: string
+                number:
+                  type: string
+                base64Data:
+                  type: string
+                mimeType:
+                  type: string
+                fileName:
+                  type: string
+                isClosed:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -2893,7 +3516,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                audio: https://comunidadezdg.com.br/wp-content/uploads/2022/12/audio.ogg
+                number: '5515998566622'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                audio:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -2997,7 +3633,30 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5511999990001'
+                latitude: -23.5505
+                longitude: -46.6333
+                name: São Paulo
+                address: Av. Paulista, 1000
+                ticketId: null
+                externalKey: '{{SecretKey}}'
+              properties:
+                number:
+                  type: string
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                name:
+                  type: string
+                address:
+                  type: string
+                ticketId:
+                  type: string
+                  nullable: true
+                externalKey:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3019,7 +3678,33 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5511999990001'
+                contact:
+                  - fullName: João Silva
+                    wuid: 5511999990002@s.whatsapp.net
+                    phoneNumber: '5511999990002'
+                ticketId: null
+                externalKey: '{{SecretKey}}'
+              properties:
+                number:
+                  type: string
+                contact:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      fullName:
+                        type: string
+                      wuid:
+                        type: string
+                      phoneNumber:
+                        type: string
+                ticketId:
+                  type: string
+                  nullable: true
+                externalKey:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3041,7 +3726,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                body: A mensagem desejada
+                number: '12356818915189153'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                body:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -3063,7 +3761,23 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                mediaUrl: https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png
+                body: A mensagem desejada
+                number: '12356818915189153'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                mediaUrl:
+                  type: string
+                body:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -3085,7 +3799,41 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5535912345678'
+                contactName: Nome do Contato
+                email: contato@email.com
+                name: Nome da Oportunidade 2
+                value: 10000
+                status: open
+                pipelineId: 16
+                stageId: 7
+                responsibleId: 1
+                closingForecast: '2024-12-31'
+                description: Descrição da oportunidade
+              properties:
+                number:
+                  type: string
+                contactName:
+                  type: string
+                email:
+                  type: string
+                name:
+                  type: string
+                value:
+                  type: number
+                status:
+                  type: string
+                pipelineId:
+                  type: number
+                stageId:
+                  type: number
+                responsibleId:
+                  type: number
+                closingForecast:
+                  type: string
+                description:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3107,7 +3855,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                opportunityId: 19
+              properties:
+                opportunityId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -3129,7 +3881,35 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                opportunityId: 30
+                name: Nome da Oportunidade 2 API
+                value: 500
+                status: open
+                pipelineId: 16
+                stageId: 7
+                responsibleId: 1
+                closingForecast: '2024-12-31'
+                description: Descrição da oportunidade
+              properties:
+                opportunityId:
+                  type: number
+                name:
+                  type: string
+                value:
+                  type: number
+                status:
+                  type: string
+                pipelineId:
+                  type: number
+                stageId:
+                  type: number
+                responsibleId:
+                  type: number
+                closingForecast:
+                  type: string
+                description:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3151,7 +3931,41 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+                isClosed: false
+                templateData:
+                  messaging_product: whatsapp
+                  to: '5515998566622'
+                  type: template
+                  template:
+                    name: hello_world
+                    language:
+                      code: en_US
+              properties:
+                number:
+                  type: string
+                isClosed:
+                  type: boolean
+                templateData:
+                  type: object
+                  properties:
+                    messaging_product:
+                      type: string
+                    to:
+                      type: string
+                    type:
+                      type: string
+                    template:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        language:
+                          type: object
+                          properties:
+                            code:
+                              type: string
       parameters:
         - name: ApiID
           in: path
@@ -3173,7 +3987,41 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+                isClosed: false
+                templateData:
+                  messaging_product: whatsapp
+                  to: '5515998566622'
+                  type: template
+                  template:
+                    name: hello_world
+                    language:
+                      code: en_US
+              properties:
+                number:
+                  type: string
+                isClosed:
+                  type: boolean
+                templateData:
+                  type: object
+                  properties:
+                    messaging_product:
+                      type: string
+                    to:
+                      type: string
+                    type:
+                      type: string
+                    template:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        language:
+                          type: object
+                          properties:
+                            code:
+                              type: string
       parameters:
         - name: ApiID
           in: path
@@ -3195,7 +4043,41 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+                isClosed: false
+                templateData:
+                  messaging_product: whatsapp
+                  to: '5515998566622'
+                  type: template
+                  template:
+                    name: hello_world
+                    language:
+                      code: en_US
+              properties:
+                number:
+                  type: string
+                isClosed:
+                  type: boolean
+                templateData:
+                  type: object
+                  properties:
+                    messaging_product:
+                      type: string
+                    to:
+                      type: string
+                    type:
+                      type: string
+                    template:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        language:
+                          type: object
+                          properties:
+                            code:
+                              type: string
       parameters:
         - name: ApiID
           in: path
@@ -3217,7 +4099,31 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: API 1
+                sessionId: 1
+                urlServiceStatus: null
+                urlMessageStatus: null
+                userId: 1
+                authToken: '123456'
+                tenant: 1
+              properties:
+                name:
+                  type: string
+                sessionId:
+                  type: number
+                urlServiceStatus:
+                  type: string
+                  nullable: true
+                urlMessageStatus:
+                  type: string
+                  nullable: true
+                userId:
+                  type: number
+                authToken:
+                  type: string
+                tenant:
+                  type: number
       responses:
         '200':
           description: Successful response
@@ -3233,7 +4139,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                tenant: 1
+                name: My WhatsApp Instance
+                status: DISCONNECTED
+                type: baileys
+              properties:
+                tenant:
+                  type: number
+                name:
+                  type: string
+                status:
+                  type: string
+                type:
+                  type: string
       responses:
         '200':
           description: Successful response
@@ -3249,7 +4168,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                sessionId: 43
+                userId: 1
+                tenant: 1
+                apiId: 5ec32c80-4549-4256-8ed1-ed57b86396c3
+              properties:
+                sessionId:
+                  type: number
+                userId:
+                  type: number
+                tenant:
+                  type: number
+                apiId:
+                  type: string
       responses:
         '200':
           description: Successful response
@@ -3275,7 +4207,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                id: 1
+              properties:
+                id:
+                  type: number
       responses:
         '200':
           description: Successful response
@@ -3291,7 +4227,35 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                status: active
+                name: Empresa Exemplo
+                maxUsers: 3
+                maxConnections: 3
+                acceptTerms: true
+                email: user@example.com
+                password: securePassword123!
+                userName: Pedro Bastos
+                profile: admin
+              properties:
+                status:
+                  type: string
+                name:
+                  type: string
+                maxUsers:
+                  type: number
+                maxConnections:
+                  type: number
+                acceptTerms:
+                  type: boolean
+                email:
+                  type: string
+                password:
+                  type: string
+                userName:
+                  type: string
+                profile:
+                  type: string
       responses:
         '200':
           description: Successful response
@@ -3307,7 +4271,125 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                identity: '07122989674'
+                status: active
+                maxUsers: 100
+                maxConnections: 10
+                paymentGateway: asaas
+                supportChatEnabled: enabled
+                menuVisibility:
+                  - Groups
+                  - MassDispatch
+                  - Kanban
+                  - Tasks
+                  - Api
+                  - ChatBot
+                  - Reports
+                  - Campaigns
+                  - PrivateChat
+                  - Teams
+                  - AllowedChannels
+                allowedChannels:
+                  - waba
+                  - baileys
+                  - whatsapp
+                  - meow
+                  - evo
+                  - zapi
+                  - uazapi
+                  - telegram
+                  - hub
+                  - webchat
+                  - webmail
+                  - wabaoauth
+                  - instagramoauth
+                  - facebookoauth
+                channelConnectionLimits:
+                  waba: 0
+                  baileys: 0
+                  whatsapp: 0
+                  meow: 0
+                  evo: 0
+                  zapi: 0
+                  uazapi: 0
+                  telegram: 0
+                  hub: 0
+                  webchat: 0
+                  webmail: 0
+                  wabaoauth: 0
+                  instagramoauth: 0
+                  facebookoauth: 0
+                oauthEnabled: false
+                oauthProxyUrl: https://proxy.exemplo.com/oauth
+                instagramWebhookProxyUrl: https://proxy.exemplo.com/instagram/webhook
+                instagramWebhookProxySecret: secret_instagram
+                messengerWebhookProxyUrl: https://proxy.exemplo.com/messenger/webhook
+                messengerWebhookProxySecret: secret_messenger
+              properties:
+                identity:
+                  type: string
+                status:
+                  type: string
+                maxUsers:
+                  type: number
+                maxConnections:
+                  type: number
+                paymentGateway:
+                  type: string
+                supportChatEnabled:
+                  type: string
+                menuVisibility:
+                  type: array
+                  items:
+                    type: string
+                allowedChannels:
+                  type: array
+                  items:
+                    type: string
+                channelConnectionLimits:
+                  type: object
+                  properties:
+                    waba:
+                      type: number
+                    baileys:
+                      type: number
+                    whatsapp:
+                      type: number
+                    meow:
+                      type: number
+                    evo:
+                      type: number
+                    zapi:
+                      type: number
+                    uazapi:
+                      type: number
+                    telegram:
+                      type: number
+                    hub:
+                      type: number
+                    webchat:
+                      type: number
+                    webmail:
+                      type: number
+                    wabaoauth:
+                      type: number
+                    instagramoauth:
+                      type: number
+                    facebookoauth:
+                      type: number
+                oauthEnabled:
+                  type: boolean
+                oauthProxyUrl:
+                  type: string
+                instagramWebhookProxyUrl:
+                  type: string
+                instagramWebhookProxySecret:
+                  type: string
+                messengerWebhookProxyUrl:
+                  type: string
+                messengerWebhookProxySecret:
+                  type: string
       responses:
         '200':
           description: Successful response
@@ -3323,7 +4405,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticketId: 4
+                tagId: 1
+              properties:
+                ticketId:
+                  type: number
+                tagId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -3345,7 +4434,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                notes: Mensagem da nota
+                ticketId: 1262
+                userId: 1
+                idFront: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
+              properties:
+                notes:
+                  type: string
+                ticketId:
+                  type: number
+                userId:
+                  type: number
+                idFront:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3367,7 +4469,35 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                body: Mensagem inicial do ticket por email
+                email: contato@exemplo.com
+                channelId: 17841443941506796
+                externalKey: '{{SecretKey}}'
+                userId: 3
+                status: pending
+                name: Nome do Contato
+                firstName: Nome
+                lastName: Sobrenome
+              properties:
+                body:
+                  type: string
+                email:
+                  type: string
+                channelId:
+                  type: number
+                externalKey:
+                  type: string
+                userId:
+                  type: number
+                status:
+                  type: string
+                name:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3411,7 +4541,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticketId: 4
+                tagId: 1
+              properties:
+                ticketId:
+                  type: number
+                tagId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -3433,7 +4570,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticketId: 1262
+                state: typing
+              properties:
+                ticketId:
+                  type: number
+                state:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3455,7 +4599,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticketId: 4
+                queueId: 1
+              properties:
+                ticketId:
+                  type: number
+                queueId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -3477,7 +4628,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticketId: 4
+                tag: 1
+              properties:
+                ticketId:
+                  type: number
+                tag:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -3499,7 +4657,40 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticketId: 1262
+                userId: 1
+                status: pending
+                queueId: null
+                typebotStatus: false
+                chatgptStatus: false
+                dialogflowStatus: false
+                difyStatus: false
+                n8nStatus: false
+                chatFlowId: null
+              properties:
+                ticketId:
+                  type: number
+                userId:
+                  type: number
+                status:
+                  type: string
+                queueId:
+                  type: string
+                  nullable: true
+                typebotStatus:
+                  type: boolean
+                chatgptStatus:
+                  type: boolean
+                dialogflowStatus:
+                  type: boolean
+                difyStatus:
+                  type: boolean
+                n8nStatus:
+                  type: boolean
+                chatFlowId:
+                  type: string
+                  nullable: true
       parameters:
         - name: ApiID
           in: path
@@ -3521,7 +4712,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticket: '123'
+              properties:
+                ticket:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3543,7 +4738,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3565,7 +4764,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3587,7 +4790,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3609,7 +4816,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                noteId: 1
+                notes: Conteúdo atualizado da nota
+              properties:
+                noteId:
+                  type: number
+                notes:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3631,7 +4845,17 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticketId: 1262
+                whatsappId: 1
+                channel: whatsapp
+              properties:
+                ticketId:
+                  type: number
+                whatsappId:
+                  type: number
+                channel:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3727,7 +4951,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticketId: '{{ticketId}}'
+              properties:
+                ticketId:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3749,7 +4977,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                pauseReason: Aguardando cliente
+              properties:
+                pauseReason:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3776,7 +5008,14 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                ticketId: '{{ticketId}}'
+                inviteUrl: https://app.example.com/shared
+              properties:
+                ticketId:
+                  type: string
+                inviteUrl:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3819,7 +5058,26 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                name: Ligar para cliente
+                description: Confirmar proposta
+                owner: João
+                ownerId: '{{userId}}'
+                status: pending
+                priority: high
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                owner:
+                  type: string
+                ownerId:
+                  type: string
+                status:
+                  type: string
+                priority:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3905,7 +5163,11 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                status: finished
+              properties:
+                status:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -3932,7 +5194,20 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                email: usuario@example.com
+                password: senha123
+                name: Nome do Usuário
+                profile: user
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+                profile:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -4003,7 +5278,17 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                userId: 1
+                name: Nome Atualizado
+                email: novoemail@example.com
+              properties:
+                userId:
+                  type: number
+                name:
+                  type: string
+                email:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -4025,7 +5310,26 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+                message: 'Escolha uma opção:'
+                button1: Opção 1
+                button2: Opção 2
+                button3: Opção 3
+                ticketId: 1262
+              properties:
+                number:
+                  type: string
+                message:
+                  type: string
+                button1:
+                  type: string
+                button2:
+                  type: string
+                button3:
+                  type: string
+                ticketId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -4047,7 +5351,53 @@ paths:
           application/json:
             schema:
               type: object
-              example: {}
+              example:
+                number: '5515998566622'
+                header: Menu Principal
+                body: 'Escolha uma opção da lista:'
+                footer: Selecione uma opção
+                button_text: Ver opções
+                sections:
+                  - title: Seção 1
+                    rows:
+                      - id: '1'
+                        title: Opção 1
+                        description: Descrição da opção 1
+                      - id: '2'
+                        title: Opção 2
+                        description: Descrição da opção 2
+                ticketId: 1262
+              properties:
+                number:
+                  type: string
+                header:
+                  type: string
+                body:
+                  type: string
+                footer:
+                  type: string
+                button_text:
+                  type: string
+                sections:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      rows:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            title:
+                              type: string
+                            description:
+                              type: string
+                ticketId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
