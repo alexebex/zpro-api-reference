@@ -1,0 +1,5902 @@
+{
+	"info": {
+		"_postman_id": "ec046aa1-a0c5-4f25-b668-0fb76bdef619",
+		"name": "Postman v3",
+		"description": "Postman v3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "📅 Agendamentos e Lembretes",
+			"item": [
+				{
+					"name": "AppointmentCreate",
+					"id": "112c59e4-ffda-4b87-baf6-ebf3d7d8a612",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Reunião de Vendas\",\n  \"description\": \"Reunião sobre proposta\",\n  \"contactId\": \"{{contactId}}\",\n  \"startAt\": \"2026-04-15T14:00:00.000Z\",\n  \"endAt\": \"2026-04-15T15:00:00.000Z\",\n  \"status\": \"pending\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/appointment/create"
+					},
+					"response": []
+				},
+				{
+					"name": "AppointmentDelete",
+					"id": "6301b812-f530-4291-b66d-30de2fce9e04",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/appointment/delete/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "AppointmentList",
+					"id": "4d014dcc-00f2-40f4-81ad-073f0f12fa53",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/appointment/list?page=1&limit=20&status=pending",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"appointment",
+								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "status",
+									"value": "pending"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AppointmentShow",
+					"id": "fd6fb3ad-f4c5-4b54-9a03-b0c0430d90c4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/appointment/show/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "AppointmentUpdate",
+					"id": "0b6909ee-dc04-4b95-bd56-bd0c05beeaa6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"confirmed\",\n  \"notes\": \"Cliente confirmou presença\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/appointment/update/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "ScheduleReminderCreate",
+					"id": "937243c6-5053-417b-886f-25959edf8e4a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Lembrete 24h antes\",\n  \"hoursBeforeEvent\": 24,\n  \"messageType\": \"message\",\n  \"messageContent\": \"Olá {nome}, lembrete da sua reunião amanhã!\",\n  \"active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/scheduleReminder/create"
+					},
+					"response": []
+				},
+				{
+					"name": "ScheduleReminderDelete",
+					"id": "36ae1765-4bdc-4bed-9da3-1dd4aafb0e73",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/scheduleReminder/delete/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "ScheduleReminderList",
+					"id": "e3d710ff-46e0-40c4-ac85-d8b3dddf34ee",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/scheduleReminder/list"
+					},
+					"response": []
+				},
+				{
+					"name": "ScheduleReminderToggle",
+					"id": "d5b53ff2-5d6c-4e08-b5ce-455e514ff38a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/scheduleReminder/toggle/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "ScheduleReminderUpdate",
+					"id": "32e60eff-b418-4470-bc95-15536ea3dce1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Lembrete 48h antes\",\n  \"hoursBeforeEvent\": 48\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/scheduleReminder/update/{{id}}"
+					},
+					"response": []
+				}
+			],
+			"id": "40e6937b-aa66-48a1-8202-72d4b13aa030"
+		},
+		{
+			"name": "📣 Campanhas",
+			"item": [
+				{
+					"name": "CampaignCancel",
+					"id": "bcc78378-2bee-4d63-b0bb-e6c2dddb2645",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/cancel/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignContactsAdd",
+					"id": "b8ffa7fe-07da-4820-93ec-f458dc5c130c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"name\": \"Contato 1\",\n    \"number\": \"5511999990001\"\n  },\n  {\n    \"name\": \"Contato 2\",\n    \"number\": \"5511999990002\"\n  }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/contacts/add/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignContactsList",
+					"id": "d40f46f1-56a3-46c3-bec6-98980e93a4f3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/contacts/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignContactsRemove",
+					"id": "367e8a62-978a-4eda-838d-ce0e18faccb2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/contacts/remove/{{campaignId}}/{{contactId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignContactsRemoveAll",
+					"id": "8fa37250-8f6b-48ef-a754-7cbe655ac1e1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/contacts/removeAll/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignCreate",
+					"id": "24117798-99c5-4fae-92dd-382d2568592b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Campanha Teste\",\n  \"start\": \"2026-04-10T10:00:00.000Z\",\n  \"message1\": \"Olá {nome}!\",\n  \"message2\": \"Como vai?\",\n  \"message3\": \"Até logo!\",\n  \"sessionId\": \"{{sessionId}}\",\n  \"delay\": \"5\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/create"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignDelete",
+					"id": "a9a0f317-a5d9-41c1-9f7a-e10acd053062",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/delete/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignDuplicate",
+					"id": "8eadf627-3dd9-4b11-89f1-adb251b536a7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/duplicate/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignList",
+					"id": "12d1a5f2-f02d-41fa-a248-85fa79ea0d15",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/list?page=1&limit=10",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"campaign",
+								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignPause",
+					"id": "4c175fb7-0389-42c6-b9b9-c637f9de3e49",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/pause/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignReport",
+					"id": "27c24fe9-8fb4-467b-8282-713e0d557694",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/report/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignResume",
+					"id": "9f800d42-7378-4d25-aabb-d79de33144b5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/resume/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignSkip",
+					"id": "15d4af93-9039-4119-9680-c2f9cbb6e061",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/skip/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignStart",
+					"id": "22b319e0-ed40-4ebd-a009-f1ebebd82429",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/start/{{campaignId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CampaignUpdate",
+					"id": "716a3c6b-10ac-4f3b-b5a9-c5a9fa48a0b3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Campanha Atualizada\",\n  \"start\": \"2026-04-15T10:00:00.000Z\",\n  \"message1\": \"Olá!\",\n  \"message2\": \"Tudo bem?\",\n  \"message3\": \"Até logo!\",\n  \"sessionId\": \"{{sessionId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/campaign/update/{{campaignId}}"
+					},
+					"response": []
+				}
+			],
+			"id": "09ed1e1c-1f53-4bbc-989d-3063d6acf20c"
+		},
+		{
+			"name": "🔌 Canais e Sessões",
+			"item": [
+				{
+					"name": "CreateSession",
+					"id": "c0988e98-373e-45c8-9033-94852e6189a4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Nome da instância do WhatsApp\n    \"name\": \"My WhatsApp Instance\",\n    \n    // Status inicial da sessão (DISCONNECTED, CONNECTED)\n    \"status\": \"DISCONNECTED\",\n    \n    // Tipo da sessão\n    \"type\": \"baileys\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createtSession"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteSession",
+					"id": "9f145133-974c-4dfc-b7dc-010409010a5e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp que será deletada\n    \"whatsappId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/deleteSession"
+					},
+					"response": []
+				},
+				{
+					"name": "ListGroupsInfo",
+					"id": "969fb23b-58de-4620-a69d-e195abbd8fb1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    //lista todos os grupos\n    \"listGroups\": true, \n    \n    //lista todos os grupos e adiciona o array de participantes\n    \"listParticipants\": true \n\n    // opicional (lista dados de um grupo específico ex: idDoGrupo@g.us)\n    // \"groupId\": \"46211553263266@g.us\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listGroupInfo"
+					},
+					"response": []
+				},
+				{
+					"name": "RequestNewQrCode",
+					"id": "c90b25da-05a4-4150-9bd7-3090bbabd2da",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp que terá um novo QR Code gerado\n    \"whatsappId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/requestNewQrCodeSession"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowChannelInformation",
+					"id": "653a8bd3-5911-429d-a2d7-8806b7cd9a52",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do canal (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showChannel"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowChannelInformationById",
+					"id": "653ae8cb-c659-41cf-a9bc-203fe55ec7ef",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do canal que será consultado\n    \"id\": 43\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showChannelById"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowQrCode",
+					"id": "d07c238b-9aaf-4f14-8a2a-265180aa179e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp que terá o QR Code gerado\n    \"whatsappId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/qrCodeSession"
+					},
+					"response": []
+				},
+				{
+					"name": "StartSession",
+					"id": "d96317d4-2422-4290-b6a2-70664e97ac51",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp que será iniciada\n    \"whatsappId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/startSession"
+					},
+					"response": []
+				}
+			],
+			"id": "b7d5f776-93c4-49b7-845b-023a407442b5"
+		},
+		{
+			"name": "👤 Contatos",
+			"item": [
+				{
+					"name": "BlockContact",
+					"id": "28c0770f-36a1-4ba8-abb5-1500e120d5d8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do contato que será bloqueado/desbloqueado\n    \"contactId\": 1,\n    \n    // true para bloquear, false para desbloquear\n    \"blocked\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/blockContact"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateContact",
+					"id": "dc500dc3-e178-465a-9bb4-d24b7c19022e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Nome completo do contato\n    \"name\": \"Nome\", \n    \n    // Número do WhatsApp (formato: 5511999999999)\n    \"number\": \"5515998566622\", \n    \n    // Email do contato\n    \"email\": \"contato@email.com\",\n    \n    // CPF do contato (formato: 000.000.000-00)\n    \"cpf\": \"012.345.678.91\",\n    \n    // Primeiro nome do contato\n    \"firstName\": \"Nome Principal\",\n    \n    // Sobrenome do contato\n    \"lastName\": \"Sobrenome\",\n    \n    // Nome da empresa do contato\n    \"businessName\": \"Empresa\",\n    \n    // Data de nascimento (formato: DD/MM/AAAA)\n    \"birthdayDate\": \"01/01/1990\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createContact"
+					},
+					"response": []
+				},
+				{
+					"name": "GetContactExtraInfo",
+					"id": "1e4b88e6-fea8-41bb-947d-8f104c3f4b6a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/getContactExtraInfo?contactId=1",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"getContactExtraInfo"
+							],
+							"query": [
+								{
+									"key": "contactId",
+									"value": "1",
+									"description": "ID do contato"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SearchContacts",
+					"id": "7f84a82f-4d53-4f28-ae43-cd5ea9b0074f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Parâmetro de busca textual (opcional) - busca em nome, número, CPF, etc\n    \"searchParam\": \"\",\n    \n    // Número da página (padrão: 1)\n    \"page\": 1,\n    \n    // Limite de resultados por página (padrão: 40)\n    \"limit\": 40,\n    \n    // ID de uma tag para filtrar (opcional)\n    \"tagId\": 1,\n    \n    // OU array de IDs de tags para filtrar por múltiplas tags (opcional)\n    // \"tagIds\": [1, 2, 3],\n    \n    // ID da wallet para filtrar (opcional)\n    // \"walletId\": 1,\n    \n    // Filtrar por contatos bloqueados (opcional: true/false)\n    // \"blocked\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/contacts/search"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowContact",
+					"id": "c2e9db11-3cdb-47cb-aec2-22605788002f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do contato (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showcontact"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContact",
+					"id": "c7ae0b6b-76f2-4108-9c0f-934b2cfd4bd4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Nome completo do contato\n    \"name\": \"Nome\", \n    \n    // Número do WhatsApp (formato: 5511999999999)\n    \"number\": \"5515998566622\", \n    \n    // Email do contato\n    \"email\": \"contato@email.com\",\n    \n    // CPF do contato (formato: 000.000.000-00)\n    \"cpf\": \"012.345.678.91\",\n    \n    // Primeiro nome do contato\n    \"firstName\": \"Nome Principal\",\n    \n    // Sobrenome do contato\n    \"lastName\": \"Sobrenome\",\n    \n    // Nome da empresa do contato\n    \"businessName\": \"Empresa\",\n    \n    // Data de nascimento (formato: DD/MM/AAAA)\n    \"birthdayDate\": \"01/01/1990\",\n    \n    // ID do kanban do contato\n    \"kanban\": 2,\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"externalKey\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateContact"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContactExtraInfo",
+					"id": "6ee4dd06-eae6-461c-8b4d-428a0aef81b6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do contato que terá as informações adicionais atualizadas\n    \"contactId\": 1,\n    \n    // Array de campos personalizados (extraInfo)\n    \"extraInfo\": [\n        {\n            \"name\": \"Campo Personalizado 1\",\n            \"value\": \"Valor do campo 1\"\n        },\n        {\n            \"name\": \"Campo Personalizado 2\",\n            \"value\": \"Valor do campo 2\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateContactExtraInfo"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContactKanban",
+					"id": "92a5afd6-f92a-4b4d-aaab-9090562a4bf4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do contato que terá o kanban (carteira) alterado\n    \"contactId\": 1,\n    \n    // ID do kanban (carteira) que será atribuído ao contato\n    \"kanban\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateContactKanban"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContactWallet",
+					"id": "5442d26d-06fe-444f-b469-69321685bff7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do contato que será carteirizado\n    \"contactId\": 1,\n    \n    // ID da wallet que será atribuída ao contato (pode usar walletId ou walletIds)\n    \"walletId\": 2,\n    \n    // OU array de IDs de wallets para atribuir múltiplas wallets de uma vez\n    // \"walletIds\": [1, 2, 3]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateContactWallet"
+					},
+					"response": []
+				}
+			],
+			"id": "ed2b4128-da56-483b-bda5-0a5b8e2e8c19"
+		},
+		{
+			"name": "🏗️ CRM - Pipeline",
+			"item": [
+				{
+					"name": "PipelineCreate",
+					"id": "9fef93d7-e5a3-4734-947e-81d524bb10fc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Funil de Vendas\",\n  \"description\": \"Pipeline principal\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/pipeline/create"
+					},
+					"response": []
+				},
+				{
+					"name": "PipelineDelete",
+					"id": "470ba08b-30de-4b7f-8bdf-a1c58fa01cbc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/pipeline/delete/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "PipelineList",
+					"id": "85edec05-9c30-4ed4-bcda-7b5e2978f18d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/pipeline/list?page=1&limit=20",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"pipeline",
+								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PipelineShow",
+					"id": "c89bcaf7-8fde-4d0d-a0fd-503adc71c794",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/pipeline/show/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "PipelineUpdate",
+					"id": "cf245b2c-d4b9-47d6-b7b9-fc584fb9038d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Funil Atualizado\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/pipeline/update/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "StageCreate",
+					"id": "d7ec81e3-425c-47f5-9a86-d9aa728f1386",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Prospecção\",\n  \"pipelineId\": \"{{pipelineId}}\",\n  \"order\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/stage/create"
+					},
+					"response": []
+				},
+				{
+					"name": "StageDelete",
+					"id": "7c53f2e3-bb8d-4e8b-bbca-7b364eb54821",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/stage/delete/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "StageList",
+					"id": "75c0f07c-57d5-4387-8b54-aee9dea66765",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/stage/list?page=1&limit=20&pipelineId={{pipelineId}}",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"stage",
+								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "pipelineId",
+									"value": "{{pipelineId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StageShow",
+					"id": "93a05bc5-374a-4d28-8cc8-0d718ec9940e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/stage/show/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "StageUpdate",
+					"id": "a6f19fa1-187e-4524-a604-0774fd2ee5ae",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Qualificação\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/stage/update/{{id}}"
+					},
+					"response": []
+				}
+			],
+			"id": "475ee531-4bd3-467c-9684-c7fa17ba1f3f"
+		},
+		{
+			"name": "📊 Dashboard",
+			"item": [
+				{
+					"name": "DashTicketsAndTimes",
+					"id": "943584fc-2e8a-4105-ae76-e90cbdd91979",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsAndTimes?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsAndTimes"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DashTicketsChannels",
+					"id": "a9f5acdd-9e67-47d5-8d87-6045cd579913",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsChannels?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsChannels"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DashTicketsEvolution",
+					"id": "7e39261b-231b-4f77-b7ac-fa4e0048f948",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsEvolution?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsEvolution"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DashTicketsEvolutionByValue",
+					"id": "a1c01cf9-4ece-4e6b-98da-fa9ee6a6796f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsEvolutionByValue?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsEvolutionByValue"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DashTicketsEvolutionChannelsName",
+					"id": "edf6e8d5-8306-45a8-88c3-b1c23678d265",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsEvolutionChannelsName?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsEvolutionChannelsName"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DashTicketsPerUser",
+					"id": "146baefc-6e7d-45ca-a81b-444893d2c40c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsPerUser?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsPerUser"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DashTicketsQueue",
+					"id": "7d97a710-1e12-4440-a750-f67a5578db42",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsQueue?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsQueue"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DashTicketsReasons",
+					"id": "11cd63b6-f0b3-4f57-a451-8539de501857",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsReasons?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsReasons"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DashTicketsStatus",
+					"id": "246c6e81-fb95-4dfd-a637-1e67cea13e53",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsStatus?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsStatus"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DashTicketsUser",
+					"id": "3f876c61-4eb4-4ee7-ae0f-21f4042b8663",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/dash/ticketsUser?startDate=2026-03-01&endDate=2026-03-31",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"dash",
+								"ticketsUser"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2026-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2026-03-31"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "7615fc05-15de-41aa-abfb-794ee555fffe"
+		},
+		{
+			"name": "📤 Envio em Lote",
+			"item": [
+				{
+					"name": "BulkDispatchIncrementProgress",
+					"id": "205fb05d-96e9-4916-b35c-9435a27a5e60",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"success\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/bulkDispatch/incrementProgress/{{dispatchId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "BulkDispatchList",
+					"id": "eb556968-af6d-47e3-81be-b379cd199848",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/bulkDispatch/list?page=1&limit=20",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"bulkDispatch",
+								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BulkDispatchShow",
+					"id": "e04529c3-f14f-4af6-9870-fe1bb550ce79",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/bulkDispatch/show/{{dispatchId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "BulkDispatchUpdate",
+					"id": "af091bb0-802e-4410-bd84-5deb84c99996",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"cancelled\",\n  \"cancellationReason\": \"Cancelado pelo usuário\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/bulkDispatch/update/{{dispatchId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "BulkFastMessage",
+					"id": "a5ded521-e456-4ed0-8927-2017fd057995",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"whatsappType\": \"baileys\",\n  \"arrayNumbers\": [\n    \"5511999990001\",\n    \"5511999990002\"\n  ],\n  \"message\": \"Olá, mensagem rápida!\",\n  \"min\": 3,\n  \"max\": 8\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/bulkFastMessage"
+					},
+					"response": []
+				},
+				{
+					"name": "BulkIndividual",
+					"id": "d7139628-8228-40f5-82d5-a677d0f7bb1a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"number\": \"5511999990001\",\n  \"message\": \"Olá, mensagem individual!\",\n  \"externalKey\": \"{{SecretKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/bulkIndividual"
+					},
+					"response": []
+				},
+				{
+					"name": "BulkSendMessage",
+					"id": "8cdd17f6-8220-46b3-af1b-1dac47f85502",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"arrayNumbers\": [\n    \"5511999990001\",\n    \"5511999990002\"\n  ],\n  \"message\": \"Olá, tudo bem?\",\n  \"min\": 3,\n  \"max\": 8\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/bulkSendMessage"
+					},
+					"response": []
+				},
+				{
+					"name": "BulkSendMessageWithVariable",
+					"id": "0561b652-d170-4b9b-8bc0-25fc82c3471f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"message\": \"Olá {nome}, seu código é {codigo}\",\n  \"dataInput\": \"5511999990001,João,ABC123\\n5511999990002,Maria,DEF456\",\n  \"min\": 3,\n  \"max\": 8\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/bulkSendMessageWithVariable"
+					},
+					"response": []
+				}
+			],
+			"id": "d02d5b1e-b722-49f7-8a55-fbe3d09d4cb8"
+		},
+		{
+			"name": "📂 Galeria",
+			"item": [
+				{
+					"name": "GalleryDelete",
+					"id": "891a537c-20e6-4a13-8a1f-5c5f5deff042",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/gallery/delete/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "GalleryList",
+					"id": "cec46848-a249-4932-b114-fe64dc059c31",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/gallery/list?pageNumber=1&fileType=image",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"gallery",
+								"list"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "fileType",
+									"value": "image"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GalleryUpload",
+					"id": "61a039f3-9574-4711-9992-d64e5b56dc0f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Arquivo de marketing\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/gallery/upload"
+					},
+					"response": []
+				}
+			],
+			"id": "c0471b87-002a-4fa6-af13-f52e2a0729a0"
+		},
+		{
+			"name": "👥 Grupos WhatsApp",
+			"item": [
+				{
+					"name": "GroupAddParticipant",
+					"id": "6a737b2c-8cc0-4df4-b03a-382a0065d0aa",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupIds\": [\n    \"{{groupId}}\"\n  ],\n  \"participants\": [\n    \"5511999990001\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/addParticipant"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupChangeDescription",
+					"id": "98203856-38ec-4975-b945-6a3b2b287ab4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupIds\": [\n    \"{{groupId}}\"\n  ],\n  \"description\": \"Nova descrição do grupo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/changeDescription"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupChangePicture",
+					"id": "e4beb454-792e-47f6-8053-daffd4891339",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupIds\": [\n    \"{{groupId}}\"\n  ],\n  \"picture\": \"https://exemplo.com/foto.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/changePicture"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupChangeTitle",
+					"id": "eaedc9d2-1d66-4475-a15c-66fa15bd45ea",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupIds\": [\n    \"{{groupId}}\"\n  ],\n  \"title\": \"Novo Título do Grupo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/changeTitle"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupCreate",
+					"id": "53ccfe45-8447-4363-aa89-01cc2964c4a2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"titles\": [\n    \"Meu Grupo 1\"\n  ],\n  \"number\": \"5511999990001\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/create"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupDemote",
+					"id": "4e0c28a9-53d9-4ea9-8cbc-991e68781036",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupIds\": [\n    \"{{groupId}}\"\n  ],\n  \"participants\": [\n    \"5511999990001\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/demote"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupGetInviteLink",
+					"id": "cd7041f0-aa78-4aee-87a1-5e95ed94f0e8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupId\": \"{{groupId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/getInviteLink"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupList",
+					"id": "e2663f96-e273-47f3-ad55-044df833128a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/list"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupListParticipants",
+					"id": "0bfdfd42-8ddd-48a3-8851-e823ffa7a449",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupIds\": [\n    \"{{groupId}}\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/listParticipants"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupPromote",
+					"id": "0790a678-51c5-42de-8379-121c1f9900f4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupIds\": [\n    \"{{groupId}}\"\n  ],\n  \"participants\": [\n    \"5511999990001\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/promote"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupRemoveParticipant",
+					"id": "935f1b80-c9b5-46a3-8141-40a88b03cc2a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupIds\": [\n    \"{{groupId}}\"\n  ],\n  \"participants\": [\n    \"5511999990001\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/removeParticipant"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupSetAdminsOnly",
+					"id": "00a54517-ccd3-417c-99bb-6712577c213e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupIds\": [\n    \"{{groupId}}\"\n  ],\n  \"adminsOnly\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/setAdminsOnly"
+					},
+					"response": []
+				},
+				{
+					"name": "GroupShowById",
+					"id": "ac4acce7-414a-4717-b8a8-ba9cbca2eaad",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupId\": \"{{groupId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/showById"
+					},
+					"response": []
+				}
+			],
+			"id": "d885e307-dc8e-4acc-a991-36af4ff4fb9f"
+		},
+		{
+			"name": "🏷️ Kanban / Tags / Motivos / Filas",
+			"item": [
+				{
+					"name": "CreateKanban",
+					"id": "14b85826-81ea-4b24-9c9c-b3e8add886f7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Coluna 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createKanban"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateQueueData",
+					"id": "9a4167f8-4184-4c0e-bfaa-45332384cefa",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"queue\": \"Suporte\",\n  \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createQueueData"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateReason",
+					"id": "3bcc0364-c864-4e6e-b2f2-838c80c519c2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Resolvido\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createReason"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTag",
+					"id": "da4c729d-b6e7-4222-acbb-76342f896510",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tag\": \"Urgente\",\n  \"color\": \"#FF0000\",\n  \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createTag"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteKanban",
+					"id": "ebeb270c-0a65-4b1a-bcd9-7da6ef44f3aa",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/deleteKanban/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteQueueData",
+					"id": "f7277f64-2bac-4e88-b4ca-ce9f831421fb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/deleteQueueData/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteReason",
+					"id": "479e45a1-3c1a-47c0-b3ab-8be277225213",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/deleteReason/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTag",
+					"id": "474cbabb-c17f-48b5-9e04-1280b0d30ff9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/deleteTag/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "ListKanban",
+					"id": "7ff610e6-e9d5-4623-8dfd-1dfd842523a1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listKanban"
+					},
+					"response": []
+				},
+				{
+					"name": "ListReasons",
+					"id": "766889ac-5aa5-4402-afff-7a178d736f7f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listReasons"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateKanban",
+					"id": "03968e0f-9e97-498d-8cff-1271eee2b816",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Coluna Atualizada\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateKanban/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateQueueData",
+					"id": "bfeb0c87-0183-4567-9bf3-1ea1d6e28083",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"queue\": \"Suporte v2\",\n  \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateQueueData/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateReason",
+					"id": "edd7ee37-7484-49ad-a2b1-a1b24807fa08",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Resolvido com sucesso\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateReason/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTagData",
+					"id": "18b86732-4969-416e-8a79-995a397724db",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tag\": \"Urgente v2\",\n  \"color\": \"#CC0000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateTagData/{{id}}"
+					},
+					"response": []
+				}
+			],
+			"id": "8bee00cc-5b3e-415a-91ed-c59b7304a321"
+		},
+		{
+			"name": "📊 Listagens",
+			"item": [
+				{
+					"name": "GetAllSessionApis",
+					"id": "a592947a-ee25-4c23-a17b-20a4ebf97411",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/getAllSessionApis"
+					},
+					"response": []
+				},
+				{
+					"name": "ListChannels",
+					"id": "2e94a987-ece2-428e-8f5a-8e53ad708e9b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listChannels"
+					},
+					"response": []
+				},
+				{
+					"name": "ListContacts",
+					"id": "0f21de14-234b-4aa0-b68d-743e8af1311e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listContacts?pageNumber=1",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listContacts"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1",
+									"description": "Número da página"
+								},
+								{
+									"key": "searchParam",
+									"value": "",
+									"description": "Parâmetro de busca (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "walletId",
+									"value": "",
+									"description": "ID da wallet (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "tagId",
+									"value": "",
+									"description": "ID da tag (opcional)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListOpportunities",
+					"id": "cb9f613a-46be-4887-96eb-2ab48e3212ed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listOpportunities?page=1&limit=40",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listOpportunities"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Número da página"
+								},
+								{
+									"key": "limit",
+									"value": "40",
+									"description": "Limite de resultados por página"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"description": "Status da oportunidade (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "pipelineId",
+									"value": "",
+									"description": "ID do pipeline (opcional)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListQueues",
+					"id": "660af19f-6730-4ab7-baa5-f2348645e8df",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listQueues"
+					},
+					"response": []
+				},
+				{
+					"name": "ListSessions",
+					"id": "bffb92d8-469b-4af0-be8c-e47d51cfe3f5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listSessions"
+					},
+					"response": []
+				},
+				{
+					"name": "ListTags",
+					"id": "943725a0-9e22-45a8-bb5e-d35cfef8d966",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listTags?isActive=true",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listTags"
+							],
+							"query": [
+								{
+									"key": "isActive",
+									"value": "true",
+									"description": "Filtrar por tags ativas (true/false)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListTickets",
+					"id": "bd8cf531-d882-4f20-9c95-d57d0b9e5709",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listTickets?pageNumber=1&status=open",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listTickets"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1",
+									"description": "Número da página"
+								},
+								{
+									"key": "status",
+									"value": "open",
+									"description": "Status do ticket (open, pending, closed)"
+								},
+								{
+									"key": "searchParam",
+									"value": "",
+									"description": "Parâmetro de busca (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "queuesIds",
+									"value": "",
+									"description": "IDs das filas (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "whatsappIds",
+									"value": "",
+									"description": "IDs dos canais (opcional)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "a8cc06cd-8576-4ed4-90b3-b5cd3104c809"
+		},
+		{
+			"name": "🔍 Listagens Utilitárias",
+			"item": [
+				{
+					"name": "ListAutoReplies",
+					"id": "28d5a6ad-a868-4730-99ae-be5ff52f7be4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listAutoReplies"
+					},
+					"response": []
+				},
+				{
+					"name": "ListChatFlows",
+					"id": "621467ed-a34e-4b1d-9d40-6ae72d257a96",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listChatFlows"
+					},
+					"response": []
+				},
+				{
+					"name": "ListFastReplies",
+					"id": "68e1d4c2-a66f-44c2-a204-bab838f77fef",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listFastReplies"
+					},
+					"response": []
+				}
+			],
+			"id": "04fa8d35-0d37-49eb-a41a-a37948faea72"
+		},
+		{
+			"name": "📞 Logs de Chamadas",
+			"item": [
+				{
+					"name": "CallLogList",
+					"id": "c6783509-7ea4-4498-8617-751f637e9eba",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/callLog/list?page=1&limit=20",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"callLog",
+								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CallLogShow",
+					"id": "5b3ad29b-73af-4f8a-9263-c0899ec26c9c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/callLog/show/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "WavoipCallList",
+					"id": "6a8f448b-3d85-4f97-96c3-8ec4fb646f58",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/wavoip/calls?page=1&limit=20",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"wavoip",
+								"calls"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "WavoipCallShow",
+					"id": "c3829606-f29e-4317-8472-1c52db722ca6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/wavoip/calls/{{id}}"
+					},
+					"response": []
+				}
+			],
+			"id": "e5f42274-6e57-4848-a631-6d3a3b7a3436"
+		},
+		{
+			"name": "📨 Mensagens",
+			"item": [
+				{
+					"name": "GetMessageByMessageId",
+					"id": "fdb20dff-2516-4bd9-933a-106345f7b9c2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/getMessageByMessageId?messageId=wamid.xxxxx",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"getMessageByMessageId"
+							],
+							"query": [
+								{
+									"key": "messageId",
+									"value": "wamid.xxxxx",
+									"description": "ID da mensagem retornado pela Meta (ex: wamid.xxxxx)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIFile",
+					"id": "54ba3d59-5962-4d12-8dcd-64e662cde726",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "media",
+									"description": "Arquivo a ser enviado (imagem, documento, etc)",
+									"type": "file",
+									"src": "/C:/Users/Pedro/Downloads/cps_vanderlei.docx"
+								},
+								{
+									"key": "body",
+									"value": "Mensagem de teste 2",
+									"description": "Texto da mensagem que acompanhará o arquivo",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5515998566622",
+									"description": "Número do WhatsApp do destinatário (formato: 5511999999999)",
+									"type": "text"
+								},
+								{
+									"key": "externalKey",
+									"value": "{{SecretKey}}",
+									"description": "Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)",
+									"type": "text"
+								},
+								{
+									"key": "isClosed",
+									"value": "false",
+									"description": "Define se o ticket será fechado após o envio",
+									"type": "text"
+								}
+							]
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIFileURL",
+					"id": "26682fe2-e1a6-4796-8691-94ef54e4a545",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // URL do arquivo que será enviado (imagem, documento, etc)\r\n    \"mediaUrl\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png\",\r\n    \r\n    // Texto da mensagem que acompanhará o arquivo\r\n    \"body\": \"A mensagem desejada\",\r\n    \r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\r\n    \"externalKey\": \"{{SecretKey}}\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/url"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIText",
+					"id": "656611c1-9be1-42e3-921e-031ffd8a4ea6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem que será enviada\n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPITextBase64",
+					"id": "a5df3793-09a7-4557-8f8d-d01b521ecf25",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem que acompanhará o arquivo\n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Arquivo codificado em base64\n    \"base64Data\": \"iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\",\n    \n    // Tipo MIME do arquivo (ex: image/png, application/pdf)\n    \"mimeType\": \"image/png\",\n    \n    // Nome do arquivo que será exibido\n    \"fileName\": \"exemplo_imagem\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/base64"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIVoice",
+					"id": "31bcff44-480a-4d11-b5f1-78cd95b4944b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // URL do arquivo de áudio que será enviado\n    \"audio\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/12/audio.ogg\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/voice"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageParams",
+					"id": "639a51cd-b9f4-4e75-a5b7-826959cc2fe2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/params/?body=A%20mensagem%20desejadaa&number=5515998566622&externalKey={{SecretKey}}&bearertoken={{BearerToken}}&isClosed=false",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"params",
+								""
+							],
+							"query": [
+								{
+									"key": "body",
+									"value": "A%20mensagem%20desejadaa",
+									"description": "Texto da mensagem que será enviada"
+								},
+								{
+									"key": "number",
+									"value": "5515998566622",
+									"description": "Número do WhatsApp do destinatário (formato: 5511999999999)"
+								},
+								{
+									"key": "externalKey",
+									"value": "{{SecretKey}}",
+									"description": "Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)"
+								},
+								{
+									"key": "bearertoken",
+									"value": "{{BearerToken}}",
+									"description": "Token de autenticação"
+								},
+								{
+									"key": "isClosed",
+									"value": "false",
+									"description": "Define se o ticket será fechado após o envio"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "99841dfa-12ad-4841-b50d-8809f1a20104"
+		},
+		{
+			"name": "📨 Mensagens Avançadas",
+			"item": [
+				{
+					"name": "SearchMessages",
+					"id": "bafc7967-cf47-4e3e-b730-4a4238ff69b8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/searchMessages?ticketId={{ticketId}}&searchParam=olá&page=1&limit=20",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"searchMessages"
+							],
+							"query": [
+								{
+									"key": "ticketId",
+									"value": "{{ticketId}}"
+								},
+								{
+									"key": "searchParam",
+									"value": "olá"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendLocation",
+					"id": "dd066101-0622-4e14-8e80-48690a8a97f9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"number\": \"5511999990001\",\n  \"latitude\": -23.5505,\n  \"longitude\": -46.6333,\n  \"name\": \"São Paulo\",\n  \"address\": \"Av. Paulista, 1000\",\n  \"ticketId\": null,\n  \"externalKey\": \"{{SecretKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendLocation"
+					},
+					"response": []
+				},
+				{
+					"name": "SendVcard",
+					"id": "e3dbf354-d1b5-4a11-9d36-58141d4afe4e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"number\": \"5511999990001\",\n  \"contact\": [\n    {\n      \"fullName\": \"João Silva\",\n      \"wuid\": \"5511999990002@s.whatsapp.net\",\n      \"phoneNumber\": \"5511999990002\"\n    }\n  ],\n  \"ticketId\": null,\n  \"externalKey\": \"{{SecretKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendVcard"
+					},
+					"response": []
+				}
+			],
+			"id": "1e98d9de-08ad-4df2-9749-927c5d86f402"
+		},
+		{
+			"name": "👥 Mensagens em Grupo",
+			"item": [
+				{
+					"name": "SendGroupMessageAPIFile",
+					"id": "8eb443b2-f983-4535-97b0-ba994553a346",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "media",
+									"description": "Arquivo(s) a ser enviado (imagem, documento, etc)",
+									"type": "file",
+									"src": [
+										"/C:/Users/Pedro/Downloads/cps_vanderlei.docx",
+										"/C:/Users/pedro/OneDrive/Desktop/izing-passaporte/frontend/public/bg-wchats.png"
+									]
+								},
+								{
+									"key": "body",
+									"value": "Mensagem de teste 2",
+									"description": "Texto da mensagem que acompanhará o arquivo",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "12356818915189153",
+									"description": "ID do grupo do WhatsApp",
+									"type": "text"
+								},
+								{
+									"key": "externalKey",
+									"value": "{{SecretKey}}",
+									"description": "Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)",
+									"type": "text"
+								},
+								{
+									"key": "isClosed",
+									"value": "false",
+									"description": "Define se o ticket será fechado após o envio",
+									"type": "text"
+								}
+							]
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group"
+					},
+					"response": []
+				},
+				{
+					"name": "SendGroupMessageAPIText",
+					"id": "cc7623bc-f7d4-40ac-b059-0e20ae1fa74a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem que será enviada\n    \"body\": \"A mensagem desejada\",\n    \n    // ID do grupo do WhatsApp\n    \"number\": \"12356818915189153\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group"
+					},
+					"response": []
+				},
+				{
+					"name": "SendMessageAPIFileURLGroup",
+					"id": "75fb0527-9370-4413-8247-129c69f53c26",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // URL do arquivo que será enviado (imagem, documento, etc)\r\n    \"mediaUrl\": \"https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png\",\r\n    \r\n    // Texto da mensagem que acompanhará o arquivo\r\n    \"body\": \"A mensagem desejada\",\r\n    \r\n    // ID do grupo do WhatsApp\r\n    \"number\": \"12356818915189153\",\r\n    \r\n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\r\n    \"externalKey\": \"{{SecretKey}}\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/groupMediaUrl"
+					},
+					"response": []
+				}
+			],
+			"id": "7ac76958-d816-45dd-98a5-ceb949f5bf05"
+		},
+		{
+			"name": "💼 Oportunidades",
+			"item": [
+				{
+					"name": "CreateOpportunity",
+					"id": "8ab44142-ece1-4336-9be4-c859e16e7679",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  // Campos do contato\n  \"number\": \"5535912345678\",  // número do WhatsApp\n  \"contactName\": \"Nome do Contato\",   // nome do contato\n  \"email\": \"contato@email.com\", // email do contato\n\n  // Campos da oportunidade\n  \"name\": \"Nome da Oportunidade 2\", // nome da oportunidade\n  \"value\": 10000.00,              // valor da oportunidade\n  \"status\": \"open\",              // pode ser: \"open\", \"win\", \"lose\"\n  \"pipelineId\": 16,               // ID do pipeline\n  \"stageId\": 7,                  // ID do estágio\n  \"responsibleId\": 1,            // ID do responsável\n  \"closingForecast\": \"2024-12-31\", // data esperada de fechamento\n  \"description\": \"Descrição da oportunidade\" // descrição da oportunidade\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createOpportunity"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteOpportunity",
+					"id": "6153f1b0-ef44-46ee-8b77-c0a137552265",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  // Campos da oportunidade\n  \"opportunityId\": 19 // id da oportunidade\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/deleteOpportunity"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateOpportunity",
+					"id": "913d6ca0-64d2-492a-a067-73b176e91799",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  // Campos da oportunidade\n  \"opportunityId\": 30, // id da oportunidade\n  \"name\": \"Nome da Oportunidade 2 API\", // nome da oportunidade\n  \"value\": 500.00,              // valor da oportunidade\n  \"status\": \"open\",              // pode ser: \"open\", \"win\", \"lose\"\n  \"pipelineId\": 16,               // ID do pipeline\n  \"stageId\": 7,                  // ID do estágio\n  \"responsibleId\": 1,            // ID do responsável\n  \"closingForecast\": \"2024-12-31\", // data esperada de fechamento\n  \"description\": \"Descrição da oportunidade\" // descrição da oportunidade\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateOpportunity"
+					},
+					"response": []
+				}
+			],
+			"id": "4e9b0d5e-db8c-4873-9585-6a62c66e8dc8"
+		},
+		{
+			"name": "📋 Templates WABA",
+			"item": [
+				{
+					"name": "SendTemplateWaba",
+					"id": "78ecdf8b-0f4a-423c-9bb8-03b814798a53",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false,\r\n    \r\n    // Dados do template do WhatsApp Business API\r\n    \"templateData\": {\r\n        // Produto de mensageria (sempre whatsapp)\r\n        \"messaging_product\": \"whatsapp\",\r\n        \r\n        // Número do destinatário (mesmo do campo number)\r\n        \"to\": \"5515998566622\",\r\n        \r\n        // Tipo da mensagem (sempre template)\r\n        \"type\": \"template\",\r\n        \r\n        // Configurações do template\r\n        \"template\": {\r\n            // Nome do template aprovado\r\n            \"name\": \"hello_world\",\r\n            \r\n            // Configurações de idioma\r\n            \"language\": {\r\n                // Código do idioma (ex: en_US, pt_BR)\r\n                \"code\": \"en_US\"\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/template"
+					},
+					"response": []
+				},
+				{
+					"name": "SendTemplateWabaBody",
+					"id": "a9594933-0655-4683-a283-4a588a5af6cc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false,\r\n    \r\n    // Dados do template do WhatsApp Business API\r\n    \"templateData\": {\r\n        // Produto de mensageria (sempre whatsapp)\r\n        \"messaging_product\": \"whatsapp\",\r\n        \r\n        // Número do destinatário (mesmo do campo number)\r\n        \"to\": \"5515998566622\",\r\n        \r\n        // Tipo da mensagem (sempre template)\r\n        \"type\": \"template\",\r\n        \r\n        // Configurações do template\r\n        \"template\": {\r\n            // Nome do template aprovado\r\n            \"name\": \"hello_world\",\r\n            \r\n            // Configurações de idioma\r\n            \"language\": {\r\n                // Código do idioma (ex: en_US, pt_BR)\r\n                \"code\": \"en_US\"\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/templateBody"
+					},
+					"response": []
+				},
+				{
+					"name": "SendTemplateWabaMarketing",
+					"id": "2afffc3e-5d36-4e67-b6da-f1b69a7e8690",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\r\n    \"number\": \"5515998566622\",\r\n    \r\n    // Define se o ticket será fechado após o envio\r\n    \"isClosed\": false,\r\n    \r\n    // Dados do template do WhatsApp Business API\r\n    \"templateData\": {\r\n        // Produto de mensageria (sempre whatsapp)\r\n        \"messaging_product\": \"whatsapp\",\r\n        \r\n        // Número do destinatário (mesmo do campo number)\r\n        \"to\": \"5515998566622\",\r\n        \r\n        // Tipo da mensagem (sempre template)\r\n        \"type\": \"template\",\r\n        \r\n        // Configurações do template\r\n        \"template\": {\r\n            // Nome do template aprovado\r\n            \"name\": \"hello_world\",\r\n            \r\n            // Configurações de idioma\r\n            \"language\": {\r\n                // Código do idioma (ex: en_US, pt_BR)\r\n                \"code\": \"en_US\"\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/templateMarketingBody"
+					},
+					"response": []
+				}
+			],
+			"id": "954f5619-e4d4-4391-9dbf-253c8253fc76"
+		},
+		{
+			"name": "🏢 Tenant API",
+			"item": [
+				{
+					"name": "CreateApi",
+					"id": "1d19df7a-ba7b-4926-9841-992064871edd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Nome da API que será criada\n    \"name\": \"API 1\",\n    \n    // ID da sessão do WhatsApp associada\n    \"sessionId\": 1,\n    \n    // URL para receber atualizações de status do serviço (opcional)\n    \"urlServiceStatus\": null,\n    \n    // URL para receber atualizações de status das mensagens (opcional)\n    \"urlMessageStatus\": null,\n    \n    // ID do usuário que está criando a API\n    \"userId\": 1,\n    \n    // Token de autenticação para a API\n    \"authToken\": \"123456\",\n    \n    // ID do tenant que terá a API\n    \"tenant\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantCreateApi"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateSessionTenant",
+					"id": "bdbaa223-139f-47b4-bc2e-90fe63d2f3dc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Tenant\n    \"tenant\": 1,\n\n    // Nome da instância do WhatsApp\n    \"name\": \"My WhatsApp Instance\",\n    \n    // Status inicial da sessão (DISCONNECTED, CONNECTED)\n    \"status\": \"DISCONNECTED\",\n    \n    // Tipo da sessão (whatsapp, baileys, meow, evo, uazapi, zapi)\n    \"type\": \"baileys\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantApiCreateSession"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteApi",
+					"id": "8d6306d4-644a-4363-9b29-dcd74c158fe3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da sessão do WhatsApp associada à API\n    \"sessionId\": 43,\n    \n    // ID do usuário que está deletando a API\n    \"userId\": 1,\n    \n    // ID do tenant que possui a API\n    \"tenant\": 1,\n    \n    // ID da API que será deletada\n    \"apiId\": \"5ec32c80-4549-4256-8ed1-ed57b86396c3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantDeleteApi"
+					},
+					"response": []
+				},
+				{
+					"name": "ListTenants",
+					"id": "8a77f070-b04f-477c-8646-f2baa4643f6b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://{{BaseUrl}}/tenantApiListTenants"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowTenant",
+					"id": "4982d516-ee41-4098-9c8b-a3801dd4a4f2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do tenant que será consultado\n    \"id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantApiShowTenant"
+					},
+					"response": []
+				},
+				{
+					"name": "StoreTenant",
+					"id": "7de02939-6ed8-4342-8528-ffdb6c503208",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Status do tenant (active, inactive)\n    \"status\": \"active\",\n    \n    // Nome da empresa/tenant\n    \"name\": \"Empresa Exemplo\",\n    \n    // Número máximo de usuários permitidos\n    \"maxUsers\": 3,\n    \n    // Número máximo de conexões WhatsApp permitidas\n    \"maxConnections\": 3,\n    \n    // Confirmação de aceite dos termos\n    \"acceptTerms\": true,\n    \n    // Email do administrador do tenant\n    \"email\": \"user@example.com\",\n    \n    // Senha do administrador (mínimo 8 caracteres, incluindo números e caracteres especiais)\n    \"password\": \"securePassword123!\",\n    \n    // Nome completo do administrador\n    \"userName\": \"Pedro Bastos\",\n    \n    // Perfil do administrador (admin, user)\n    \"profile\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantApiStoreTenant"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTenant",
+					"id": "8e82fe1d-0c95-4ca2-a3b1-4b3ac0d59996",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{SuperAdminToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Identidade do tenant (CPF/CNPJ) - identificador usado para reconhecer qual tenant será atualizado\n    \"identity\": \"07122989674\",\n\n    // Status do tenant (active, inactive)\n    \"status\": \"active\",\n\n    // Número máximo de usuários permitidos\n    \"maxUsers\": 100,\n\n    // Número máximo de conexões permitidas\n    \"maxConnections\": 10,\n\n    // Gateway de pagamento (none, asaas, mercadopago, stripe, pagarme)\n    \"paymentGateway\": \"asaas\",\n\n    // Chat de suporte habilitado (enabled, disabled)\n    \"supportChatEnabled\": \"enabled\",\n\n    // Menus visíveis — array de strings com os menus habilitados\n    // Opções: Groups, MassDispatch, Kanban, Tasks, Api, ChatBot, Reports, Campaigns, PrivateChat, Teams, AllowedChannels\n    \"menuVisibility\": [\"Groups\", \"MassDispatch\", \"Kanban\", \"Tasks\", \"Api\", \"ChatBot\", \"Reports\", \"Campaigns\", \"PrivateChat\", \"Teams\", \"AllowedChannels\"],\n\n    // Canais permitidos — array de strings com os canais habilitados\n    // Opções: waba, baileys, whatsapp, meow, evo, zapi, uazapi, telegram, hub, webchat, webmail, wabaoauth, instagramoauth, facebookoauth\n    \"allowedChannels\": [\"waba\", \"baileys\", \"whatsapp\", \"meow\", \"evo\", \"zapi\", \"uazapi\", \"telegram\", \"hub\", \"webchat\", \"webmail\", \"wabaoauth\", \"instagramoauth\", \"facebookoauth\"],\n\n    // Limite máximo de conexões por tipo de canal. Use 0 para ilimitado.\n    \"channelConnectionLimits\": {\n        \"waba\": 0,\n        \"baileys\": 0,\n        \"whatsapp\": 0,\n        \"meow\": 0,\n        \"evo\": 0,\n        \"zapi\": 0,\n        \"uazapi\": 0,\n        \"telegram\": 0,\n        \"hub\": 0,\n        \"webchat\": 0,\n        \"webmail\": 0,\n        \"wabaoauth\": 0,\n        \"instagramoauth\": 0,\n        \"facebookoauth\": 0\n    },\n\n    // OAuth (Meta Embedded Signup)\n    // OAuth habilitado (true/false)\n    \"oauthEnabled\": false,\n\n    // URL do Proxy OAuth\n    \"oauthProxyUrl\": \"https://proxy.exemplo.com/oauth\",\n\n    // URL do Proxy de Webhook Instagram\n    \"instagramWebhookProxyUrl\": \"https://proxy.exemplo.com/instagram/webhook\",\n\n    // Segredo do Proxy Instagram\n    \"instagramWebhookProxySecret\": \"secret_instagram\",\n\n    // URL do Proxy de Webhook Messenger\n    \"messengerWebhookProxyUrl\": \"https://proxy.exemplo.com/messenger/webhook\",\n\n    // Segredo do Proxy Messenger\n    \"messengerWebhookProxySecret\": \"secret_messenger\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/tenantApiUpdateTenant"
+					},
+					"response": []
+				}
+			],
+			"id": "7048dc7b-b2b6-443e-bcdc-509ac99a1fb2"
+		},
+		{
+			"name": "🎫 Tickets",
+			"item": [
+				{
+					"name": "AddTag",
+					"id": "6c2cb4f0-1687-4727-b519-55b7e0c5a499",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que receberá a tag\n    \"ticketId\": 4,\n    \n    // ID da tag que será adicionada (pode usar tagId ou tagIds)\n    \"tagId\": 1,\n    \n    // OU array de IDs de tags para adicionar múltiplas tags de uma vez\n    // \"tagIds\": [1, 2, 3]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/addTag"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateNotes",
+					"id": "8dbc944d-3251-4978-bc72-d6d0add0ed06",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da nota que será adicionada ao ticket\n    \"notes\": \"Mensagem da nota\", \n    \n    // ID do ticket que receberá a nota\n    \"ticketId\": 1262, \n    \n    // ID do usuário que está criando a nota\n    \"userId\": 1,\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"idFront\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createNotes"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTicket",
+					"id": "956c4eb7-b324-4eb0-9718-11402d2b25c8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem inicial do ticket\n    \"body\": \"A mensagem desejada\",\n    \n    // Para canais WhatsApp/outros: número do contato (formato: 5511999999999)\n    \"number\": \"5535988754197\",\n    \n    // Para canal WEBMAIL: email do contato (obrigatório quando channelId for de um canal webmail)\n    // \"email\": \"contato@exemplo.com\",\n    \n    // ID do canal (opcional). Para webmail: envie o id do canal webmail (não vem do APIConfig)\n    // \"channelId\": 17841443941506797,\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)\n    \"externalKey\": \"{{SecretKey}}\",\n    \n    // ID do usuário que está criando o ticket\n    \"userId\": 3,\n    \n    // Status inicial do ticket (pending ou open)\n    \"status\": \"pending\",\n    \n    // ID do kanban (opcional)\n    // \"kanbanId\": 1,\n    \n    // ID do fluxo de chat (opcional)\n    // \"chatFlowId\": 16,\n    \n    // ID da fila (opcional)\n    // \"queueId\": 1,\n    \n    // ID da demanda (opcional)\n    // \"reasonId\": 1,\n    \n    // Valor do ticket (opcional)\n    // \"value\": 10.25,\n    \n    // Para webmail: nome do contato (opcional, usado na criação do contato)\n    // \"name\": \"Nome do Contato\",\n    // \"firstName\": \"Nome\",\n    // \"lastName\": \"Sobrenome\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createTicket"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTicketFile",
+					"id": "287620f8-c575-4a65-8613-ba4521f39c3f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "media",
+									"description": "Arquivo a ser enviado (imagem, documento, etc)",
+									"type": "file",
+									"src": "/C:/Users/Pedro/Downloads/cps_vanderlei.docx"
+								},
+								{
+									"key": "body",
+									"value": "Mensagem de teste 2",
+									"description": "Texto da mensagem inicial do ticket",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5515998566622",
+									"description": "Número do WhatsApp do contato (formato: 5511999999999)",
+									"type": "text"
+								},
+								{
+									"key": "externalKey",
+									"value": "{{SecretKey}}",
+									"description": "Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "3",
+									"description": "ID do usuário que está criando o ticket",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "pending",
+									"description": "Status inicial do ticket (pending, open, closed)",
+									"type": "text"
+								},
+								{
+									"key": "kanbanId",
+									"value": "1",
+									"description": "ID do kanban (opcional)",
+									"type": "text"
+								},
+								{
+									"key": "chatFlowId",
+									"value": "10",
+									"description": "ID do fluxo de chat (opcional)",
+									"type": "text"
+								},
+								{
+									"key": "queueId",
+									"value": "1",
+									"description": "ID da fila (opcional)",
+									"type": "text"
+								},
+								{
+									"key": "channelId",
+									"value": "",
+									"description": "ID do canal (opcional). Para webmail: envie o id do canal webmail",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "",
+									"description": "Para canal webmail: email do contato (obrigatório quando usar channelId de webmail)",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "Para webmail: nome do contato (opcional)",
+									"type": "text"
+								}
+							]
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createTicket"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTicketWebmail",
+					"id": "d1f6a99d-ad2e-42f6-acad-a08eda614bfb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Texto da mensagem inicial do ticket\n    \"body\": \"Mensagem inicial do ticket por email\",\n    \n    // Email do contato (obrigatório para webmail)\n    \"email\": \"contato@exemplo.com\",\n    \n    // ID do canal webmail (opcional; se não enviar, usa canal da APIConfig)\n    \"channelId\": 17841443941506797,\n    \n    \"externalKey\": \"{{SecretKey}}\",\n    \"userId\": 3,\n    \"status\": \"pending\",\n    \n    // Opcionais: nome do contato (usado ao criar contato se não existir)\n    \"name\": \"Nome do Contato\",\n    \"firstName\": \"Nome\",\n    \"lastName\": \"Sobrenome\",\n    \n    // \"kanbanId\": 1,\n    // \"chatFlowId\": 16,\n    // \"queueId\": 1,\n    // \"reasonId\": 1,\n    // \"value\": 10.25\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createTicket"
+					},
+					"response": []
+				},
+				{
+					"name": "ListNotes",
+					"id": "b29e126a-ca5c-4138-89a6-f3fe4d7ab0f1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listNotes?ticketId=1262",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listNotes"
+							],
+							"query": [
+								{
+									"key": "ticketId",
+									"value": "1262",
+									"description": "ID do ticket"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveTag",
+					"id": "bbac2d51-ca69-4f32-afe4-88bd4173fb69",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá a tag removida\n    \"ticketId\": 4,\n    \n    // ID da tag que será removida (pode usar tagId ou tagIds)\n    \"tagId\": 1,\n    \n    // OU array de IDs de tags para remover múltiplas tags de uma vez\n    // \"tagIds\": [1, 2, 3]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/removeTag"
+					},
+					"response": []
+				},
+				{
+					"name": "SendPresence",
+					"id": "6232ba46-df83-4de1-966d-def82e3be801",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket associado\n    \"ticketId\": 1262,\n    \n    // Estado de presence: \"typing\" (digitando), \"paused\" (pausado) ou \"recording\" (gravando)\n    \"state\": \"typing\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendPresence"
+					},
+					"response": []
+				},
+				{
+					"name": "SetQueue",
+					"id": "791d8927-86b7-4e97-891e-ec9ded575229",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá a fila alterada\n    \"ticketId\": 4,\n    \n    // ID da fila que será atribuída ao ticket\n    \"queueId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updatequeue"
+					},
+					"response": []
+				},
+				{
+					"name": "SetTag",
+					"id": "b4bb12c3-b2cc-43d5-9496-a54fd57d6d0e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá a tag alterada\n    \"ticketId\": 4,\n    \n    // ID da tag que será atribuída ao ticket\n    \"tag\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updatetag"
+					},
+					"response": []
+				},
+				{
+					"name": "SetTicketInfo",
+					"id": "933c53d2-c673-4dd4-b5f4-f7e33915dc9e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que será atualizado\n    \"ticketId\": 1262,\n    \n    // ID do usuário que está fazendo a atualização\n    \"userId\": 1,\n    \n    // Status do ticket (pending, open, closed)\n    \"status\": \"pending\",\n    \n    // ID da fila do ticket (null para remover)\n    \"queueId\": null,\n    \n    // Status de integração com Typebot\n    \"typebotStatus\": false,\n    \n    // Status de integração com ChatGPT\n    \"chatgptStatus\": false,\n    \n    // Status de integração com Dialogflow\n    \"dialogflowStatus\": false,\n    \n    // Status de integração com Dify\n    \"difyStatus\": false,\n    \n    // Status de integração com N8N\n    \"n8nStatus\": false,\n    \n    // ID do fluxo de chat (null para remover)\n    \"chatFlowId\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateticketinfo"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowAllMessages",
+					"id": "01f0273d-f4d0-4694-beb3-7a421e003430",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá as mensagens listadas\n    \"ticket\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showAllMessages"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowAllTicketInformation",
+					"id": "65d1fed0-7f73-4e48-b60f-a05684eeb5f7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do contato (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showallticket"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowTicketInformation",
+					"id": "2994067e-c763-46bf-a3c7-0f98f797eee1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do contato (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showticket"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowTicketInformationChatBot",
+					"id": "d087d549-8765-41c0-a0b3-cf5c1d61f91c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do contato (formato: 5511999999999)\n    \"number\": \"5515998566622\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showticketchatbot"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateNote",
+					"id": "b76899fd-5942-4059-9b4b-d2126ffa6a10",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID da nota que será atualizada\n    \"noteId\": 1,\n    \n    // Novo conteúdo da nota\n    \"notes\": \"Conteúdo atualizado da nota\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateNote"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTicketChannel",
+					"id": "f834e290-93e3-497a-a9eb-66a60e08fea0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do ticket que terá o canal alterado\n    \"ticketId\": 1262,\n    \n    // ID do novo canal (WhatsApp)\n    \"whatsappId\": 1,\n    \n    // Tipo do canal (whatsapp, baileys, waba, etc)\n    \"channel\": \"whatsapp\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateTicketChannel"
+					},
+					"response": []
+				}
+			],
+			"id": "dff19da8-ff07-4976-b5b3-331d3a36e9b3"
+		},
+		{
+			"name": "🎫 Tickets - Extras",
+			"item": [
+				{
+					"name": "EndTicketPause",
+					"id": "d482f576-e617-44ad-9a4c-1131c9e6ca60",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/ticket/pause/end/{{ticketId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "ListTicketEvaluations",
+					"id": "06b6be52-5d50-4ef0-8e24-c8cb735c1a3b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listTicketEvaluations?page=1&limit=20",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listTicketEvaluations"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListTicketPauseLogs",
+					"id": "99f74b2e-db81-48f4-bd91-4b952736abc7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/ticket/pause/logs/{{ticketId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "ShowTicketById",
+					"id": "54bd3f47-d88a-4dc9-867a-1d9a2d440be7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ticketId\": \"{{ticketId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/showTicketById"
+					},
+					"response": []
+				},
+				{
+					"name": "StartTicketPause",
+					"id": "d69ba594-49a9-4d02-8a28-7c4839af3c5e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pauseReason\": \"Aguardando cliente\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/ticket/pause/start/{{ticketId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "TicketShareCreate",
+					"id": "455b2a78-5a1c-4c97-989b-057c56494b3a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ticketId\": \"{{ticketId}}\",\n  \"inviteUrl\": \"https://app.example.com/shared\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/ticket/share"
+					},
+					"response": []
+				},
+				{
+					"name": "TicketShareShow",
+					"id": "aa10b4d4-24d1-40c2-9450-ba016426497f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/ticket/share/{{ticketId}}"
+					},
+					"response": []
+				}
+			],
+			"id": "acddb3f3-1e63-4e41-8cd7-51dbbdc49cc9"
+		},
+		{
+			"name": "✅ To-Do List",
+			"item": [
+				{
+					"name": "TodoCreate",
+					"id": "65704dca-a2cd-4463-865b-927e96cc7de2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Ligar para cliente\",\n  \"description\": \"Confirmar proposta\",\n  \"owner\": \"João\",\n  \"ownerId\": \"{{userId}}\",\n  \"status\": \"pending\",\n  \"priority\": \"high\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/todo/create"
+					},
+					"response": []
+				},
+				{
+					"name": "TodoDelete",
+					"id": "a31f4b59-048b-402e-8ed6-4d45b7554cf5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/todo/delete/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "TodoList",
+					"id": "18e8d3af-295f-4cb8-8630-2aa55456c864",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/todo/list"
+					},
+					"response": []
+				},
+				{
+					"name": "TodoLogs",
+					"id": "664df933-ce08-4a33-93ef-4bb834b27432",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/todo/logs/{{userId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "TodoUpdate",
+					"id": "44080197-0aa5-4e9c-9484-b323325b25d4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"finished\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/todo/update/{{id}}"
+					},
+					"response": []
+				}
+			],
+			"id": "380f4bb8-77cb-47b4-886a-c7a5782c5b5c"
+		},
+		{
+			"name": "👥 Usuários",
+			"item": [
+				{
+					"name": "CreateUser",
+					"id": "7a3982e7-d5f3-4acd-ac0d-db7c70fc77d3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Email do usuário\n    \"email\": \"usuario@example.com\",\n    \n    // Senha do usuário (mínimo 8 caracteres)\n    \"password\": \"senha123\",\n    \n    // Nome completo do usuário\n    \"name\": \"Nome do Usuário\",\n    \n    // Perfil do usuário (admin, user)\n    \"profile\": \"user\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/createUser"
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserStatus",
+					"id": "433d3208-d57e-4bad-bf60-b27af22b1ef6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/getUserStatus?userId=1",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"getUserStatus"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1",
+									"description": "ID do usuário"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListUsers",
+					"id": "b41e0db2-e3f6-4999-a86d-2a17680d9d1b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/listUsers?pageNumber=1",
+							"protocol": "https",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"v2",
+								"api",
+								"external",
+								"{{ApiID}}",
+								"listUsers"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1",
+									"description": "Número da página"
+								},
+								{
+									"key": "searchParam",
+									"value": "",
+									"description": "Parâmetro de busca (opcional)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser",
+					"id": "7d22b522-0eea-4b53-944c-cbe384ec0c40",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // ID do usuário que será atualizado\n    \"userId\": 1,\n    \n    // Nome completo do usuário (opcional)\n    \"name\": \"Nome Atualizado\",\n    \n    // Email do usuário (opcional)\n    \"email\": \"novoemail@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/updateUser"
+					},
+					"response": []
+				}
+			],
+			"id": "f904684d-29a0-4d6d-a9c6-d1315ffc95ed"
+		},
+		{
+			"name": "🔘 WABA Interativo",
+			"item": [
+				{
+					"name": "SendButtonWABA",
+					"id": "24fc1f65-650a-45b2-8c6c-56be52b28b0d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Mensagem que acompanhará os botões\n    \"message\": \"Escolha uma opção:\",\n    \n    // Texto do primeiro botão\n    \"button1\": \"Opção 1\",\n    \n    // Texto do segundo botão\n    \"button2\": \"Opção 2\",\n    \n    // Texto do terceiro botão (opcional)\n    \"button3\": \"Opção 3\",\n    \n    // ID do ticket \n    \"ticketId\": 1262\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendButtonWABA"
+					},
+					"response": []
+				},
+				{
+					"name": "SendListWABA",
+					"id": "eb568719-2b72-488e-83c4-5a321d3c53cd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BearerToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Cabeçalho da lista\n    \"header\": \"Menu Principal\",\n    \n    // Corpo da lista\n    \"body\": \"Escolha uma opção da lista:\",\n    \n    // Rodapé da lista\n    \"footer\": \"Selecione uma opção\",\n    \n    // Texto do botão\n    \"button_text\": \"Ver opções\",\n    \n    // Seções da lista (array de objetos)\n    \"sections\": [\n        {\n            \"title\": \"Seção 1\",\n            \"rows\": [\n                {\n                    \"id\": \"1\",\n                    \"title\": \"Opção 1\",\n                    \"description\": \"Descrição da opção 1\"\n                },\n                {\n                    \"id\": \"2\",\n                    \"title\": \"Opção 2\",\n                    \"description\": \"Descrição da opção 2\"\n                }\n            ]\n        }\n    ],\n    \n    // ID do ticket\n    \"ticketId\": 1262\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendListWABA"
+					},
+					"response": []
+				}
+			],
+			"id": "3b2d1bb9-2f7e-43c8-bfc6-bd2333f319a4"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{vault:authorization-secret}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "db5fb716-2f87-48ff-b9c2-dfa84ccfa916"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "077d1bae-9d9a-4e24-b7ff-25f7e891ce05"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BaseUrl",
+			"value": "backend_url_here"
+		},
+		{
+			"key": "BearerToken",
+			"value": "your_token_here"
+		},
+		{
+			"key": "SecretKey",
+			"value": "unique_id"
+		},
+		{
+			"key": "SuperAdminToken",
+			"value": "your_superadmin_token_here"
+		},
+		{
+			"key": "ApiID",
+			"value": "your_api_id_here"
+		}
+	]
+}
