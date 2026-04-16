@@ -194,7 +194,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Lembrete 24h antes\",\n  \"hoursBeforeEvent\": 24,\n  \"messageType\": \"message\",\n  \"messageContent\": \"Olá {nome}, lembrete da sua reunião amanhã!\",\n  //status\n  \"active\": true\n}",
+							"raw": "{\n  \"name\": \"Lembrete 24h antes\",\n  \"hoursBeforeEvent\": 24,\n  \"messageType\": \"message\",\n  \"messageContent\": \"Olá {nome}, lembrete da sua reunião amanhã!\",\n  \"active\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
