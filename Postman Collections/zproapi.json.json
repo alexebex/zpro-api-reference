@@ -166,7 +166,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"status\": \"confirmed\",\n  \"notes\": \"Cliente confirmou presença\"\n}",
+							"raw": "{\n  \"status\": \"confirmed\",\n  \"notes\": \"Cliente confirmou presença\"\n  //\n}",
 							"options": {
 								"raw": {
 									"language": "json"
