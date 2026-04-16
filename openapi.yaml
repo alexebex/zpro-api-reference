@@ -1,185 +1,5411 @@
-name: Converter Postman para OpenAPI
-
-on:
-  push:
-    paths:
-      - 'Postman Collections/zproapi.json'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  convert:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4 # <-- Atualizado para v4 (sem avisos do Node)
-      
-      - name: Instalar bibliotecas
-        run: npm install postman-to-openapi json5 js-yaml
-        
-      - name: Converter usando script Node.js
-        run: |
-          node -e "
-          const fs = require('fs');
-          const p2o = require('postman-to-openapi');
-          const JSON5 = require('json5');
-          const yaml = require('js-yaml');
-          
-          try {
-            const inputFile = './Postman Collections/zproapi.json';
-            const tempFile = './temp_zproapi.json';
-            
-            const collectionStr = fs.readFileSync(inputFile, 'utf8');
-            const collection = JSON.parse(collectionStr);
-            
-            // 1. O RESGATADOR DE COMENTÁRIOS: Lê os // do Postman antes de converter
-            const endpointDescriptions = {};
-            
-            function extractDescriptions(rawString) {
-              const descriptions = {};
-              if (!rawString) return descriptions;
-              const lines = rawString.split('\n');
-              let pendingComment = '';
-              
-              lines.forEach(line => {
-                const tLine = line.trim();
-                if (tLine.startsWith('//')) {
-                  // Acumula os comentários acima do campo
-                  pendingComment += tLine.replace(/^\/\/\s*/, '') + ' ';
-                } else {
-                  const keyMatch = tLine.match(/^\"([^\"]+)\"\s*:/);
-                  if (keyMatch) {
-                    const key = keyMatch[1];
-                    let desc = pendingComment.trim();
-                    
-                    // Pega também comentários inline (no final da linha)
-                    const inlineIdx = tLine.indexOf('//');
-                    if (inlineIdx !== -1 && !tLine.includes('http://') && !tLine.includes('https://')) {
-                      const inlineDesc = tLine.substring(inlineIdx + 2).trim();
-                      desc = desc ? desc + ' | ' + inlineDesc : inlineDesc;
-                    }
-                    
-                    if (desc) descriptions[key] = desc;
-                    pendingComment = ''; // Reseta para o próximo campo
-                  } else {
-                    pendingComment = '';
-                  }
-                }
-              });
-              return descriptions;
-            }
-            
-            function traverseAndExtract(items) {
-              if (!items) return;
-              for (const item of items) {
-                if (item.item) traverseAndExtract(item.item);
-                else if (item.request && item.request.body && item.request.body.raw) {
-                   endpointDescriptions[item.name] = extractDescriptions(item.request.body.raw);
-                }
-              }
-            }
-            traverseAndExtract(collection.item);
-            
-            // 2. Limpa o JSON com segurança usando JSON5
-            function cleanJsonString(str) {
-              if (!str || str.trim() === '') return undefined;
-              try {
-                let cleaned = str.replace(/:\s*(\{\{[^}]+\}\})\s*(,?)/g, ': \'$1\'$2');
-                const parsed = JSON5.parse(cleaned);
-                return JSON.stringify(parsed, null, 2);
-              } catch (e) {
-                return '{}';
-              }
-            }
-            
-            function forceValidJson(obj) {
-              if (!obj || typeof obj !== 'object') return;
-              if (obj.body && obj.body.mode === 'raw' && obj.body.options && obj.body.options.raw && obj.body.options.raw.language === 'json') {
-                const cleaned = cleanJsonString(obj.body.raw);
-                if (cleaned) obj.body.raw = cleaned;
-              }
-              if (obj._postman_previewlanguage === 'json' && typeof obj.body === 'string') {
-                const cleaned = cleanJsonString(obj.body);
-                if (cleaned) obj.body = cleaned;
-              }
-              Object.values(obj).forEach(forceValidJson);
-            }
-            
-            forceValidJson(collection);
-            fs.writeFileSync(tempFile, JSON.stringify(collection));
-            
-            // 3. Converte para YAML e INJETA OS COMENTÁRIOS DE VOLTA
-            p2o(tempFile, './openapi.yaml')
-              .then(() => {
-                const openapiStr = fs.readFileSync('./openapi.yaml', 'utf8');
-                const openapi = yaml.load(openapiStr);
-                
-                function inferSchema(example, descMap) {
-                  if (example === null) return { type: 'string', nullable: true };
-                  if (Array.isArray(example)) {
-                    return { type: 'array', items: example.length > 0 ? inferSchema(example[0], descMap) : { type: 'string' } };
-                  }
-                  if (typeof example === 'object') {
-                    const properties = {};
-                    for (const key in example) {
-                      properties[key] = inferSchema(example[key], descMap);
-                      // Injeta a descrição resgatada se existir
-                      if (descMap && descMap[key]) {
-                        properties[key].description = descMap[key];
-                      }
-                    }
-                    return { type: 'object', properties };
-                  }
-                  return { type: typeof example };
-                }
-                
-                if (openapi.paths) {
-                  for (const path in openapi.paths) {
-                    for (const method in openapi.paths[path]) {
-                      const operation = openapi.paths[path][method];
-                      
-                      // Usa o nome da rota (summary) para achar os comentários salvos
-                      const descMap = endpointDescriptions[operation.summary] || {};
-                      
-                      if (operation.requestBody && operation.requestBody.content && operation.requestBody.content['application/json']) {
-                        const content = operation.requestBody.content['application/json'];
-                        let exampleData = content.example;
-                        if (exampleData === undefined && content.schema && content.schema.example !== undefined) {
-                          exampleData = content.schema.example;
-                        }
-                        
-                        if (exampleData && typeof exampleData === 'object' && Object.keys(exampleData).length > 0) {
-                          const inferred = inferSchema(exampleData, descMap);
-                          if (!content.schema) content.schema = {};
-                          content.schema.type = inferred.type;
-                          content.schema.properties = inferred.properties;
-                          if (inferred.items) content.schema.items = inferred.items;
-                        }
-                      }
-                    }
-                  }
-                }
-                
-                fs.writeFileSync('./openapi.yaml', yaml.dump(openapi, { lineWidth: -1 }));
-                fs.unlinkSync(tempFile);
-                console.log('Conversão 100% concluída! Comentários mapeados para o GitBook!');
-              })
-              .catch(err => {
-                console.error('Erro na conversão:', err);
-                process.exit(1);
-              });
-              
-          } catch(err) {
-            console.error('Erro geral:', err);
-            process.exit(1);
-          }
-          "
-          
-      - name: Salvar o YAML no GitHub
-        run: |
-          git config --global user.name "Robô de Conversão"
-          git config --global user.email "action@github.com"
-          git add openapi.yaml
-          git commit -m "Auto-convertendo e Injetando Descrições GitBook" || exit 0
-          git push
+openapi: 3.0.0
+info:
+  title: Postman v3
+  description: Postman v3
+  version: 1.0.0
+servers:
+  - url: https://{{baseurl}}
+  - url: https://{{BaseUrl}}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+tags:
+  - name: 📅 Agendamentos e Lembretes
+  - name: 📣 Campanhas
+  - name: 🔌 Canais e Sessões
+  - name: 👤 Contatos
+  - name: 🏗️ CRM - Pipeline
+  - name: 📊 Dashboard
+  - name: 📤 Envio em Lote
+  - name: 📂 Galeria
+  - name: 👥 Grupos WhatsApp
+  - name: 🏷️ Kanban / Tags / Motivos / Filas
+  - name: 📊 Listagens
+  - name: 🔍 Listagens Utilitárias
+  - name: 📞 Logs de Chamadas
+  - name: 📨 Mensagens
+  - name: 📨 Mensagens Avançadas
+  - name: 👥 Mensagens em Grupo
+  - name: 💼 Oportunidades
+  - name: 📋 Templates WABA
+  - name: 🏢 Tenant API
+  - name: 🎫 Tickets
+  - name: 🎫 Tickets - Extras
+  - name: ✅ To-Do List
+  - name: 👥 Usuários
+  - name: 🔘 WABA Interativo
+paths:
+  /v2/api/external/{ApiID}/appointment/create:
+    post:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: AppointmentCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Reunião de Vendas
+                description: Reunião sobre proposta
+                contactId: '{{contactId}}'
+                startAt: '2026-04-15T14:00:00.000Z'
+                endAt: '2026-04-15T15:00:00.000Z'
+                status: pending
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                contactId:
+                  type: string
+                startAt:
+                  type: string
+                endAt:
+                  type: string
+                status:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/appointment/delete/{id}:
+    post:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: AppointmentDelete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/appointment/list:
+    get:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: AppointmentList
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '20'
+        - name: status
+          in: query
+          schema:
+            type: string
+          example: pending
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/appointment/show/{id}:
+    get:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: AppointmentShow
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/appointment/update/{id}:
+    post:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: AppointmentUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                status: confirmed
+                notes: Cliente confirmou presença
+              properties:
+                status:
+                  type: string
+                notes:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/scheduleReminder/create:
+    post:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: ScheduleReminderCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Lembrete 24h antes
+                hoursBeforeEvent: 24
+                messageType: message
+                messageContent: Olá {nome}, lembrete da sua reunião amanhã!
+                active: true
+              properties:
+                name:
+                  type: string
+                hoursBeforeEvent:
+                  type: number
+                messageType:
+                  type: string
+                messageContent:
+                  type: string
+                active:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/scheduleReminder/delete/{id}:
+    post:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: ScheduleReminderDelete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/scheduleReminder/list:
+    get:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: ScheduleReminderList
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/scheduleReminder/toggle/{id}:
+    post:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: ScheduleReminderToggle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/scheduleReminder/update/{id}:
+    post:
+      tags:
+        - 📅 Agendamentos e Lembretes
+      summary: ScheduleReminderUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Lembrete 48h antes
+                hoursBeforeEvent: 48
+              properties:
+                name:
+                  type: string
+                hoursBeforeEvent:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/cancel/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignCancel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/contacts/add/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignContactsAdd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              example:
+                - name: Contato 1
+                  number: '5511999990001'
+                - name: Contato 2
+                  number: '5511999990002'
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  number:
+                    type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/contacts/{campaignId}:
+    get:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignContactsList
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/contacts/remove/{campaignId}/{contactId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignContactsRemove
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: contactId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/contacts/removeAll/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignContactsRemoveAll
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/create:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Campanha Teste
+                start: '2026-04-10T10:00:00.000Z'
+                message1: Olá {nome}!
+                message2: Como vai?
+                message3: Até logo!
+                sessionId: '{{sessionId}}'
+                delay: '5'
+              properties:
+                name:
+                  type: string
+                start:
+                  type: string
+                message1:
+                  type: string
+                message2:
+                  type: string
+                message3:
+                  type: string
+                sessionId:
+                  type: string
+                delay:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/delete/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignDelete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/duplicate/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignDuplicate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/list:
+    get:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignList
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '10'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/pause/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignPause
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/report/{campaignId}:
+    get:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignReport
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/resume/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignResume
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/skip/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignSkip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/start/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignStart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/campaign/update/{campaignId}:
+    post:
+      tags:
+        - 📣 Campanhas
+      summary: CampaignUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Campanha Atualizada
+                start: '2026-04-15T10:00:00.000Z'
+                message1: Olá!
+                message2: Tudo bem?
+                message3: Até logo!
+                sessionId: '{{sessionId}}'
+              properties:
+                name:
+                  type: string
+                start:
+                  type: string
+                message1:
+                  type: string
+                message2:
+                  type: string
+                message3:
+                  type: string
+                sessionId:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: campaignId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createtSession:
+    post:
+      tags:
+        - 🔌 Canais e Sessões
+      summary: CreateSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: My WhatsApp Instance
+                status: DISCONNECTED
+                type: baileys
+              properties:
+                name:
+                  type: string
+                status:
+                  type: string
+                type:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/deleteSession:
+    post:
+      tags:
+        - 🔌 Canais e Sessões
+      summary: DeleteSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: 1
+              properties:
+                whatsappId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listGroupInfo:
+    post:
+      tags:
+        - 🔌 Canais e Sessões
+      summary: ListGroupsInfo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                listGroups: true
+                listParticipants: true
+              properties:
+                listGroups:
+                  type: boolean
+                listParticipants:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/requestNewQrCodeSession:
+    post:
+      tags:
+        - 🔌 Canais e Sessões
+      summary: RequestNewQrCode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: 1
+              properties:
+                whatsappId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/showChannel:
+    post:
+      tags:
+        - 🔌 Canais e Sessões
+      summary: ShowChannelInformation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/showChannelById:
+    post:
+      tags:
+        - 🔌 Canais e Sessões
+      summary: ShowChannelInformationById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 43
+              properties:
+                id:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/qrCodeSession:
+    post:
+      tags:
+        - 🔌 Canais e Sessões
+      summary: ShowQrCode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: 1
+              properties:
+                whatsappId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/startSession:
+    post:
+      tags:
+        - 🔌 Canais e Sessões
+      summary: StartSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: 1
+              properties:
+                whatsappId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/blockContact:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: BlockContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                contactId: 1
+                blocked: true
+              properties:
+                contactId:
+                  type: number
+                blocked:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createContact:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: CreateContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Nome
+                number: '5515998566622'
+                email: contato@email.com
+                cpf: 012.345.678.91
+                firstName: Nome Principal
+                lastName: Sobrenome
+                businessName: Empresa
+                birthdayDate: 01/01/1990
+                externalKey: '{{SecretKey}}'
+              properties:
+                name:
+                  type: string
+                number:
+                  type: string
+                email:
+                  type: string
+                cpf:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                businessName:
+                  type: string
+                birthdayDate:
+                  type: string
+                externalKey:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/getContactExtraInfo:
+    get:
+      tags:
+        - 👤 Contatos
+      summary: GetContactExtraInfo
+      parameters:
+        - name: contactId
+          in: query
+          schema:
+            type: integer
+          description: ID do contato
+          example: '1'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/contacts/search:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: SearchContacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                searchParam: ''
+                page: 1
+                limit: 40
+                tagId: 1
+              properties:
+                searchParam:
+                  type: string
+                page:
+                  type: number
+                limit:
+                  type: number
+                tagId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/showcontact:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: ShowContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateContact:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: UpdateContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Nome
+                number: '5515998566622'
+                email: contato@email.com
+                cpf: 012.345.678.91
+                firstName: Nome Principal
+                lastName: Sobrenome
+                businessName: Empresa
+                birthdayDate: 01/01/1990
+                kanban: 2
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
+              properties:
+                name:
+                  type: string
+                number:
+                  type: string
+                email:
+                  type: string
+                cpf:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                businessName:
+                  type: string
+                birthdayDate:
+                  type: string
+                kanban:
+                  type: number
+                externalKey:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateContactExtraInfo:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: UpdateContactExtraInfo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                contactId: 1
+                extraInfo:
+                  - name: Campo Personalizado 1
+                    value: Valor do campo 1
+                  - name: Campo Personalizado 2
+                    value: Valor do campo 2
+              properties:
+                contactId:
+                  type: number
+                extraInfo:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      value:
+                        type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateContactKanban:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: UpdateContactKanban
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                contactId: 1
+                kanban: 2
+              properties:
+                contactId:
+                  type: number
+                kanban:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateContactWallet:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: UpdateContactWallet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                contactId: 1
+                walletId: 2
+              properties:
+                contactId:
+                  type: number
+                walletId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/pipeline/create:
+    post:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: PipelineCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Funil de Vendas
+                description: Pipeline principal
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/pipeline/delete/{id}:
+    post:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: PipelineDelete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/pipeline/list:
+    get:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: PipelineList
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '20'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/pipeline/show/{id}:
+    get:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: PipelineShow
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/pipeline/update/{id}:
+    post:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: PipelineUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Funil Atualizado
+              properties:
+                name:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/stage/create:
+    post:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: StageCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Prospecção
+                pipelineId: '{{pipelineId}}'
+                order: 1
+              properties:
+                name:
+                  type: string
+                pipelineId:
+                  type: string
+                order:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/stage/delete/{id}:
+    post:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: StageDelete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/stage/list:
+    get:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: StageList
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '20'
+        - name: pipelineId
+          in: query
+          schema:
+            type: string
+          example: '{{pipelineId}}'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/stage/show/{id}:
+    get:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: StageShow
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/stage/update/{id}:
+    post:
+      tags:
+        - 🏗️ CRM - Pipeline
+      summary: StageUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Qualificação
+              properties:
+                name:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsAndTimes:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsAndTimes
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsChannels:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsChannels
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsEvolution:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsEvolution
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsEvolutionByValue:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsEvolutionByValue
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsEvolutionChannelsName:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsEvolutionChannelsName
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsPerUser:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsPerUser
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsQueue:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsQueue
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsReasons:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsReasons
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsStatus:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsStatus
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/dash/ticketsUser:
+    get:
+      tags:
+        - 📊 Dashboard
+      summary: DashTicketsUser
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-01'
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          example: '2026-03-31'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/bulkDispatch/incrementProgress/{dispatchId}:
+    post:
+      tags:
+        - 📤 Envio em Lote
+      summary: BulkDispatchIncrementProgress
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                success: true
+              properties:
+                success:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: dispatchId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/bulkDispatch/list:
+    get:
+      tags:
+        - 📤 Envio em Lote
+      summary: BulkDispatchList
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '20'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/bulkDispatch/show/{dispatchId}:
+    get:
+      tags:
+        - 📤 Envio em Lote
+      summary: BulkDispatchShow
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: dispatchId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/bulkDispatch/update/{dispatchId}:
+    post:
+      tags:
+        - 📤 Envio em Lote
+      summary: BulkDispatchUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                status: cancelled
+                cancellationReason: Cancelado pelo usuário
+              properties:
+                status:
+                  type: string
+                cancellationReason:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: dispatchId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/bulkFastMessage:
+    post:
+      tags:
+        - 📤 Envio em Lote
+      summary: BulkFastMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                whatsappType: baileys
+                arrayNumbers:
+                  - '5511999990001'
+                  - '5511999990002'
+                message: Olá, mensagem rápida!
+                min: 3
+                max: 8
+              properties:
+                whatsappId:
+                  type: string
+                whatsappType:
+                  type: string
+                arrayNumbers:
+                  type: array
+                  items:
+                    type: string
+                message:
+                  type: string
+                min:
+                  type: number
+                max:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/bulkIndividual:
+    post:
+      tags:
+        - 📤 Envio em Lote
+      summary: BulkIndividual
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                number: '5511999990001'
+                message: Olá, mensagem individual!
+                externalKey: '{{SecretKey}}'
+              properties:
+                whatsappId:
+                  type: string
+                number:
+                  type: string
+                message:
+                  type: string
+                externalKey:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/bulkSendMessage:
+    post:
+      tags:
+        - 📤 Envio em Lote
+      summary: BulkSendMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                arrayNumbers:
+                  - '5511999990001'
+                  - '5511999990002'
+                message: Olá, tudo bem?
+                min: 3
+                max: 8
+              properties:
+                whatsappId:
+                  type: string
+                arrayNumbers:
+                  type: array
+                  items:
+                    type: string
+                message:
+                  type: string
+                min:
+                  type: number
+                max:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/bulkSendMessageWithVariable:
+    post:
+      tags:
+        - 📤 Envio em Lote
+      summary: BulkSendMessageWithVariable
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                message: Olá {nome}, seu código é {codigo}
+                dataInput: |-
+                  5511999990001,João,ABC123
+                  5511999990002,Maria,DEF456
+                min: 3
+                max: 8
+              properties:
+                whatsappId:
+                  type: string
+                message:
+                  type: string
+                dataInput:
+                  type: string
+                min:
+                  type: number
+                max:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/gallery/delete/{id}:
+    post:
+      tags:
+        - 📂 Galeria
+      summary: GalleryDelete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/gallery/list:
+    get:
+      tags:
+        - 📂 Galeria
+      summary: GalleryList
+      parameters:
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: fileType
+          in: query
+          schema:
+            type: string
+          example: image
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/gallery/upload:
+    post:
+      tags:
+        - 📂 Galeria
+      summary: GalleryUpload
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                description: Arquivo de marketing
+              properties:
+                description:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/addParticipant:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupAddParticipant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                participants:
+                  - '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                participants:
+                  type: array
+                  items:
+                    type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/changeDescription:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupChangeDescription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                description: Nova descrição do grupo
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                description:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/changePicture:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupChangePicture
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                picture: https://exemplo.com/foto.jpg
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                picture:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/changeTitle:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupChangeTitle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                title: Novo Título do Grupo
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                title:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/create:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                titles:
+                  - Meu Grupo 1
+                number: '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                titles:
+                  type: array
+                  items:
+                    type: string
+                number:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/demote:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupDemote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                participants:
+                  - '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                participants:
+                  type: array
+                  items:
+                    type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/getInviteLink:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupGetInviteLink
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupId: '{{groupId}}'
+              properties:
+                whatsappId:
+                  type: string
+                groupId:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/list:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+              properties:
+                whatsappId:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/listParticipants:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupListParticipants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/promote:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupPromote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                participants:
+                  - '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                participants:
+                  type: array
+                  items:
+                    type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/removeParticipant:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupRemoveParticipant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                participants:
+                  - '5511999990001'
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                participants:
+                  type: array
+                  items:
+                    type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/setAdminsOnly:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupSetAdminsOnly
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupIds:
+                  - '{{groupId}}'
+                adminsOnly: true
+              properties:
+                whatsappId:
+                  type: string
+                groupIds:
+                  type: array
+                  items:
+                    type: string
+                adminsOnly:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group/showById:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: GroupShowById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                whatsappId: '{{whatsappId}}'
+                groupId: '{{groupId}}'
+              properties:
+                whatsappId:
+                  type: string
+                groupId:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createKanban:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: CreateKanban
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Coluna 1
+              properties:
+                name:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createQueueData:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: CreateQueueData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                queue: Suporte
+                isActive: true
+              properties:
+                queue:
+                  type: string
+                isActive:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createReason:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: CreateReason
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Resolvido
+              properties:
+                name:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createTag:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: CreateTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                tag: Urgente
+                color: '#FF0000'
+                isActive: true
+              properties:
+                tag:
+                  type: string
+                color:
+                  type: string
+                isActive:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/deleteKanban/{id}:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: DeleteKanban
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/deleteQueueData/{id}:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: DeleteQueueData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/deleteReason/{id}:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: DeleteReason
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/deleteTag/{id}:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: DeleteTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listKanban:
+    get:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: ListKanban
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listReasons:
+    get:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: ListReasons
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateKanban/{id}:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: UpdateKanban
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Coluna Atualizada
+              properties:
+                name:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateQueueData/{id}:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: UpdateQueueData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                queue: Suporte v2
+                isActive: true
+              properties:
+                queue:
+                  type: string
+                isActive:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateReason/{id}:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: UpdateReason
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Resolvido com sucesso
+              properties:
+                name:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateTagData/{id}:
+    post:
+      tags:
+        - 🏷️ Kanban / Tags / Motivos / Filas
+      summary: UpdateTagData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                tag: Urgente v2
+                color: '#CC0000'
+              properties:
+                tag:
+                  type: string
+                color:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/getAllSessionApis:
+    get:
+      tags:
+        - 📊 Listagens
+      summary: GetAllSessionApis
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listChannels:
+    get:
+      tags:
+        - 📊 Listagens
+      summary: ListChannels
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listContacts:
+    get:
+      tags:
+        - 📊 Listagens
+      summary: ListContacts
+      parameters:
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+          description: Número da página
+          example: '1'
+        - name: searchParam
+          in: query
+          schema:
+            type: string
+          description: Parâmetro de busca (opcional)
+        - name: walletId
+          in: query
+          schema:
+            type: string
+          description: ID da wallet (opcional)
+        - name: tagId
+          in: query
+          schema:
+            type: string
+          description: ID da tag (opcional)
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listOpportunities:
+    get:
+      tags:
+        - 📊 Listagens
+      summary: ListOpportunities
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Número da página
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Limite de resultados por página
+          example: '40'
+        - name: status
+          in: query
+          schema:
+            type: string
+          description: Status da oportunidade (opcional)
+        - name: pipelineId
+          in: query
+          schema:
+            type: string
+          description: ID do pipeline (opcional)
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listQueues:
+    get:
+      tags:
+        - 📊 Listagens
+      summary: ListQueues
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listSessions:
+    get:
+      tags:
+        - 📊 Listagens
+      summary: ListSessions
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listTags:
+    get:
+      tags:
+        - 📊 Listagens
+      summary: ListTags
+      parameters:
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+          description: Filtrar por tags ativas (true/false)
+          example: 'true'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listTickets:
+    get:
+      tags:
+        - 📊 Listagens
+      summary: ListTickets
+      parameters:
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+          description: Número da página
+          example: '1'
+        - name: status
+          in: query
+          schema:
+            type: string
+          description: Status do ticket (open, pending, closed)
+          example: open
+        - name: searchParam
+          in: query
+          schema:
+            type: string
+          description: Parâmetro de busca (opcional)
+        - name: queuesIds
+          in: query
+          schema:
+            type: string
+          description: IDs das filas (opcional)
+        - name: whatsappIds
+          in: query
+          schema:
+            type: string
+          description: IDs dos canais (opcional)
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listAutoReplies:
+    get:
+      tags:
+        - 🔍 Listagens Utilitárias
+      summary: ListAutoReplies
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listChatFlows:
+    get:
+      tags:
+        - 🔍 Listagens Utilitárias
+      summary: ListChatFlows
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listFastReplies:
+    get:
+      tags:
+        - 🔍 Listagens Utilitárias
+      summary: ListFastReplies
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/callLog/list:
+    get:
+      tags:
+        - 📞 Logs de Chamadas
+      summary: CallLogList
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '20'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/callLog/show/{id}:
+    get:
+      tags:
+        - 📞 Logs de Chamadas
+      summary: CallLogShow
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/wavoip/calls:
+    get:
+      tags:
+        - 📞 Logs de Chamadas
+      summary: WavoipCallList
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '20'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/wavoip/calls/{id}:
+    get:
+      tags:
+        - 📞 Logs de Chamadas
+      summary: WavoipCallShow
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/getMessageByMessageId:
+    get:
+      tags:
+        - 📨 Mensagens
+      summary: GetMessageByMessageId
+      parameters:
+        - name: messageId
+          in: query
+          schema:
+            type: string
+          description: 'ID da mensagem retornado pela Meta (ex: wamid.xxxxx)'
+          example: wamid.xxxxx
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}:
+    post:
+      tags:
+        - 📨 Mensagens
+      summary: SendMessageAPIText
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                body: A mensagem desejada
+                number: '5515998566622'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                body:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/url:
+    post:
+      tags:
+        - 📨 Mensagens
+      summary: SendMessageAPIFileURL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                mediaUrl: https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png
+                body: A mensagem desejada
+                number: '5515998566622'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                mediaUrl:
+                  type: string
+                body:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/base64:
+    post:
+      tags:
+        - 📨 Mensagens
+      summary: SendMessageAPITextBase64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                body: A mensagem desejada
+                number: '5515998566622'
+                base64Data: iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==
+                mimeType: image/png
+                fileName: exemplo_imagem
+                isClosed: false
+              properties:
+                body:
+                  type: string
+                number:
+                  type: string
+                base64Data:
+                  type: string
+                mimeType:
+                  type: string
+                fileName:
+                  type: string
+                isClosed:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/voice:
+    post:
+      tags:
+        - 📨 Mensagens
+      summary: SendMessageAPIVoice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                audio: https://comunidadezdg.com.br/wp-content/uploads/2022/12/audio.ogg
+                number: '5515998566622'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                audio:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/params/:
+    get:
+      tags:
+        - 📨 Mensagens
+      summary: SendMessageParams
+      parameters:
+        - name: body
+          in: query
+          schema:
+            type: string
+          description: Texto da mensagem que será enviada
+          example: A%20mensagem%20desejadaa
+        - name: number
+          in: query
+          schema:
+            type: integer
+          description: 'Número do WhatsApp do destinatário (formato: 5511999999999)'
+          example: '5515998566622'
+        - name: externalKey
+          in: query
+          schema:
+            type: string
+          description: Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)
+          example: '{{SecretKey}}'
+        - name: bearertoken
+          in: query
+          schema:
+            type: string
+          description: Token de autenticação
+          example: '{{BearerToken}}'
+        - name: isClosed
+          in: query
+          schema:
+            type: boolean
+          description: Define se o ticket será fechado após o envio
+          example: 'false'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/searchMessages:
+    get:
+      tags:
+        - 📨 Mensagens Avançadas
+      summary: SearchMessages
+      parameters:
+        - name: ticketId
+          in: query
+          schema:
+            type: string
+          example: '{{ticketId}}'
+        - name: searchParam
+          in: query
+          schema:
+            type: string
+          example: olá
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '20'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendLocation:
+    post:
+      tags:
+        - 📨 Mensagens Avançadas
+      summary: SendLocation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5511999990001'
+                latitude: -23.5505
+                longitude: -46.6333
+                name: São Paulo
+                address: Av. Paulista, 1000
+                ticketId: null
+                externalKey: '{{SecretKey}}'
+              properties:
+                number:
+                  type: string
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                name:
+                  type: string
+                address:
+                  type: string
+                ticketId:
+                  type: string
+                  nullable: true
+                externalKey:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendVcard:
+    post:
+      tags:
+        - 📨 Mensagens Avançadas
+      summary: SendVcard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5511999990001'
+                contact:
+                  - fullName: João Silva
+                    wuid: 5511999990002@s.whatsapp.net
+                    phoneNumber: '5511999990002'
+                ticketId: null
+                externalKey: '{{SecretKey}}'
+              properties:
+                number:
+                  type: string
+                contact:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      fullName:
+                        type: string
+                      wuid:
+                        type: string
+                      phoneNumber:
+                        type: string
+                ticketId:
+                  type: string
+                  nullable: true
+                externalKey:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/group:
+    post:
+      tags:
+        - 👥 Mensagens em Grupo
+      summary: SendGroupMessageAPIText
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                body: A mensagem desejada
+                number: '12356818915189153'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                body:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/groupMediaUrl:
+    post:
+      tags:
+        - 👥 Mensagens em Grupo
+      summary: SendMessageAPIFileURLGroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                mediaUrl: https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png
+                body: A mensagem desejada
+                number: '12356818915189153'
+                externalKey: '{{SecretKey}}'
+                isClosed: false
+              properties:
+                mediaUrl:
+                  type: string
+                body:
+                  type: string
+                number:
+                  type: string
+                externalKey:
+                  type: string
+                isClosed:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createOpportunity:
+    post:
+      tags:
+        - 💼 Oportunidades
+      summary: CreateOpportunity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5535912345678'
+                contactName: Nome do Contato
+                email: contato@email.com
+                name: Nome da Oportunidade 2
+                value: 10000
+                status: open
+                pipelineId: 16
+                stageId: 7
+                responsibleId: 1
+                closingForecast: '2024-12-31'
+                description: Descrição da oportunidade
+              properties:
+                number:
+                  type: string
+                contactName:
+                  type: string
+                email:
+                  type: string
+                name:
+                  type: string
+                value:
+                  type: number
+                status:
+                  type: string
+                pipelineId:
+                  type: number
+                stageId:
+                  type: number
+                responsibleId:
+                  type: number
+                closingForecast:
+                  type: string
+                description:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/deleteOpportunity:
+    post:
+      tags:
+        - 💼 Oportunidades
+      summary: DeleteOpportunity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                opportunityId: 19
+              properties:
+                opportunityId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateOpportunity:
+    post:
+      tags:
+        - 💼 Oportunidades
+      summary: UpdateOpportunity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                opportunityId: 30
+                name: Nome da Oportunidade 2 API
+                value: 500
+                status: open
+                pipelineId: 16
+                stageId: 7
+                responsibleId: 1
+                closingForecast: '2024-12-31'
+                description: Descrição da oportunidade
+              properties:
+                opportunityId:
+                  type: number
+                name:
+                  type: string
+                value:
+                  type: number
+                status:
+                  type: string
+                pipelineId:
+                  type: number
+                stageId:
+                  type: number
+                responsibleId:
+                  type: number
+                closingForecast:
+                  type: string
+                description:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/template:
+    post:
+      tags:
+        - 📋 Templates WABA
+      summary: SendTemplateWaba
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+                isClosed: false
+                templateData:
+                  messaging_product: whatsapp
+                  to: '5515998566622'
+                  type: template
+                  template:
+                    name: hello_world
+                    language:
+                      code: en_US
+              properties:
+                number:
+                  type: string
+                isClosed:
+                  type: boolean
+                templateData:
+                  type: object
+                  properties:
+                    messaging_product:
+                      type: string
+                    to:
+                      type: string
+                    type:
+                      type: string
+                    template:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        language:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/templateBody:
+    post:
+      tags:
+        - 📋 Templates WABA
+      summary: SendTemplateWabaBody
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+                isClosed: false
+                templateData:
+                  messaging_product: whatsapp
+                  to: '5515998566622'
+                  type: template
+                  template:
+                    name: hello_world
+                    language:
+                      code: en_US
+              properties:
+                number:
+                  type: string
+                isClosed:
+                  type: boolean
+                templateData:
+                  type: object
+                  properties:
+                    messaging_product:
+                      type: string
+                    to:
+                      type: string
+                    type:
+                      type: string
+                    template:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        language:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/templateMarketingBody:
+    post:
+      tags:
+        - 📋 Templates WABA
+      summary: SendTemplateWabaMarketing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+                isClosed: false
+                templateData:
+                  messaging_product: whatsapp
+                  to: '5515998566622'
+                  type: template
+                  template:
+                    name: hello_world
+                    language:
+                      code: en_US
+              properties:
+                number:
+                  type: string
+                isClosed:
+                  type: boolean
+                templateData:
+                  type: object
+                  properties:
+                    messaging_product:
+                      type: string
+                    to:
+                      type: string
+                    type:
+                      type: string
+                    template:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        language:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tenantCreateApi:
+    post:
+      tags:
+        - 🏢 Tenant API
+      summary: CreateApi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: API 1
+                sessionId: 1
+                urlServiceStatus: null
+                urlMessageStatus: null
+                userId: 1
+                authToken: '123456'
+                tenant: 1
+              properties:
+                name:
+                  type: string
+                sessionId:
+                  type: number
+                urlServiceStatus:
+                  type: string
+                  nullable: true
+                urlMessageStatus:
+                  type: string
+                  nullable: true
+                userId:
+                  type: number
+                authToken:
+                  type: string
+                tenant:
+                  type: number
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tenantApiCreateSession:
+    post:
+      tags:
+        - 🏢 Tenant API
+      summary: CreateSessionTenant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                tenant: 1
+                name: My WhatsApp Instance
+                status: DISCONNECTED
+                type: baileys
+              properties:
+                tenant:
+                  type: number
+                name:
+                  type: string
+                status:
+                  type: string
+                type:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tenantDeleteApi:
+    post:
+      tags:
+        - 🏢 Tenant API
+      summary: DeleteApi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                sessionId: 43
+                userId: 1
+                tenant: 1
+                apiId: 5ec32c80-4549-4256-8ed1-ed57b86396c3
+              properties:
+                sessionId:
+                  type: number
+                userId:
+                  type: number
+                tenant:
+                  type: number
+                apiId:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tenantApiListTenants:
+    get:
+      tags:
+        - 🏢 Tenant API
+      summary: ListTenants
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tenantApiShowTenant:
+    post:
+      tags:
+        - 🏢 Tenant API
+      summary: ShowTenant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 1
+              properties:
+                id:
+                  type: number
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tenantApiStoreTenant:
+    post:
+      tags:
+        - 🏢 Tenant API
+      summary: StoreTenant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                status: active
+                name: Empresa Exemplo
+                maxUsers: 3
+                maxConnections: 3
+                acceptTerms: true
+                email: user@example.com
+                password: securePassword123!
+                userName: Pedro Bastos
+                profile: admin
+              properties:
+                status:
+                  type: string
+                name:
+                  type: string
+                maxUsers:
+                  type: number
+                maxConnections:
+                  type: number
+                acceptTerms:
+                  type: boolean
+                email:
+                  type: string
+                password:
+                  type: string
+                userName:
+                  type: string
+                profile:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tenantApiUpdateTenant:
+    post:
+      tags:
+        - 🏢 Tenant API
+      summary: UpdateTenant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                identity: '07122989674'
+                status: active
+                maxUsers: 100
+                maxConnections: 10
+                paymentGateway: asaas
+                supportChatEnabled: enabled
+                menuVisibility:
+                  - Groups
+                  - MassDispatch
+                  - Kanban
+                  - Tasks
+                  - Api
+                  - ChatBot
+                  - Reports
+                  - Campaigns
+                  - PrivateChat
+                  - Teams
+                  - AllowedChannels
+                allowedChannels:
+                  - waba
+                  - baileys
+                  - whatsapp
+                  - meow
+                  - evo
+                  - zapi
+                  - uazapi
+                  - telegram
+                  - hub
+                  - webchat
+                  - webmail
+                  - wabaoauth
+                  - instagramoauth
+                  - facebookoauth
+                channelConnectionLimits:
+                  waba: 0
+                  baileys: 0
+                  whatsapp: 0
+                  meow: 0
+                  evo: 0
+                  zapi: 0
+                  uazapi: 0
+                  telegram: 0
+                  hub: 0
+                  webchat: 0
+                  webmail: 0
+                  wabaoauth: 0
+                  instagramoauth: 0
+                  facebookoauth: 0
+                oauthEnabled: false
+                oauthProxyUrl: https://proxy.exemplo.com/oauth
+                instagramWebhookProxyUrl: https://proxy.exemplo.com/instagram/webhook
+                instagramWebhookProxySecret: secret_instagram
+                messengerWebhookProxyUrl: https://proxy.exemplo.com/messenger/webhook
+                messengerWebhookProxySecret: secret_messenger
+              properties:
+                identity:
+                  type: string
+                status:
+                  type: string
+                maxUsers:
+                  type: number
+                maxConnections:
+                  type: number
+                paymentGateway:
+                  type: string
+                supportChatEnabled:
+                  type: string
+                menuVisibility:
+                  type: array
+                  items:
+                    type: string
+                allowedChannels:
+                  type: array
+                  items:
+                    type: string
+                channelConnectionLimits:
+                  type: object
+                  properties:
+                    waba:
+                      type: number
+                    baileys:
+                      type: number
+                    whatsapp:
+                      type: number
+                    meow:
+                      type: number
+                    evo:
+                      type: number
+                    zapi:
+                      type: number
+                    uazapi:
+                      type: number
+                    telegram:
+                      type: number
+                    hub:
+                      type: number
+                    webchat:
+                      type: number
+                    webmail:
+                      type: number
+                    wabaoauth:
+                      type: number
+                    instagramoauth:
+                      type: number
+                    facebookoauth:
+                      type: number
+                oauthEnabled:
+                  type: boolean
+                oauthProxyUrl:
+                  type: string
+                instagramWebhookProxyUrl:
+                  type: string
+                instagramWebhookProxySecret:
+                  type: string
+                messengerWebhookProxyUrl:
+                  type: string
+                messengerWebhookProxySecret:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/addTag:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: AddTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 4
+                tagId: 1
+              properties:
+                ticketId:
+                  type: number
+                tagId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createNotes:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: CreateNotes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                notes: Mensagem da nota
+                ticketId: 1262
+                userId: 1
+                idFront: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
+              properties:
+                notes:
+                  type: string
+                ticketId:
+                  type: number
+                userId:
+                  type: number
+                idFront:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createTicket:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: CreateTicketWebmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                body: Mensagem inicial do ticket por email
+                email: contato@exemplo.com
+                channelId: 17841443941506796
+                externalKey: '{{SecretKey}}'
+                userId: 3
+                status: pending
+                name: Nome do Contato
+                firstName: Nome
+                lastName: Sobrenome
+              properties:
+                body:
+                  type: string
+                email:
+                  type: string
+                channelId:
+                  type: number
+                externalKey:
+                  type: string
+                userId:
+                  type: number
+                status:
+                  type: string
+                name:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listNotes:
+    get:
+      tags:
+        - 🎫 Tickets
+      summary: ListNotes
+      parameters:
+        - name: ticketId
+          in: query
+          schema:
+            type: integer
+          description: ID do ticket
+          example: '1262'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/removeTag:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: RemoveTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 4
+                tagId: 1
+              properties:
+                ticketId:
+                  type: number
+                tagId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendPresence:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: SendPresence
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                state: typing
+              properties:
+                ticketId:
+                  type: number
+                state:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updatequeue:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: SetQueue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 4
+                queueId: 1
+              properties:
+                ticketId:
+                  type: number
+                queueId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updatetag:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: SetTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 4
+                tag: 1
+              properties:
+                ticketId:
+                  type: number
+                tag:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateticketinfo:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: SetTicketInfo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                userId: 1
+                status: pending
+                queueId: null
+                typebotStatus: false
+                chatgptStatus: false
+                dialogflowStatus: false
+                difyStatus: false
+                n8nStatus: false
+                chatFlowId: null
+              properties:
+                ticketId:
+                  type: number
+                userId:
+                  type: number
+                status:
+                  type: string
+                queueId:
+                  type: string
+                  nullable: true
+                typebotStatus:
+                  type: boolean
+                chatgptStatus:
+                  type: boolean
+                dialogflowStatus:
+                  type: boolean
+                difyStatus:
+                  type: boolean
+                n8nStatus:
+                  type: boolean
+                chatFlowId:
+                  type: string
+                  nullable: true
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/showAllMessages:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: ShowAllMessages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticket: '123'
+              properties:
+                ticket:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/showallticket:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: ShowAllTicketInformation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/showticket:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: ShowTicketInformation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/showticketchatbot:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: ShowTicketInformationChatBot
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+              properties:
+                number:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateNote:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: UpdateNote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                noteId: 1
+                notes: Conteúdo atualizado da nota
+              properties:
+                noteId:
+                  type: number
+                notes:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateTicketChannel:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: UpdateTicketChannel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                whatsappId: 1
+                channel: whatsapp
+              properties:
+                ticketId:
+                  type: number
+                whatsappId:
+                  type: number
+                channel:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/ticket/pause/end/{ticketId}:
+    post:
+      tags:
+        - 🎫 Tickets - Extras
+      summary: EndTicketPause
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: ticketId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listTicketEvaluations:
+    get:
+      tags:
+        - 🎫 Tickets - Extras
+      summary: ListTicketEvaluations
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '20'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/ticket/pause/logs/{ticketId}:
+    get:
+      tags:
+        - 🎫 Tickets - Extras
+      summary: ListTicketPauseLogs
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: ticketId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/showTicketById:
+    post:
+      tags:
+        - 🎫 Tickets - Extras
+      summary: ShowTicketById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: '{{ticketId}}'
+              properties:
+                ticketId:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/ticket/pause/start/{ticketId}:
+    post:
+      tags:
+        - 🎫 Tickets - Extras
+      summary: StartTicketPause
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                pauseReason: Aguardando cliente
+              properties:
+                pauseReason:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: ticketId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/ticket/share:
+    post:
+      tags:
+        - 🎫 Tickets - Extras
+      summary: TicketShareCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: '{{ticketId}}'
+                inviteUrl: https://app.example.com/shared
+              properties:
+                ticketId:
+                  type: string
+                inviteUrl:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/ticket/share/{ticketId}:
+    get:
+      tags:
+        - 🎫 Tickets - Extras
+      summary: TicketShareShow
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: ticketId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/todo/create:
+    post:
+      tags:
+        - ✅ To-Do List
+      summary: TodoCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Ligar para cliente
+                description: Confirmar proposta
+                owner: João
+                ownerId: '{{userId}}'
+                status: pending
+                priority: high
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                owner:
+                  type: string
+                ownerId:
+                  type: string
+                status:
+                  type: string
+                priority:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/todo/delete/{id}:
+    post:
+      tags:
+        - ✅ To-Do List
+      summary: TodoDelete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/todo/list:
+    get:
+      tags:
+        - ✅ To-Do List
+      summary: TodoList
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/todo/logs/{userId}:
+    get:
+      tags:
+        - ✅ To-Do List
+      summary: TodoLogs
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: userId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/todo/update/{id}:
+    post:
+      tags:
+        - ✅ To-Do List
+      summary: TodoUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                status: finished
+              properties:
+                status:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/createUser:
+    post:
+      tags:
+        - 👥 Usuários
+      summary: CreateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: usuario@example.com
+                password: senha123
+                name: Nome do Usuário
+                profile: user
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+                profile:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/getUserStatus:
+    get:
+      tags:
+        - 👥 Usuários
+      summary: GetUserStatus
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: integer
+          description: ID do usuário
+          example: '1'
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listUsers:
+    get:
+      tags:
+        - 👥 Usuários
+      summary: ListUsers
+      parameters:
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+          description: Número da página
+          example: '1'
+        - name: searchParam
+          in: query
+          schema:
+            type: string
+          description: Parâmetro de busca (opcional)
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/updateUser:
+    post:
+      tags:
+        - 👥 Usuários
+      summary: UpdateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                userId: 1
+                name: Nome Atualizado
+                email: novoemail@example.com
+              properties:
+                userId:
+                  type: number
+                name:
+                  type: string
+                email:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendButtonWABA:
+    post:
+      tags:
+        - 🔘 WABA Interativo
+      summary: SendButtonWABA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+                message: 'Escolha uma opção:'
+                button1: Opção 1
+                button2: Opção 2
+                button3: Opção 3
+                ticketId: 1262
+              properties:
+                number:
+                  type: string
+                message:
+                  type: string
+                button1:
+                  type: string
+                button2:
+                  type: string
+                button3:
+                  type: string
+                ticketId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendListWABA:
+    post:
+      tags:
+        - 🔘 WABA Interativo
+      summary: SendListWABA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+                header: Menu Principal
+                body: 'Escolha uma opção da lista:'
+                footer: Selecione uma opção
+                button_text: Ver opções
+                sections:
+                  - title: Seção 1
+                    rows:
+                      - id: '1'
+                        title: Opção 1
+                        description: Descrição da opção 1
+                      - id: '2'
+                        title: Opção 2
+                        description: Descrição da opção 2
+                ticketId: 1262
+              properties:
+                number:
+                  type: string
+                header:
+                  type: string
+                body:
+                  type: string
+                footer:
+                  type: string
+                button_text:
+                  type: string
+                sections:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      rows:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            title:
+                              type: string
+                            description:
+                              type: string
+                ticketId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
