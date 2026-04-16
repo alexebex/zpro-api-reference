@@ -6,20 +6,25 @@ on:
       - 'Postman Collections/zproapi.json'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   convert:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       
-      - name: Instalar biblioteca
-        run: npm install postman-to-openapi
+      - name: Instalar bibliotecas
+        run: npm install postman-to-openapi strip-json-comments js-yaml
         
       - name: Converter usando script Node.js
         run: |
           node -e "
           const fs = require('fs');
           const p2o = require('postman-to-openapi');
+          const stripJsonComments = require('strip-json-comments');
+          const yaml = require('js-yaml');
           
           try {
             const inputFile = './Postman Collections/zproapi.json';
@@ -27,25 +32,31 @@ jobs:
             
             const collection = JSON.parse(fs.readFileSync(inputFile, 'utf8'));
             
+            // Função mais inteligente para limpar o JSON sem apagá-lo
+            function cleanJsonString(str) {
+              if (!str || str.trim() === '') return undefined;
+              try {
+                let cleaned = stripJsonComments(str);
+                // Arruma variáveis do postman sem aspas
+                cleaned = cleaned.replace(/:\s*(\{\{[^}]+\}\})\s*(,?)/g, function(m, p1, p2) { return ': \"' + p1 + '\"' + p2; });
+                JSON.parse(cleaned);
+                return cleaned;
+              } catch (e) {
+                return '{}'; // Só em último caso apaga
+              }
+            }
+            
             function forceValidJson(obj) {
               if (!obj || typeof obj !== 'object') return;
               
               if (obj.body && obj.body.mode === 'raw' && obj.body.options && obj.body.options.raw && obj.body.options.raw.language === 'json') {
-                try {
-                  if (!obj.body.raw || obj.body.raw.trim() === '') throw new Error('Vazio');
-                  JSON.parse(obj.body.raw);
-                } catch(e) {
-                  obj.body.raw = '{}';
-                }
+                const cleaned = cleanJsonString(obj.body.raw);
+                if (cleaned) obj.body.raw = cleaned;
               }
               
               if (obj._postman_previewlanguage === 'json' && typeof obj.body === 'string') {
-                try {
-                  if (obj.body.trim() === '') throw new Error('Vazio');
-                  JSON.parse(obj.body);
-                } catch(e) {
-                  obj.body = '{}';
-                }
+                const cleaned = cleanJsonString(obj.body);
+                if (cleaned) obj.body = cleaned;
               }
               
               Object.values(obj).forEach(forceValidJson);
@@ -54,10 +65,43 @@ jobs:
             forceValidJson(collection);
             fs.writeFileSync(tempFile, JSON.stringify(collection));
             
+            // Converte e depois aplica a Mágica dos Schemas
             p2o(tempFile, './openapi.yaml')
               .then(() => {
-                console.log('Conversão forçada com sucesso!');
+                const openapiStr = fs.readFileSync('./openapi.yaml', 'utf8');
+                const openapi = yaml.load(openapiStr);
+                
+                // Transforma o exemplo do Postman em uma Tabela de Parâmetros pro GitBook
+                function inferSchema(example) {
+                  if (example === null) return { type: 'string', nullable: true };
+                  if (Array.isArray(example)) {
+                    return { type: 'array', items: example.length > 0 ? inferSchema(example[0]) : { type: 'string' } };
+                  }
+                  if (typeof example === 'object') {
+                    const properties = {};
+                    for (const key in example) properties[key] = inferSchema(example[key]);
+                    return { type: 'object', properties };
+                  }
+                  return { type: typeof example };
+                }
+                
+                if (openapi.paths) {
+                  for (const path in openapi.paths) {
+                    for (const method in openapi.paths[path]) {
+                      const operation = openapi.paths[path][method];
+                      if (operation.requestBody && operation.requestBody.content && operation.requestBody.content['application/json']) {
+                        const content = operation.requestBody.content['application/json'];
+                        if (content.example && content.schema && content.schema.type === 'object' && !content.schema.properties) {
+                          content.schema = inferSchema(content.example);
+                        }
+                      }
+                    }
+                  }
+                }
+                
+                fs.writeFileSync('./openapi.yaml', yaml.dump(openapi, { lineWidth: -1 }));
                 fs.unlinkSync(tempFile);
+                console.log('Conversão e criação de schemas concluídas com sucesso!');
               })
               .catch(err => {
                 console.error('Erro na conversão:', err);
@@ -65,15 +109,15 @@ jobs:
               });
               
           } catch(err) {
-            console.error('Erro ao processar o arquivo:', err);
+            console.error('Erro geral:', err);
             process.exit(1);
           }
           "
-        
+          
       - name: Salvar o YAML no GitHub
         run: |
           git config --global user.name "Robô de Conversão"
           git config --global user.email "action@github.com"
           git add openapi.yaml
-          git commit -m "Auto-convertendo Postman para OpenAPI" || exit 0
+          git commit -m "Auto-convertendo Postman e Gerando Schemas" || exit 0
           git push
