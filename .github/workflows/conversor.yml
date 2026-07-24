@@ -1,10 +1,12 @@
 name: Converter Postman para OpenAPI
 
 on:
-  push:
-    paths:
-      - 'Postman Collections/zproapi.json'
   workflow_dispatch:
+    inputs:
+      json_path:
+        description: 'Caminho do JSON da collection do Postman dentro do repositório'
+        required: false
+        default: 'Postman Collections/zproapi.json'
 
 permissions:
   contents: write
@@ -22,6 +24,8 @@ jobs:
         run: npm install postman-to-openapi json5 js-yaml
         
       - name: Converter usando script Node.js
+        env:
+          INPUT_FILE: ${{ inputs.json_path }}
         run: |
           node -e "
           const fs = require('fs');
@@ -30,8 +34,13 @@ jobs:
           const yaml = require('js-yaml');
           
           try {
-            const inputFile = './Postman Collections/zproapi.json';
+            const inputFile = process.env.INPUT_FILE || './Postman Collections/zproapi.json';
             const tempFile = './temp_zproapi.json';
+
+            if (!fs.existsSync(inputFile)) {
+              console.error('Arquivo não encontrado: ' + inputFile);
+              process.exit(1);
+            }
             
             const collection = JSON.parse(fs.readFileSync(inputFile, 'utf8'));
             
