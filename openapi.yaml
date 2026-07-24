@@ -1,11 +1,11 @@
 openapi: 3.0.0
 info:
-  title: Postman v3
-  description: Postman v3
+  title: Z-PRO v4.x.x.x
+  description: Postman Z-PRO v4.x.x.x
   version: 1.0.0
 servers:
-  - url: https://{{baseurl}}
   - url: https://{{BaseUrl}}
+  - url: undefined://{{BASE_URL}}
 components:
   securitySchemes:
     bearerAuth:
@@ -23,6 +23,11 @@ tags:
   - name: 📤 Envio em Lote
   - name: 📂 Galeria
   - name: 👥 Grupos WhatsApp
+  - name: 🟢 Interativo Baileys
+  - name: 📷 Interativo Instagram
+  - name: 💬 Interativo Messenger
+  - name: 🟩 Interativo UazAPI
+  - name: 🔘 Interativo Waba
   - name: 🏷️ Kanban / Tags / Motivos / Filas
   - name: 📊 Listagens
   - name: 🔍 Listagens Utilitárias
@@ -37,7 +42,6 @@ tags:
   - name: 🎫 Tickets - Extras
   - name: ✅ To-Do List
   - name: 👥 Usuários
-  - name: 🔘 WABA Interativo
 paths:
   /v2/api/external/{ApiID}/appointment/create:
     post:
@@ -51,11 +55,15 @@ paths:
               type: object
               example:
                 title: Reunião de Vendas
-                description: Reunião sobre proposta
+                description: Reunião sobre proposta comercial
                 contactId: '{{contactId}}'
+                contactName: João Silva
+                contactPhone: '5511999999999'
+                whatsappId: '{{whatsappId}}'
                 startAt: '2026-04-15T14:00:00.000Z'
                 endAt: '2026-04-15T15:00:00.000Z'
                 status: pending
+                notes: Levar proposta impressa
               properties:
                 title:
                   type: string
@@ -63,11 +71,19 @@ paths:
                   type: string
                 contactId:
                   type: string
+                contactName:
+                  type: string
+                contactPhone:
+                  type: string
+                whatsappId:
+                  type: string
                 startAt:
                   type: string
                 endAt:
                   type: string
                 status:
+                  type: string
+                notes:
                   type: string
       parameters:
         - name: ApiID
@@ -127,7 +143,25 @@ paths:
           in: query
           schema:
             type: string
+          description: pending | confirmed | cancelled | completed
           example: pending
+        - name: startFrom
+          in: query
+          schema:
+            type: number
+          description: Filtrar agendamentos a partir desta data (ISO 8601)
+          example: '2026-04-01T00:00:00.000Z'
+        - name: startTo
+          in: query
+          schema:
+            type: number
+          description: Filtrar agendamentos até esta data (ISO 8601)
+          example: '2026-04-30T23:59:59.000Z'
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Busca por título ou nome do contato
         - name: ApiID
           in: path
           schema:
@@ -170,9 +204,33 @@ paths:
             schema:
               type: object
               example:
+                title: Reunião de Vendas (atualizada)
+                description: Descrição atualizada
+                contactId: '{{contactId}}'
+                contactName: João Silva
+                contactPhone: '5511999999999'
+                whatsappId: '{{whatsappId}}'
+                startAt: '2026-04-15T15:00:00.000Z'
+                endAt: '2026-04-15T16:00:00.000Z'
                 status: confirmed
                 notes: Cliente confirmou presença
               properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                contactId:
+                  type: string
+                contactName:
+                  type: string
+                contactPhone:
+                  type: string
+                whatsappId:
+                  type: string
+                startAt:
+                  type: string
+                endAt:
+                  type: string
                 status:
                   type: string
                 notes:
@@ -205,18 +263,24 @@ paths:
               type: object
               example:
                 name: Lembrete 24h antes
+                description: Envia mensagem ao contato 24h antes do agendamento
                 hoursBeforeEvent: 24
                 messageType: message
-                messageContent: Olá {nome}, lembrete da sua reunião amanhã!
+                messageContent: Olá {{nome}}, lembrete da sua reunião amanhã!
+                whatsappId: '{{whatsappId}}'
                 active: true
               properties:
                 name:
+                  type: string
+                description:
                   type: string
                 hoursBeforeEvent:
                   type: number
                 messageType:
                   type: string
                 messageContent:
+                  type: string
+                whatsappId:
                   type: string
                 active:
                   type: boolean
@@ -313,12 +377,27 @@ paths:
               type: object
               example:
                 name: Lembrete 48h antes
+                description: Envia mensagem 48h antes do evento
                 hoursBeforeEvent: 48
+                messageType: message
+                messageContent: Olá {{nome}}, sua reunião é em 2 dias!
+                whatsappId: '{{whatsappId}}'
+                active: true
               properties:
                 name:
                   type: string
+                description:
+                  type: string
                 hoursBeforeEvent:
                   type: number
+                messageType:
+                  type: string
+                messageContent:
+                  type: string
+                whatsappId:
+                  type: string
+                active:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -837,35 +916,6 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /v2/api/external/{ApiID}/listGroupInfo:
-    post:
-      tags:
-        - 🔌 Canais e Sessões
-      summary: ListGroupsInfo
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                listGroups: true
-                listParticipants: true
-              properties:
-                listGroups:
-                  type: boolean
-                listParticipants:
-                  type: boolean
-      parameters:
-        - name: ApiID
-          in: path
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
   /v2/api/external/{ApiID}/requestNewQrCodeSession:
     post:
       tags:
@@ -1044,7 +1094,8 @@ paths:
                 lastName: Sobrenome
                 businessName: Empresa
                 birthdayDate: 01/01/1990
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
+                validateNumber: true
               properties:
                 name:
                   type: string
@@ -1064,6 +1115,8 @@ paths:
                   type: string
                 externalKey:
                   type: string
+                validateNumber:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -1144,9 +1197,12 @@ paths:
               type: object
               example:
                 number: '5515998566622'
+                validateNumber: true
               properties:
                 number:
                   type: string
+                validateNumber:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -1179,6 +1235,7 @@ paths:
                 birthdayDate: 01/01/1990
                 kanban: 2
                 externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
+                validateNumber: true
               properties:
                 name:
                   type: string
@@ -1200,6 +1257,8 @@ paths:
                   type: number
                 externalKey:
                   type: string
+                validateNumber:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -1298,6 +1357,110 @@ paths:
                   type: number
                 walletId:
                   type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/mergecontacts:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: MergeContacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                pairs:
+                  - primaryId: 123
+                    duplicateId: 456
+                  - primaryNumber: '5511999999999'
+                    duplicateNumber: '551199999999'
+              properties:
+                pairs:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      primaryId:
+                        type: number
+                      duplicateId:
+                        type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/findduplicatecontacts:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: FindDuplicateContacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                limit: 500
+                matchKinds:
+                  - nine_digit_variant
+                  - cross_collision
+              properties:
+                limit:
+                  type: number
+                matchKinds:
+                  type: array
+                  items:
+                    type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/unmergecontacts:
+    post:
+      tags:
+        - 👤 Contatos
+      summary: UnmergeContacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                duplicateIds:
+                  - 456
+                mergeLogIds: []
+              properties:
+                duplicateIds:
+                  type: array
+                  items:
+                    type: number
+                mergeLogIds:
+                  type: array
+                  items:
+                    type: string
       parameters:
         - name: ApiID
           in: path
@@ -1457,6 +1620,7 @@ paths:
                 name: Prospecção
                 pipelineId: '{{pipelineId}}'
                 order: 1
+                color: '#00a300'
               properties:
                 name:
                   type: string
@@ -1464,6 +1628,8 @@ paths:
                   type: string
                 order:
                   type: number
+                color:
+                  type: string
       parameters:
         - name: ApiID
           in: path
@@ -1962,6 +2128,7 @@ paths:
       tags:
         - 📤 Envio em Lote
       summary: BulkFastMessage
+      description: 'v2 crossChannelTicketCheck: quando a flag ''Verificar conversa em outros canais'' do tenant esta ligada, destinatarios com ticket aberto ou pendente (em qualquer canal) NAO recebem o disparo. A resposta inclui skipped (contagem) e skippedNumbers (lista). Para ignorar a checagem nesta chamada, envie "skipActiveTicketCheck": false no body.'
       requestBody:
         content:
           application/json:
@@ -2016,7 +2183,7 @@ paths:
                 whatsappId: '{{whatsappId}}'
                 number: '5511999990001'
                 message: Olá, mensagem individual!
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
               properties:
                 whatsappId:
                   type: string
@@ -2042,6 +2209,7 @@ paths:
       tags:
         - 📤 Envio em Lote
       summary: BulkSendMessage
+      description: 'v2 crossChannelTicketCheck: quando a flag ''Verificar conversa em outros canais'' do tenant esta ligada, destinatarios com ticket aberto ou pendente (em qualquer canal) NAO recebem o disparo. A resposta inclui skipped (contagem) e skippedNumbers (lista). Para ignorar a checagem nesta chamada, envie "skipActiveTicketCheck": false no body.'
       requestBody:
         content:
           application/json:
@@ -2084,6 +2252,7 @@ paths:
       tags:
         - 📤 Envio em Lote
       summary: BulkSendMessageWithVariable
+      description: 'v2 crossChannelTicketCheck: quando a flag ''Verificar conversa em outros canais'' do tenant esta ligada, o destinatario com ticket aberto ou pendente (em qualquer canal) NAO recebe o disparo. A resposta inclui skipped (contagem) e skippedNumbers (lista). Para ignorar a checagem nesta chamada, envie "skipActiveTicketCheck": false no body.'
       requestBody:
         content:
           application/json:
@@ -2630,6 +2799,1552 @@ paths:
                   type: string
                 groupId:
                   type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/listGroupInfo:
+    post:
+      tags:
+        - 👥 Grupos WhatsApp
+      summary: ListGroupsInfo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                listGroups: true
+                listParticipants: true
+              properties:
+                listGroups:
+                  type: boolean
+                listParticipants:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/baileys/quickReply:
+    post:
+      tags:
+        - 🟢 Interativo Baileys
+      summary: BaileysQuickReply
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                body:
+                  text: 'Escolha uma opcao:'
+                footer:
+                  text: Rodape opcional
+                buttons:
+                  - display_text: Opcao 1
+                    id: op1
+                  - display_text: Opcao 2
+                    id: op2
+              properties:
+                ticketId:
+                  type: number
+                body:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                footer:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                buttons:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      display_text:
+                        type: string
+                      id:
+                        type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/baileys/singleSelect:
+    post:
+      tags:
+        - 🟢 Interativo Baileys
+      summary: BaileysSingleSelect
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                body:
+                  text: 'Escolha uma opcao:'
+                footer:
+                  text: Rodape
+                list:
+                  title: Ver opcoes
+                  sections:
+                    - title: Secao 1
+                      rows:
+                        - id: '1'
+                          title: Item 1
+                          description: Descricao
+                        - id: '2'
+                          title: Item 2
+              properties:
+                ticketId:
+                  type: number
+                body:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                footer:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                list:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    sections:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                          rows:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                title:
+                                  type: string
+                                description:
+                                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/baileys/pixButton:
+    post:
+      tags:
+        - 🟢 Interativo Baileys
+      summary: BaileysPixButton
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                pixType: EVP
+                pixKey: chave-aleatoria-uuid
+                pixName: Nome Beneficiario
+                bodyText: 'Pague com PIX:'
+              properties:
+                ticketId:
+                  type: number
+                pixType:
+                  type: string
+                pixKey:
+                  type: string
+                pixName:
+                  type: string
+                bodyText:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/baileys/ctaCopy:
+    post:
+      tags:
+        - 🟢 Interativo Baileys
+      summary: BaileysCtaCopy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                body:
+                  text: 'Copie seu codigo:'
+                footer:
+                  text: Valido por 24h
+                displayText: Copiar codigo
+                copyCode: BR123456789
+              properties:
+                ticketId:
+                  type: number
+                body:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                footer:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                displayText:
+                  type: string
+                copyCode:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/baileys/ctaUrl:
+    post:
+      tags:
+        - 🟢 Interativo Baileys
+      summary: BaileysCtaUrl
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                body:
+                  text: 'Acesse nosso site:'
+                footer:
+                  text: Clique para visitar
+                displayText: Visitar site
+                url: https://exemplo.com
+              properties:
+                ticketId:
+                  type: number
+                body:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                footer:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                displayText:
+                  type: string
+                url:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/baileys/ctaCall:
+    post:
+      tags:
+        - 🟢 Interativo Baileys
+      summary: BaileysCtaCall
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                body:
+                  text: Precisa de ajuda?
+                footer:
+                  text: Ligue para nos
+                displayText: Ligar agora
+                phoneNumber: '+5511999999999'
+              properties:
+                ticketId:
+                  type: number
+                body:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                footer:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                displayText:
+                  type: string
+                phoneNumber:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/instagram/quickReply:
+    post:
+      tags:
+        - 📷 Interativo Instagram
+      summary: Quick Reply
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                message: 'Escolha uma opção:'
+                quickReplies:
+                  - content_type: text
+                    title: Sim
+                    payload: 'YES'
+                  - content_type: text
+                    title: Não
+                    payload: 'NO'
+                  - content_type: user_phone_number
+              properties:
+                ticketId:
+                  type: number
+                message:
+                  type: string
+                quickReplies:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      content_type:
+                        type: string
+                      title:
+                        type: string
+                      payload:
+                        type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/instagram/buttonTemplate:
+    post:
+      tags:
+        - 📷 Interativo Instagram
+      summary: Button Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                message: 'Clique em uma opção:'
+                buttons:
+                  - type: postback
+                    title: Comprar
+                    payload: BUY
+                  - type: postback
+                    title: Falar com atendente
+                    payload: HUMAN
+              properties:
+                ticketId:
+                  type: number
+                message:
+                  type: string
+                buttons:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      title:
+                        type: string
+                      payload:
+                        type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/instagram/genericTemplate:
+    post:
+      tags:
+        - 📷 Interativo Instagram
+      summary: Generic Template (cards)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                elements:
+                  - title: Produto 1
+                    subtitle: Descrição
+                    image_url: https://...
+                    buttons:
+                      - type: postback
+                        title: Ver
+                        payload: PROD_1
+              properties:
+                ticketId:
+                  type: number
+                elements:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      subtitle:
+                        type: string
+                      image_url:
+                        type: string
+                      buttons:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                            title:
+                              type: string
+                            payload:
+                              type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/instagram/iceBreakers:
+    post:
+      tags:
+        - 📷 Interativo Instagram
+      summary: Ice Breakers (get/set/delete)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                action: set
+                iceBreakers:
+                  - question: Qual o horário?
+                    payload: HOURS
+                  - question: Vocês fazem entrega?
+                    payload: DELIVERY
+              properties:
+                action:
+                  type: string
+                iceBreakers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      question:
+                        type: string
+                      payload:
+                        type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/instagram/persistentMenu:
+    post:
+      tags:
+        - 📷 Interativo Instagram
+      summary: Persistent Menu (get/set/delete)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                action: set
+                composerInputDisabled: false
+                menuItems:
+                  - type: postback
+                    title: Menu
+                    payload: MAIN_MENU
+                  - type: web_url
+                    title: Site
+                    url: https://...
+              properties:
+                action:
+                  type: string
+                composerInputDisabled:
+                  type: boolean
+                menuItems:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      title:
+                        type: string
+                      payload:
+                        type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/messenger/quickReply:
+    post:
+      tags:
+        - 💬 Interativo Messenger
+      summary: Quick Reply
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                message: 'Escolha:'
+                quickReplies:
+                  - content_type: text
+                    title: Sim
+                    payload: 'YES'
+                  - content_type: text
+                    title: Não
+                    payload: 'NO'
+              properties:
+                ticketId:
+                  type: number
+                message:
+                  type: string
+                quickReplies:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      content_type:
+                        type: string
+                      title:
+                        type: string
+                      payload:
+                        type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/messenger/buttonTemplate:
+    post:
+      tags:
+        - 💬 Interativo Messenger
+      summary: Button Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                message: 'Opções:'
+                buttons:
+                  - type: postback
+                    title: Opção 1
+                    payload: OPT_1
+                  - type: web_url
+                    title: Visitar
+                    url: https://...
+              properties:
+                ticketId:
+                  type: number
+                message:
+                  type: string
+                buttons:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      title:
+                        type: string
+                      payload:
+                        type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/messenger/genericTemplate:
+    post:
+      tags:
+        - 💬 Interativo Messenger
+      summary: Generic Template (cards)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                elements:
+                  - title: Card 1
+                    subtitle: Subtítulo
+                    image_url: https://...
+                    buttons:
+                      - type: postback
+                        title: Ação
+                        payload: ACT
+              properties:
+                ticketId:
+                  type: number
+                elements:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      subtitle:
+                        type: string
+                      image_url:
+                        type: string
+                      buttons:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                            title:
+                              type: string
+                            payload:
+                              type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/messenger/mediaTemplate:
+    post:
+      tags:
+        - 💬 Interativo Messenger
+      summary: Media Template (image/video + botões)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                mediaType: image
+                mediaUrl: https://exemplo.com/imagem.jpg
+                buttons:
+                  - type: postback
+                    title: Comprar
+                    payload: BUY
+              properties:
+                ticketId:
+                  type: number
+                mediaType:
+                  type: string
+                mediaUrl:
+                  type: string
+                buttons:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      title:
+                        type: string
+                      payload:
+                        type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/messenger/receiptTemplate:
+    post:
+      tags:
+        - 💬 Interativo Messenger
+      summary: Receipt Template (recibo)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                receipt:
+                  recipient_name: João Silva
+                  order_number: ORD-001
+                  currency: BRL
+                  payment_method: PIX
+                  summary:
+                    total_cost: 150
+                  elements:
+                    - title: Produto A
+                      price: 100
+                      quantity: 1
+                    - title: Produto B
+                      price: 50
+                      quantity: 1
+              properties:
+                ticketId:
+                  type: number
+                receipt:
+                  type: object
+                  properties:
+                    recipient_name:
+                      type: string
+                    order_number:
+                      type: string
+                    currency:
+                      type: string
+                    payment_method:
+                      type: string
+                    summary:
+                      type: object
+                      properties:
+                        total_cost:
+                          type: number
+                    elements:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                          price:
+                            type: number
+                          quantity:
+                            type: number
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/messenger/messageTag:
+    post:
+      tags:
+        - 💬 Interativo Messenger
+      summary: Message Tag (Marketing/Utility)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                message: Seu pedido foi aprovado.
+                tag: POST_PURCHASE_UPDATE
+              properties:
+                ticketId:
+                  type: number
+                message:
+                  type: string
+                tag:
+                  type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/sendInteractive/messenger/customerFeedback:
+    post:
+      tags:
+        - 💬 Interativo Messenger
+      summary: Customer Feedback Template (NPS/CSAT)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 123
+                title: Avalie sua experiência
+                subtitle: Opcional
+                business_privacy_url: https://exemplo.com/privacidade
+                expires_in_days: 7
+                feedback_screens:
+                  - questions:
+                      - id: CSAT
+                        type: csat
+                        title: Como foi nosso atendimento?
+              properties:
+                ticketId:
+                  type: number
+                title:
+                  type: string
+                subtitle:
+                  type: string
+                business_privacy_url:
+                  type: string
+                expires_in_days:
+                  type: number
+                feedback_screens:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      questions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            type:
+                              type: string
+                            title:
+                              type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/messenger/greeting:
+    post:
+      tags:
+        - 💬 Interativo Messenger
+      summary: Greeting Text (get/set/delete)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                action: set
+                greetings:
+                  - locale: default
+                    text: Olá! Como podemos ajudar?
+              properties:
+                action:
+                  type: string
+                greetings:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      locale:
+                        type: string
+                      text:
+                        type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{apiId}/messenger/personas:
+    post:
+      tags:
+        - 💬 Interativo Messenger
+      summary: Personas (list/create/delete)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                action: create
+                name: Atendente Ana
+                profilePictureUrl: https://exemplo.com/ana.jpg
+              properties:
+                action:
+                  type: string
+                name:
+                  type: string
+                profilePictureUrl:
+                  type: string
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{API_TOKEN}}
+        - name: apiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/uazapi/button:
+    post:
+      tags:
+        - 🟩 Interativo UazAPI
+      summary: UazapiButton
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                text: 'Escolha uma opcao:'
+                choices:
+                  - Opcao 1
+                  - Opcao 2
+                  - Opcao 3
+                footerText: Rodape opcional
+                imageButton: https://exemplo.com/img.png
+              properties:
+                ticketId:
+                  type: number
+                text:
+                  type: string
+                choices:
+                  type: array
+                  items:
+                    type: string
+                footerText:
+                  type: string
+                imageButton:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/uazapi/list:
+    post:
+      tags:
+        - 🟩 Interativo UazAPI
+      summary: UazapiList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                text: 'Escolha uma opcao:'
+                choices:
+                  - Item 1
+                  - Item 2
+                  - Item 3
+                  - Item 4
+                listButton: Ver opcoes
+                footerText: Selecione uma opcao
+              properties:
+                ticketId:
+                  type: number
+                text:
+                  type: string
+                choices:
+                  type: array
+                  items:
+                    type: string
+                listButton:
+                  type: string
+                footerText:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/uazapi/poll:
+    post:
+      tags:
+        - 🟩 Interativo UazAPI
+      summary: UazapiPoll
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                text: Qual sua preferencia?
+                choices:
+                  - Opcao A
+                  - Opcao B
+                  - Opcao C
+                selectableCount: 1
+              properties:
+                ticketId:
+                  type: number
+                text:
+                  type: string
+                choices:
+                  type: array
+                  items:
+                    type: string
+                selectableCount:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/uazapi/carousel:
+    post:
+      tags:
+        - 🟩 Interativo UazAPI
+      summary: UazapiCarousel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                text: 'Confira nossas opcoes:'
+                carousel:
+                  - text: Produto A
+                    image: https://exemplo.com/a.png
+                    buttons:
+                      - text: Ver detalhes
+                        type: REPLY
+                  - text: Produto B
+                    image: https://exemplo.com/b.png
+                    buttons:
+                      - text: Comprar
+                        type: URL
+              properties:
+                ticketId:
+                  type: number
+                text:
+                  type: string
+                carousel:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      text:
+                        type: string
+                      image:
+                        type: string
+                      buttons:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            text:
+                              type: string
+                            type:
+                              type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/uazapi/pixButton:
+    post:
+      tags:
+        - 🟩 Interativo UazAPI
+      summary: UazapiPixButton
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                pixType: EVP
+                pixKey: chave-aleatoria-uuid
+                pixName: Nome Beneficiario
+              properties:
+                ticketId:
+                  type: number
+                pixType:
+                  type: string
+                pixKey:
+                  type: string
+                pixName:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/uazapi/locationButton:
+    post:
+      tags:
+        - 🟩 Interativo UazAPI
+      summary: UazapiLocationButton
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                text: 'Por favor, compartilhe sua localizacao:'
+              properties:
+                ticketId:
+                  type: number
+                text:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendInteractive/uazapi/requestPayment:
+    post:
+      tags:
+        - 🟩 Interativo UazAPI
+      summary: UazapiRequestPayment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                amount: 150
+                title: 'Pedido #001'
+                text: 'Sua cobranca esta pronta:'
+                footer: Vencimento em 3 dias
+                itemName: Produto X
+                invoiceNumber: NF-001
+                pixType: EVP
+                pixKey: chave-aleatoria-uuid
+                pixName: Nome Beneficiario
+              properties:
+                ticketId:
+                  type: number
+                amount:
+                  type: number
+                title:
+                  type: string
+                text:
+                  type: string
+                footer:
+                  type: string
+                itemName:
+                  type: string
+                invoiceNumber:
+                  type: string
+                pixType:
+                  type: string
+                pixKey:
+                  type: string
+                pixName:
+                  type: string
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendButtonWABA:
+    post:
+      tags:
+        - 🔘 Interativo Waba
+      summary: SendButtonWABA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+                message: 'Escolha uma opção:'
+                button1: Opção 1
+                button2: Opção 2
+                button3: Opção 3
+                ticketId: 1262
+              properties:
+                number:
+                  type: string
+                message:
+                  type: string
+                button1:
+                  type: string
+                button2:
+                  type: string
+                button3:
+                  type: string
+                ticketId:
+                  type: number
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/sendListWABA:
+    post:
+      tags:
+        - 🔘 Interativo Waba
+      summary: SendListWABA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5515998566622'
+                header: Menu Principal
+                body: 'Escolha uma opção da lista:'
+                footer: Selecione uma opção
+                button_text: Ver opções
+                sections:
+                  - title: Seção 1
+                    rows:
+                      - id: '1'
+                        title: Opção 1
+                        description: Descrição da opção 1
+                      - id: '2'
+                        title: Opção 2
+                        description: Descrição da opção 2
+                ticketId: 1262
+              properties:
+                number:
+                  type: string
+                header:
+                  type: string
+                body:
+                  type: string
+                footer:
+                  type: string
+                button_text:
+                  type: string
+                sections:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      rows:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            title:
+                              type: string
+                            description:
+                              type: string
+                ticketId:
+                  type: number
       parameters:
         - name: ApiID
           in: path
@@ -3405,8 +5120,9 @@ paths:
               example:
                 body: A mensagem desejada
                 number: '5515998566622'
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
                 isClosed: false
+                validateNumber: true
               properties:
                 body:
                   type: string
@@ -3415,6 +5131,8 @@ paths:
                 externalKey:
                   type: string
                 isClosed:
+                  type: boolean
+                validateNumber:
                   type: boolean
       parameters:
         - name: ApiID
@@ -3441,8 +5159,9 @@ paths:
                 mediaUrl: https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png
                 body: A mensagem desejada
                 number: '5515998566622'
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
                 isClosed: false
+                validateNumber: true
               properties:
                 mediaUrl:
                   type: string
@@ -3453,6 +5172,8 @@ paths:
                 externalKey:
                   type: string
                 isClosed:
+                  type: boolean
+                validateNumber:
                   type: boolean
       parameters:
         - name: ApiID
@@ -3482,6 +5203,7 @@ paths:
                 mimeType: image/png
                 fileName: exemplo_imagem
                 isClosed: false
+                validateNumber: true
               properties:
                 body:
                   type: string
@@ -3494,6 +5216,8 @@ paths:
                 fileName:
                   type: string
                 isClosed:
+                  type: boolean
+                validateNumber:
                   type: boolean
       parameters:
         - name: ApiID
@@ -3519,7 +5243,7 @@ paths:
               example:
                 audio: https://comunidadezdg.com.br/wp-content/uploads/2022/12/audio.ogg
                 number: '5515998566622'
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
                 isClosed: false
               properties:
                 audio:
@@ -3563,8 +5287,8 @@ paths:
           in: query
           schema:
             type: string
-          description: Chave única do sistema para identificação (valor gerado do seu lado para controle do envio)
-          example: '{{SecretKey}}'
+          description: Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)
+          example: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
         - name: bearertoken
           in: query
           schema:
@@ -3577,6 +5301,12 @@ paths:
             type: boolean
           description: Define se o ticket será fechado após o envio
           example: 'false'
+        - name: validateNumber
+          in: query
+          schema:
+            type: boolean
+          description: Validar numero (opcional, padrao true). Se false, usa o numero exatamente como enviado, sem normalizacao do 9o digito BR (recomendado p/ WABA).
+          example: 'true'
         - name: ApiID
           in: path
           schema:
@@ -3640,7 +5370,7 @@ paths:
                 name: São Paulo
                 address: Av. Paulista, 1000
                 ticketId: null
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
               properties:
                 number:
                   type: string
@@ -3685,7 +5415,7 @@ paths:
                     wuid: 5511999990002@s.whatsapp.net
                     phoneNumber: '5511999990002'
                 ticketId: null
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
               properties:
                 number:
                   type: string
@@ -3729,7 +5459,7 @@ paths:
               example:
                 body: A mensagem desejada
                 number: '12356818915189153'
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
                 isClosed: false
               properties:
                 body:
@@ -3765,7 +5495,7 @@ paths:
                 mediaUrl: https://comunidadezdg.com.br/wp-content/uploads/2022/07/icon100.png
                 body: A mensagem desejada
                 number: '12356818915189153'
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
                 isClosed: false
               properties:
                 mediaUrl:
@@ -3811,6 +5541,7 @@ paths:
                 responsibleId: 1
                 closingForecast: '2024-12-31'
                 description: Descrição da oportunidade
+                validateNumber: true
               properties:
                 number:
                   type: string
@@ -3834,6 +5565,8 @@ paths:
                   type: string
                 description:
                   type: string
+                validateNumber:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -3926,6 +5659,7 @@ paths:
       tags:
         - 📋 Templates WABA
       summary: SendTemplateWaba
+      description: 'A resposta retorna o ticketId do atendimento criado ou reutilizado. Exemplo: { "success": true, "data": { "message": "Message sent successfully", "ticketId": 123 } }'
       requestBody:
         content:
           application/json:
@@ -3942,6 +5676,7 @@ paths:
                     name: hello_world
                     language:
                       code: en_US
+                validateNumber: true
               properties:
                 number:
                   type: string
@@ -3966,6 +5701,8 @@ paths:
                           properties:
                             code:
                               type: string
+                validateNumber:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -3982,6 +5719,7 @@ paths:
       tags:
         - 📋 Templates WABA
       summary: SendTemplateWabaBody
+      description: 'A resposta retorna o ticketId do atendimento criado ou reutilizado. Exemplo: { "success": true, "data": { "message": "Message sent successfully", "ticketId": 123 } }'
       requestBody:
         content:
           application/json:
@@ -3998,6 +5736,7 @@ paths:
                     name: hello_world
                     language:
                       code: en_US
+                validateNumber: true
               properties:
                 number:
                   type: string
@@ -4022,6 +5761,8 @@ paths:
                           properties:
                             code:
                               type: string
+                validateNumber:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -4038,6 +5779,7 @@ paths:
       tags:
         - 📋 Templates WABA
       summary: SendTemplateWabaMarketing
+      description: 'A resposta retorna o ticketId do atendimento criado ou reutilizado. Exemplo: { "success": true, "data": { "message": "Message sent successfully", "ticketId": 123 } }'
       requestBody:
         content:
           application/json:
@@ -4054,6 +5796,7 @@ paths:
                     name: hello_world
                     language:
                       code: en_US
+                validateNumber: true
               properties:
                 number:
                   type: string
@@ -4078,6 +5821,8 @@ paths:
                           properties:
                             code:
                               type: string
+                validateNumber:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -4237,6 +5982,9 @@ paths:
                 password: securePassword123!
                 userName: Pedro Bastos
                 profile: admin
+                paymentGateway: stripe
+                stripeCustomerId: cus_XXXXXXXXXXXXXX
+                stripeToken: sk_live_XXXXXXXXXXXXXXXX
               properties:
                 status:
                   type: string
@@ -4255,6 +6003,12 @@ paths:
                 userName:
                   type: string
                 profile:
+                  type: string
+                paymentGateway:
+                  type: string
+                stripeCustomerId:
+                  type: string
+                stripeToken:
                   type: string
       responses:
         '200':
@@ -4424,6 +6178,74 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /v2/api/external/{ApiID}/addTagContact:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: AddTagContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                contactId: 123
+                tagId: 1
+                validateNumber: true
+              properties:
+                contactId:
+                  type: number
+                tagId:
+                  type: number
+                validateNumber:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2/api/external/{ApiID}/removeTagContact:
+    post:
+      tags:
+        - 🎫 Tickets
+      summary: RemoveTagContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number: '5511999999999'
+                tagIds:
+                  - 1
+                  - 2
+                validateNumber: true
+              properties:
+                number:
+                  type: string
+                tagIds:
+                  type: array
+                  items:
+                    type: number
+                validateNumber:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /v2/api/external/{ApiID}/createNotes:
     post:
       tags:
@@ -4473,12 +6295,13 @@ paths:
                 body: Mensagem inicial do ticket por email
                 email: contato@exemplo.com
                 channelId: 17841443941506796
-                externalKey: '{{SecretKey}}'
+                externalKey: ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK
                 userId: 3
                 status: pending
                 name: Nome do Contato
                 firstName: Nome
                 lastName: Sobrenome
+                validateNumber: true
               properties:
                 body:
                   type: string
@@ -4498,6 +6321,8 @@ paths:
                   type: string
                 lastName:
                   type: string
+                validateNumber:
+                  type: boolean
       parameters:
         - name: ApiID
           in: path
@@ -4920,6 +6745,41 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /v2/api/external/{ApiID}/sendEvaluation:
+    post:
+      tags:
+        - 🎫 Tickets - Extras
+      summary: SendEvaluation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ticketId: 1262
+                body: ''
+                externalKey: ''
+                force: false
+              properties:
+                ticketId:
+                  type: number
+                body:
+                  type: string
+                externalKey:
+                  type: string
+                force:
+                  type: boolean
+      parameters:
+        - name: ApiID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /v2/api/external/{ApiID}/ticket/pause/logs/{ticketId}:
     get:
       tags:
@@ -5289,115 +7149,6 @@ paths:
                   type: string
                 email:
                   type: string
-      parameters:
-        - name: ApiID
-          in: path
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /v2/api/external/{ApiID}/sendButtonWABA:
-    post:
-      tags:
-        - 🔘 WABA Interativo
-      summary: SendButtonWABA
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                number: '5515998566622'
-                message: 'Escolha uma opção:'
-                button1: Opção 1
-                button2: Opção 2
-                button3: Opção 3
-                ticketId: 1262
-              properties:
-                number:
-                  type: string
-                message:
-                  type: string
-                button1:
-                  type: string
-                button2:
-                  type: string
-                button3:
-                  type: string
-                ticketId:
-                  type: number
-      parameters:
-        - name: ApiID
-          in: path
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /v2/api/external/{ApiID}/sendListWABA:
-    post:
-      tags:
-        - 🔘 WABA Interativo
-      summary: SendListWABA
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                number: '5515998566622'
-                header: Menu Principal
-                body: 'Escolha uma opção da lista:'
-                footer: Selecione uma opção
-                button_text: Ver opções
-                sections:
-                  - title: Seção 1
-                    rows:
-                      - id: '1'
-                        title: Opção 1
-                        description: Descrição da opção 1
-                      - id: '2'
-                        title: Opção 2
-                        description: Descrição da opção 2
-                ticketId: 1262
-              properties:
-                number:
-                  type: string
-                header:
-                  type: string
-                body:
-                  type: string
-                footer:
-                  type: string
-                button_text:
-                  type: string
-                sections:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      rows:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                            title:
-                              type: string
-                            description:
-                              type: string
-                ticketId:
-                  type: number
       parameters:
         - name: ApiID
           in: path
