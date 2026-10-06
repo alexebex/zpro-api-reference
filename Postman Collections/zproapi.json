@@ -1,11 +1,11 @@
 {
   "info": {
-    "_postman_id": "da5236a1-19ba-43b2-8d01-feb53eb5ce2e",
+    "_postman_id": "291642b8-ea67-41dd-a19e-40c399f080db",
     "name": "Z-PRO v4.x.x.x",
     "description": "Postman Z-PRO v4.x.x.x",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "25151510",
-    "_collection_link": "https://go.postman.co/collection/25151510-da5236a1-19ba-43b2-8d01-feb53eb5ce2e?source=collection_link"
+    "_exporter_id": "41817499",
+    "_collection_link": "https://go.postman.co/collection/25151510-291642b8-ea67-41dd-a19e-40c399f080db?source=collection_link"
   },
   "item": [
     {
@@ -1505,7 +1505,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // Nome completo do contato\n    \"name\": \"Nome\", \n    \n    // Número do WhatsApp (formato: 5511999999999)\n    \"number\": \"5515998566622\", \n    \n    // Email do contato\n    \"email\": \"contato@email.com\",\n    \n    // CPF do contato (formato: 000.000.000-00)\n    \"cpf\": \"012.345.678.91\",\n    \n    // Primeiro nome do contato\n    \"firstName\": \"Nome Principal\",\n    \n    // Sobrenome do contato\n    \"lastName\": \"Sobrenome\",\n    \n    // Nome da empresa do contato\n    \"businessName\": \"Empresa\",\n    \n    // Data de nascimento (formato: DD/MM/AAAA)\n    \"birthdayDate\": \"01/01/1990\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"externalKey\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\",\n    // Validar numero (opcional, padrao true). Se false, usa o numero exatamente como enviado, sem normalizacao do 9o digito BR — recomendado p/ WABA evitar ticket duplicado\n    \"validateNumber\": true\n}",
+              "raw": "{\n    // Nome completo do contato\n    \"name\": \"Nome\", \n    \n    // Número do WhatsApp (formato: 5511999999999)\n    \"number\": \"5515998566622\", \n    \n    // Email do contato\n    \"email\": \"contato@email.com\",\n    \n    // CPF do contato (formato: 000.000.000-00)\n    \"cpf\": \"012.345.678.91\",\n    \n    // Primeiro nome do contato\n    \"firstName\": \"Nome Principal\",\n    \n    // Sobrenome do contato\n    \"lastName\": \"Sobrenome\",\n    \n    // Nome da empresa do contato\n    \"businessName\": \"Empresa\",\n    \n    // Data de nascimento (formato: DD/MM/AAAA)\n    \"birthdayDate\": \"01/01/1990\",\n    \n    // Endereço (opcional). Textos aparados; o que passar do limite é cortado, sem erro\n    // CEP (até 20 caracteres)\n    \"cep\": \"01310-100\",\n    \n    // Rua (até 255 caracteres)\n    \"logradouro\": \"Avenida Paulista\",\n    \n    // Número do endereço (até 255 caracteres)\n    \"numeroEndereco\": \"1000\",\n    \n    // Complemento (até 255 caracteres)\n    \"complemento\": \"Sala 101\",\n    \n    // Bairro (até 255 caracteres)\n    \"bairro\": \"Bela Vista\",\n    \n    // Cidade (até 255 caracteres)\n    \"cidade\": \"São Paulo\",\n    \n    // Estado (até 100 caracteres, gravado como veio)\n    \"estado\": \"SP\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"externalKey\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\",\n    // Validar numero (opcional, padrao true). Se false, usa o numero exatamente como enviado, sem normalizacao do 9o digito BR — recomendado p/ WABA evitar ticket duplicado\n    \"validateNumber\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1525,7 +1525,8 @@
                 "{{ApiID}}",
                 "createContact"
               ]
-            }
+            },
+            "description": "Endereço opcional: cep (até 20 caracteres), logradouro, numeroEndereco, complemento, bairro e cidade (até 255 cada) e estado (até 100). Textos aparados e cortados no limite, sem erro; o estado é gravado como veio. A resposta traz o contato criado com os 7 campos de endereço (cep, logradouro, numeroEndereco, complemento, bairro, cidade, estado)."
           },
           "response": []
         },
@@ -1585,7 +1586,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // Parâmetro de busca textual (opcional) - busca em nome, número, CPF, etc\n    \"searchParam\": \"\",\n    \n    // Número da página (padrão: 1)\n    \"page\": 1,\n    \n    // Limite de resultados por página (padrão: 40)\n    \"limit\": 40,\n    \n    // ID de uma tag para filtrar (opcional)\n    \"tagId\": 1,\n    \n    // OU array de IDs de tags para filtrar por múltiplas tags (opcional)\n    // \"tagIds\": [1, 2, 3],\n    \n    // ID da wallet para filtrar (opcional)\n    // \"walletId\": 1,\n    \n    // Filtrar por contatos bloqueados (opcional: true/false)\n    // \"blocked\": false\n}",
+              "raw": "{\n    // Parâmetro de busca textual (opcional) - busca em nome, número, CPF, etc\n    \"searchParam\": \"\",\n    \n    // Número da página (padrão: 1)\n    \"page\": 1,\n    \n    // Limite de resultados por página (padrão: 40)\n    \"limit\": 40,\n    \n    // ID de uma tag para filtrar (opcional)\n    \"tagId\": 1,\n    \n    // OU array de IDs de tags para filtrar por múltiplas tags (opcional)\n    // \"tagIds\": [1, 2, 3],\n    \n    // ID da wallet para filtrar (opcional)\n    // \"walletId\": 1,\n    \n    // Filtrar por contatos bloqueados (opcional: true/false)\n    // \"blocked\": false,\n    \n    // Filtrar por bairro (opcional): \"contém\", sem diferenciar acento e maiúsculas\n    // \"addressBairro\": \"Bela Vista\",\n    \n    // Filtrar por cidade (opcional): \"contém\", sem diferenciar acento e maiúsculas\n    // \"addressCidade\": \"São Paulo\",\n    \n    // Filtrar pela UF do cadastro (opcional): siglas separadas por vírgula (\"SP,RJ\") ou lista ([\"SP\", \"RJ\"]); acha também o estado gravado por extenso (\"São Paulo\"). UF sem nenhuma sigla válida devolve lista vazia\n    // \"addressUfs\": \"SP,RJ\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1606,7 +1607,8 @@
                 "contacts",
                 "search"
               ]
-            }
+            },
+            "description": "Filtros de endereço: addressBairro e addressCidade por \"contém\", sem diferenciar acento e maiúsculas; addressUfs com as siglas das 27 UFs em texto separado por vírgula (\"SP,RJ\") ou em lista ([\"SP\", \"RJ\"]), achando também o estado gravado por extenso (\"São Paulo\"); UF pedida sem nenhuma sigla válida devolve lista vazia. Resposta: { \"success\": true, \"data\": [{ \"id\": 1, \"number\": \"5511999999999\", \"name\": \"Nome\", \"email\": \"contato@email.com\", \"blocked\": false, \"cep\": \"01310-100\", \"logradouro\": \"Avenida Paulista\", \"numeroEndereco\": \"1000\", \"complemento\": \"Sala 101\", \"bairro\": \"Bela Vista\", \"cidade\": \"São Paulo\", \"estado\": \"SP\", \"tags\": [], \"wallets\": [] }], \"pagination\": { \"page\": 1, \"limit\": 40, \"total\": 1, \"totalPages\": 1, \"hasMore\": false }, \"meta\": { \"addressFilter\": true } }. meta.addressFilter false indica servidor sem as colunas de endereço: os filtros de endereço foram ignorados."
           },
           "response": []
         },
@@ -1647,7 +1649,8 @@
                 "{{ApiID}}",
                 "showcontact"
               ]
-            }
+            },
+            "description": "A resposta traz o endereço do contato: cep, logradouro, numeroEndereco, complemento, bairro, cidade e estado."
           },
           "response": []
         },
@@ -1668,7 +1671,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // Nome completo do contato\n    \"name\": \"Nome\", \n    \n    // Número do WhatsApp (formato: 5511999999999)\n    \"number\": \"5515998566622\", \n    \n    // Email do contato\n    \"email\": \"contato@email.com\",\n    \n    // CPF do contato (formato: 000.000.000-00)\n    \"cpf\": \"012.345.678.91\",\n    \n    // Primeiro nome do contato\n    \"firstName\": \"Nome Principal\",\n    \n    // Sobrenome do contato\n    \"lastName\": \"Sobrenome\",\n    \n    // Nome da empresa do contato\n    \"businessName\": \"Empresa\",\n    \n    // Data de nascimento (formato: DD/MM/AAAA)\n    \"birthdayDate\": \"01/01/1990\",\n    \n    // ID do kanban do contato\n    \"kanban\": 2,\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"externalKey\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\",\n    // Validar numero (opcional, padrao true). Se false, usa o numero exatamente como enviado, sem normalizacao do 9o digito BR — recomendado p/ WABA evitar ticket duplicado\n    \"validateNumber\": true\n}",
+              "raw": "{\n    // Nome completo do contato\n    \"name\": \"Nome\", \n    \n    // Número do WhatsApp (formato: 5511999999999)\n    \"number\": \"5515998566622\", \n    \n    // Email do contato\n    \"email\": \"contato@email.com\",\n    \n    // CPF do contato (formato: 000.000.000-00)\n    \"cpf\": \"012.345.678.91\",\n    \n    // Primeiro nome do contato\n    \"firstName\": \"Nome Principal\",\n    \n    // Sobrenome do contato\n    \"lastName\": \"Sobrenome\",\n    \n    // Nome da empresa do contato\n    \"businessName\": \"Empresa\",\n    \n    // Data de nascimento (formato: DD/MM/AAAA)\n    \"birthdayDate\": \"01/01/1990\",\n    \n    // ID do kanban do contato\n    \"kanban\": 2,\n    \n    // Endereço (opcional): só os campos enviados mudam; \"\" ou null apaga o campo e campo ausente fica como está. Textos aparados; o que passar do limite é cortado, sem erro\n    // CEP (até 20 caracteres)\n    \"cep\": \"01310-100\",\n    \n    // Rua (até 255 caracteres)\n    \"logradouro\": \"Avenida Paulista\",\n    \n    // Número do endereço (até 255 caracteres)\n    \"numeroEndereco\": \"1000\",\n    \n    // Complemento (até 255 caracteres)\n    \"complemento\": \"Sala 101\",\n    \n    // Bairro (até 255 caracteres)\n    \"bairro\": \"Bela Vista\",\n    \n    // Cidade (até 255 caracteres)\n    \"cidade\": \"São Paulo\",\n    \n    // Estado (até 100 caracteres, gravado como veio)\n    \"estado\": \"SP\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"externalKey\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\",\n    // Validar numero (opcional, padrao true). Se false, usa o numero exatamente como enviado, sem normalizacao do 9o digito BR — recomendado p/ WABA evitar ticket duplicado\n    \"validateNumber\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1688,7 +1691,8 @@
                 "{{ApiID}}",
                 "updateContact"
               ]
-            }
+            },
+            "description": "Endereço: cep (até 20 caracteres), logradouro, numeroEndereco, complemento, bairro e cidade (até 255 cada) e estado (até 100), aparados e cortados no limite, sem erro; o estado é gravado como veio. Em cada campo de endereço, \"\" ou null apaga o valor e campo ausente fica como está. A resposta traz o contato atualizado com os 7 campos de endereço."
           },
           "response": []
         },
@@ -1791,7 +1795,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // ID do contato que será carteirizado\n    \"contactId\": 1,\n    \n    // ID da wallet que será atribuída ao contato (pode usar walletId ou walletIds)\n    \"walletId\": 2,\n    \n    // OU array de IDs de wallets para atribuir múltiplas wallets de uma vez\n    // \"walletIds\": [1, 2, 3]\n}",
+              "raw": "{\n    // ID do contato que será carteirizado\n    \"contactId\": 1,\n    \n    // ID da wallet que será atribuída ao contato (pode usar walletId ou walletIds)\n    \"walletId\": 2,\n    \n    // OU array de IDs de wallets para atribuir múltiplas wallets de uma vez\n    // \"walletIds\": [1, 2, 3]\n    \n    // A lista enviada SUBSTITUI as wallets atuais do contato:\n    // - para remover UMA wallet, reenvie apenas as que devem permanecer\n    // - para remover TODAS, envie \"walletIds\": [] (ou \"walletId\": null)\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3322,6 +3326,202 @@
       ]
     },
     {
+      "name": "🎯 Envio por Ticket",
+      "item": [
+        {
+          "name": "SendMessageByTicketText",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // ID do ticket (conversa) que recebera a mensagem\n    \"ticketId\": 1262,\n    \n    // Texto da mensagem (obrigatorio quando nao ha midia)\n    \"body\": \"Ola! Como posso ajudar?\",\n    \n    // Chave unica p/ idempotencia (recomendado)\n    \"externalKey\": \"chave-001\",\n    \n    // Reabrir ticket fechado antes de enviar (sem isto, ticket fechado retorna 409)\n    \"reopen\": false,\n    \n    // Fechar o ticket apos o envio\n    \"isClosed\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendMessageByTicket",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendMessageByTicket"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SendMessageByTicketFile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "media",
+                  "type": "file",
+                  "value": null
+                },
+                {
+                  "key": "ticketId",
+                  "value": "1262",
+                  "type": "text"
+                },
+                {
+                  "key": "body",
+                  "value": "Legenda opcional",
+                  "type": "text"
+                },
+                {
+                  "key": "externalKey",
+                  "value": "chave-001",
+                  "type": "text"
+                },
+                {
+                  "key": "reopen",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "isClosed",
+                  "value": "false",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendMessageByTicket",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendMessageByTicket"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SendMessageByTicketMediaUrl",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ticketId\": 1262,\n    // Backend baixa a URL (http/https, sem redirect, hosts internos bloqueados)\n    \"mediaUrl\": \"https://exemplo.com/imagem.png\",\n    \"body\": \"Legenda opcional\",\n    \"externalKey\": \"chave-001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendMessageByTicket",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendMessageByTicket"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SendMessageByTicketBase64",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ticketId\": 1262,\n    \"body\": \"Legenda opcional\",\n    \"base64Data\": \"iVBORw0KGgoAAAANSUhEUgAAAAUA...\",\n    // mimeType obrigatorio com base64Data\n    \"mimeType\": \"image/png\",\n    // fileName opcional, sem caminhos (basename)\n    \"fileName\": \"exemplo\",\n    \"externalKey\": \"chave-001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendMessageByTicket",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendMessageByTicket"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Envio de mensagem usando o ticketId como identificador da conversa — em QUALQUER canal do tenant (familia WhatsApp, Instagram, Messenger, Telegram, Webchat, E-mail, Hub, Mercado Livre). O canal e resolvido pelo proprio ticket; o token (ApiConfig ativa) vale para qualquer ticket do tenant.\n\nRegras: ticket fechado exige reopen:true (senao 409 ERR_TICKET_CLOSED); isClosed:true fecha o ticket apos enviar; no maximo UMA fonte de midia por request (media multipart | mediaUrl | base64Data). mediaUrl: apenas http/https, sem redirect, hosts internos bloqueados. Resposta: { success, data: { message, ticketId (efetivo), messageId (idFront p/ correlacao), delivered (webchat) } }. Com externalKey repetida em ate 120s a resposta e { idempotent: true, skipped: true, ticketId } (dedup best-effort, in-memory).\n\nCOMO RECEBER MENSAGENS E OBTER O ticketId: configure o Webhook do CANAL (na conexao: 'Webhook' habilitado + URL + 'Mensagens recebidas') — o payload POST { method: 'message', msg, ticket } traz ticket.id de todos os canais, incluindo e-mail. Alternativa: polling via showAllMessages/listTickets. Nao ha rate limit nas rotas externas — use externalKey para dedup de retry."
+    },
+    {
       "name": "📂 Galeria",
       "item": [
         {
@@ -3764,6 +3964,48 @@
           "response": []
         },
         {
+          "name": "GroupRevokeInviteLink",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"whatsappId\": \"{{whatsappId}}\",\n  \"groupId\": \"{{groupId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/revokeInviteLink",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "group",
+                "revokeInviteLink"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "GroupList",
           "request": {
             "auth": {
@@ -4055,6 +4297,48 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "GroupLeave",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // ID da sessao (canal WABA oficial — outros tipos retornam ERR_LEAVE_GROUP_WABA_ONLY)\n    \"whatsappId\": 1,\n    \"groupId\": \"12345678901@g.us\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/group/leave",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "group",
+                "leave"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -4314,6 +4598,312 @@
                 "sendInteractive",
                 "baileys",
                 "ctaCall"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🟢 Interativo Zapo",
+      "item": [
+        {
+          "name": "ZapoQuickReply",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ticketId\": 1262,\n    \"body\": {\n        \"text\": \"Escolha uma opcao:\"\n    },\n    \"footer\": {\n        \"text\": \"Rodape opcional\"\n    },\n    \"buttons\": [\n        {\n            \"display_text\": \"Opcao 1\",\n            \"id\": \"op1\"\n        },\n        {\n            \"display_text\": \"Opcao 2\",\n            \"id\": \"op2\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendInteractive/zapo/quickReply",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendInteractive",
+                "zapo",
+                "quickReply"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ZapoSingleSelect",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ticketId\": 1262,\n    \"body\": {\n        \"text\": \"Escolha uma opcao:\"\n    },\n    \"footer\": {\n        \"text\": \"Rodape\"\n    },\n    \"list\": {\n        \"title\": \"Ver opcoes\",\n        \"sections\": [\n            {\n                \"title\": \"Secao 1\",\n                \"rows\": [\n                    {\n                        \"id\": \"1\",\n                        \"title\": \"Item 1\",\n                        \"description\": \"Descricao\"\n                    },\n                    {\n                        \"id\": \"2\",\n                        \"title\": \"Item 2\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendInteractive/zapo/singleSelect",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendInteractive",
+                "zapo",
+                "singleSelect"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ZapoPixButton",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ticketId\": 1262,\n    \"pixType\": \"EVP\",\n    \"pixKey\": \"chave-aleatoria-uuid\",\n    \"pixName\": \"Nome Beneficiario\",\n    \"bodyText\": \"Pague com PIX:\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendInteractive/zapo/pixButton",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendInteractive",
+                "zapo",
+                "pixButton"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ZapoCtaCopy",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ticketId\": 1262,\n    \"body\": {\n        \"text\": \"Copie seu codigo:\"\n    },\n    \"footer\": {\n        \"text\": \"Valido por 24h\"\n    },\n    \"displayText\": \"Copiar codigo\",\n    \"copyCode\": \"BR123456789\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendInteractive/zapo/ctaCopy",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendInteractive",
+                "zapo",
+                "ctaCopy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ZapoCtaUrl",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ticketId\": 1262,\n    \"body\": {\n        \"text\": \"Acesse nosso site:\"\n    },\n    \"footer\": {\n        \"text\": \"Clique para visitar\"\n    },\n    \"displayText\": \"Visitar site\",\n    \"url\": \"https://exemplo.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendInteractive/zapo/ctaUrl",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendInteractive",
+                "zapo",
+                "ctaUrl"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ZapoCtaCall",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ticketId\": 1262,\n    \"body\": {\n        \"text\": \"Precisa de ajuda?\"\n    },\n    \"footer\": {\n        \"text\": \"Ligue para nos\"\n    },\n    \"displayText\": \"Ligar agora\",\n    \"phoneNumber\": \"+5511999999999\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendInteractive/zapo/ctaCall",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendInteractive",
+                "zapo",
+                "ctaCall"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ZapoPoll",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{BearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ticketId\": 1262,\n    \"name\": \"Qual sua preferencia?\",\n    \"options\": [\"Opcao A\", \"Opcao B\", \"Opcao C\"],\n    \"selectableCount\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/v2/api/external/{{ApiID}}/sendInteractive/zapo/poll",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "api",
+                "external",
+                "{{ApiID}}",
+                "sendInteractive",
+                "zapo",
+                "poll"
               ]
             }
           },
@@ -6007,7 +6597,8 @@
                   "disabled": true
                 }
               ]
-            }
+            },
+            "description": "Cada contato da resposta traz o endereço: cep, logradouro, numeroEndereco, complemento, bairro, cidade e estado."
           },
           "response": []
         },
@@ -6750,7 +7341,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // Texto da mensagem que será enviada\n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"externalKey\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false,\n    // Validar numero (opcional, padrao true). Se false, usa o numero exatamente como enviado, sem normalizacao do 9o digito BR — recomendado p/ WABA evitar ticket duplicado\n    \"validateNumber\": true\n}",
+              "raw": "{\n    // Texto da mensagem que será enviada\n    \"body\": \"A mensagem desejada\",\n    \n    // Número do WhatsApp do destinatário (formato: 5511999999999)\n    \"number\": \"5515998566622\",\n    \n    // Chave única do sistema para identificação (valor gerado do seu lado para controle do envio e não pode se repetir)\n    \"externalKey\": \"ID_UNICA_DO_SISTEMA_CLIENTE_PARA_EXECUTAR_UMA_ACAO_COM_WEBHOOK\",\n    \n    // Define se o ticket será fechado após o envio\n    \"isClosed\": false,\n    // Validar numero (opcional, padrao true). Se false, usa o numero exatamente como enviado, sem normalizacao do 9o digito BR — recomendado p/ WABA evitar ticket duplicado\n    \"validateNumber\": true\n    // Canais nao-WhatsApp: number = IGSID (Instagram) | PSID (Messenger) | telegramId (Telegram); canal e-mail usa campo \"email\" (+ \"subject\").\n    // ticketId opcional: usado quando consistente com o contato/canal do ticket.\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -6922,7 +7513,8 @@
           },
           "response": []
         }
-      ]
+      ],
+      "description": "Envio generico pelo canal vinculado ao token. O campo number carrega o ID da plataforma do canal: telefone (familia WhatsApp: whatsapp/baileys/zapo/waba/dialog360/gupshup/evo/evogo/uazapi/zapi/meow), IGSID (Instagram), PSID (Messenger), telegramId numerico (Telegram). Canal e-mail usa o campo email (+ subject opcional). IGSID/PSID/telegramId vem de showticket/showcontact ou do webhook de canal (contact.instagramPK / messengerId / telegramId). ticketId opcional: honrado apenas quando pertence ao MESMO contato+canal e esta open/pending — senao o envio segue o fluxo normal. Webchat e Mercado Livre nao enviam por number: use a pasta 'Envio por Ticket' (sendMessageByTicket). Resposta inclui ticketId efetivo e idFront (correlacao via getMessageByMessageId). Erros: { success: false, error: 'ERR_*' }. Teto de body JSON (base64): 50 MB. Sem rate limit — use externalKey."
     },
     {
       "name": "📨 Mensagens Avançadas",
@@ -7546,7 +8138,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // Tenant\n    \"tenant\": 1,\n\n    // Nome da instância do WhatsApp\n    \"name\": \"My WhatsApp Instance\",\n    \n    // Status inicial da sessão (DISCONNECTED, CONNECTED)\n    \"status\": \"DISCONNECTED\",\n    \n    // Tipo da sessão (whatsapp, baileys, meow, evo, uazapi, zapi)\n    \"type\": \"baileys\"\n}",
+              "raw": "{\n    // Tenant\n    \"tenant\": 1,\n\n    // Nome da instância do WhatsApp\n    \"name\": \"My WhatsApp Instance\",\n    \n    // Status inicial da sessão (DISCONNECTED, CONNECTED)\n    \"status\": \"DISCONNECTED\",\n    \n    // Tipo da sessão (whatsapp, baileys, zapo, meow, evo, uazapi, zapi)\n    \"type\": \"baileys\"\n\n    // Modo híbrido (opcional):\n    // criando o canal WABA     -> \"hybridMode\": \"coexistence\", \"linkedChannelId\": 12\n    // criando o não oficial    -> \"linkToWhatsappId\": 8\n    // Ver a request \"CreateSessionTenant (Híbrido)\" para o detalhamento.\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7562,7 +8154,46 @@
               "path": [
                 "tenantApiCreateSession"
               ]
-            }
+            },
+            "description": "Cria o canal (sessão) no tenant informado e, automaticamente, uma ApiConfig apontando para ele. A resposta traz { whatsapp, api }.\n\nOs campos de modo híbrido (hybridMode, linkedChannelId, linkToWhatsappId) são opcionais e, quando presentes, adicionam o bloco \"hybrid\" à resposta — ver a request \"CreateSessionTenant (Híbrido)\"."
+          },
+          "response": []
+        },
+        {
+          "name": "CreateSessionTenant (Híbrido)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{SuperAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // Tenant\n    \"tenant\": 1,\n\n    // Nome do canal\n    \"name\": \"WABA Principal\",\n\n    // Canal oficial da Meta\n    \"type\": \"waba\",\n\n    // phone_number_id (somente dígitos)\n    \"tokenAPI\": \"123456789012345\",\n\n    // WABA ID\n    \"wabaId\": \"987654321098765\",\n\n    // Token do Business Manager\n    \"bmToken\": \"EAAxxxxxxxxxxxx\",\n\n    // Modo híbrido: disabled (default) | two_numbers | coexistence\n    \"hybridMode\": \"coexistence\",\n\n    // ID do canal NÃO OFICIAL já existente que vira transporte\n    // (baileys, whatsapp, zapo, meow, evo, evogo, zapi, uazapi)\n    \"linkedChannelId\": 12\n\n    // Sentido inverso: quando o canal criado NESTA chamada é o não oficial,\n    // troque os dois campos acima por:\n    // \"linkToWhatsappId\": 8   // id do canal WABA que passa a apontar para este\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://{{BaseUrl}}/tenantApiCreateSession",
+              "protocol": "https",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "tenantApiCreateSession"
+              ]
+            },
+            "description": "Cria o canal e já grava o vínculo do modo híbrido (docs/CONFIGURAR_HIBRIDO.md).\n\nDOIS SENTIDOS, conforme o canal criado na chamada:\n\n1) Criando o canal WABA (type: \"waba\"): envie \"hybridMode\" e \"linkedChannelId\" (id do canal não oficial já existente que vira transporte).\n\n2) Criando o canal NÃO OFICIAL (baileys, whatsapp, zapo, meow, evo, evogo, zapi, uazapi): envie \"linkToWhatsappId\" com o id do canal WABA já existente — ele passa a apontar para o canal recém-criado. Aqui \"hybridMode\" é opcional: sem ele o vínculo é gravado, mas o desvio continua desligado.\n\nMODOS: \"disabled\" (default, nada muda), \"two_numbers\" (handoff entre dois números) e \"coexistence\" (mesmo número — mensagens de sessão dentro da janela de 24h saem pelo canal vinculado; templates, campanhas e fora de janela continuam na API oficial).\n\nRESPOSTA: além de whatsapp e api, vem o bloco \"hybrid\": { \"applied\": true, \"whatsappId\": 8, \"hybridMode\": \"coexistence\", \"linkedChannelId\": 12 }. Se a validação do vínculo falhar, O CANAL E A API CONTINUAM CRIADOS e a resposta traz { \"applied\": false, \"error\": \"ERR_...\" } — corrija depois com PUT /whatsapp/:whatsappId.\n\nERROS possíveis em hybrid.error: ERR_HYBRID_INVALID_MODE; ERR_HYBRID_ONLY_WABA (modo diferente de disabled em canal que não é WABA); ERR_HYBRID_LINKED_SELF; ERR_HYBRID_LINKED_NOT_FOUND (id inexistente ou de outro tenant); ERR_HYBRID_LINKED_IN_USE (o vínculo é 1:1); ERR_HYBRID_COEXISTENCE_REQUIRES_LINKED; ERR_HYBRID_COEXISTENCE_LINKED_TYPE (transporte fora da whitelist); ERR_HYBRID_INVALID_ID_LINK_TO; ERR_HYBRID_INVALID_ID_LINKED_CHANNEL; ERR_NO_WAPP_FOUND.\n\nATENÇÃO: a flag não substitui o onboarding. O modo \"coexistence\" só desvia de fato se o número WABA foi onboardado em coexistência (fluxo de 2 QRs) e o canal vinculado estiver CONNECTED; fora disso o envio segue pela API oficial (fail-open, sem erro). No envio pela API externa, o desvio por mensagem ainda exige routeVia=\"auto\"."
           },
           "response": []
         },
@@ -7685,7 +8316,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // Status do tenant (active, inactive)\n    \"status\": \"active\",\n    \n    // Nome da empresa/tenant\n    \"name\": \"Empresa Exemplo\",\n    \n    // Número máximo de usuários permitidos\n    \"maxUsers\": 3,\n    \n    // Número máximo de conexões WhatsApp permitidas\n    \"maxConnections\": 3,\n    \n    // Confirmação de aceite dos termos\n    \"acceptTerms\": true,\n    \n    // Email do administrador do tenant\n    \"email\": \"user@example.com\",\n    \n    // Senha do administrador (mínimo 8 caracteres, incluindo números e caracteres especiais)\n    \"password\": \"securePassword123!\",\n    \n    // Nome completo do administrador\n    \"userName\": \"Pedro Bastos\",\n    \n    // Perfil do administrador (admin, user)\n    \"profile\": \"admin\",\n\n    // Vinculo de gateway de pagamento (OPCIONAL). Define qual gateway o webhook\n    // usa para atualizar o status de pagamento do tenant automaticamente.\n    // Valores: asaas, stripe, pagarme, mercadopago.\n    \"paymentGateway\": \"stripe\",\n\n    // Credenciais do gateway informado acima (envie apenas o par do gateway escolhido).\n    // Exemplo Stripe: Customer ID + Secret Key.\n    \"stripeCustomerId\": \"cus_XXXXXXXXXXXXXX\",\n    \"stripeToken\": \"sk_live_XXXXXXXXXXXXXXXX\"\n\n    // Outros gateways seguem o mesmo padrao <gateway>CustomerId + <gateway>Token:\n    //   \"pagarmeCustomerId\": \"cus_xxx\",      \"pagarmeToken\": \"sk_xxx\"\n    //   \"mercadopagoCustomerId\": \"123456\",   \"mercadopagoToken\": \"APP_USR-xxx\"\n    //   \"asaasCustomerId\": \"cus_xxx\",        \"asaasToken\": \"xxx\",   \"asaas\": \"enabled\"\n}",
+              "raw": "{\n    // Status do tenant (active, inactive)\n    \"status\": \"active\",\n    \n    // Nome da empresa/tenant\n    \"name\": \"Empresa Exemplo\",\n    \n    // Número máximo de usuários permitidos\n    \"maxUsers\": 3,\n    \n    // Número máximo de conexões WhatsApp permitidas\n    \"maxConnections\": 3,\n    \n    // Confirmação de aceite dos termos\n    \"acceptTerms\": true,\n    \n    // Email do administrador do tenant\n    \"email\": \"user@example.com\",\n    \n    // Senha do administrador (mínimo 8 caracteres, incluindo números e caracteres especiais)\n    \"password\": \"securePassword123!\",\n    \n    // Nome completo do administrador\n    \"userName\": \"Pedro Bastos\",\n    \n    // Perfil do administrador (admin, user)\n    \"profile\": \"admin\",\n\n    // Plano do tenant (OPCIONAL). ID do plano cadastrado em Planos.\n    // Aplica na criação os limites e recursos do plano (usuários, conexões,\n    // canais), que prevalecem sobre maxUsers/maxConnections informados acima.\n    // ID inexistente devolve erro 400 e nada é criado.\n    // Sem este campo, o tenant nasce sem plano (comportamento anterior).\n    \"planId\": 1,\n\n    // Vinculo de gateway de pagamento (OPCIONAL). Define qual gateway o webhook\n    // usa para atualizar o status de pagamento do tenant automaticamente.\n    // Valores: asaas, stripe, pagarme, mercadopago.\n    \"paymentGateway\": \"stripe\",\n\n    // Credenciais do gateway informado acima (envie apenas o par do gateway escolhido).\n    // Exemplo Stripe: Customer ID + Secret Key.\n    \"stripeCustomerId\": \"cus_XXXXXXXXXXXXXX\",\n    \"stripeToken\": \"sk_live_XXXXXXXXXXXXXXXX\"\n\n    // Outros gateways seguem o mesmo padrao <gateway>CustomerId + <gateway>Token:\n    //   \"pagarmeCustomerId\": \"cus_xxx\",      \"pagarmeToken\": \"sk_xxx\"\n    //   \"mercadopagoCustomerId\": \"123456\",   \"mercadopagoToken\": \"APP_USR-xxx\"\n    //   \"asaasCustomerId\": \"cus_xxx\",        \"asaasToken\": \"xxx\",   \"asaas\": \"enabled\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7722,7 +8353,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // Identidade do tenant (CPF/CNPJ) - identificador usado para reconhecer qual tenant será atualizado\n    \"identity\": \"07122989674\",\n\n    // Status do tenant (active, inactive)\n    \"status\": \"active\",\n\n    // Número máximo de usuários permitidos\n    \"maxUsers\": 100,\n\n    // Número máximo de conexões permitidas\n    \"maxConnections\": 10,\n\n    // Gateway de pagamento (none, asaas, mercadopago, stripe, pagarme)\n    \"paymentGateway\": \"asaas\",\n\n    // Credenciais do gateway (OPCIONAL) — envie o par correspondente ao paymentGateway.\n    // Ao trocar para um gateway nao-Asaas, o modo Asaas legado e desligado automaticamente.\n    //   Stripe:       \"stripeCustomerId\": \"cus_xxx\",      \"stripeToken\": \"sk_live_xxx\"\n    //   Pagar.me:     \"pagarmeCustomerId\": \"cus_xxx\",     \"pagarmeToken\": \"sk_xxx\"\n    //   Mercado Pago: \"mercadopagoCustomerId\": \"123456\",  \"mercadopagoToken\": \"APP_USR-xxx\"\n\n    // Chat de suporte habilitado (enabled, disabled)\n    \"supportChatEnabled\": \"enabled\",\n\n    // Menus visíveis — array de strings com os menus habilitados\n    // Opções: Groups, MassDispatch, Kanban, Tasks, Api, ChatBot, Reports, Campaigns, PrivateChat, Teams, AllowedChannels\n    \"menuVisibility\": [\"Groups\", \"MassDispatch\", \"Kanban\", \"Tasks\", \"Api\", \"ChatBot\", \"Reports\", \"Campaigns\", \"PrivateChat\", \"Teams\", \"AllowedChannels\"],\n\n    // Canais permitidos — array de strings com os canais habilitados\n    // Opções: waba, baileys, whatsapp, meow, evo, zapi, uazapi, telegram, hub, webchat, webmail, wabaoauth, instagramoauth, facebookoauth\n    \"allowedChannels\": [\"waba\", \"baileys\", \"whatsapp\", \"meow\", \"evo\", \"zapi\", \"uazapi\", \"telegram\", \"hub\", \"webchat\", \"webmail\", \"wabaoauth\", \"instagramoauth\", \"facebookoauth\"],\n\n    // Limite máximo de conexões por tipo de canal. Use 0 para ilimitado.\n    \"channelConnectionLimits\": {\n        \"waba\": 0,\n        \"baileys\": 0,\n        \"whatsapp\": 0,\n        \"meow\": 0,\n        \"evo\": 0,\n        \"zapi\": 0,\n        \"uazapi\": 0,\n        \"telegram\": 0,\n        \"hub\": 0,\n        \"webchat\": 0,\n        \"webmail\": 0,\n        \"wabaoauth\": 0,\n        \"instagramoauth\": 0,\n        \"facebookoauth\": 0\n    },\n\n    // OAuth (Meta Embedded Signup)\n    // OAuth habilitado (true/false)\n    \"oauthEnabled\": false,\n\n    // URL do Proxy OAuth\n    \"oauthProxyUrl\": \"https://proxy.exemplo.com/oauth\",\n\n    // URL do Proxy de Webhook Instagram\n    \"instagramWebhookProxyUrl\": \"https://proxy.exemplo.com/instagram/webhook\",\n\n    // Segredo do Proxy Instagram\n    \"instagramWebhookProxySecret\": \"secret_instagram\",\n\n    // URL do Proxy de Webhook Messenger\n    \"messengerWebhookProxyUrl\": \"https://proxy.exemplo.com/messenger/webhook\",\n\n    // Segredo do Proxy Messenger\n    \"messengerWebhookProxySecret\": \"secret_messenger\"\n}",
+              "raw": "{\n    // Identidade do tenant (CPF/CNPJ) - identificador usado para reconhecer qual tenant será atualizado\n    \"identity\": \"07122989674\",\n\n    // Status do tenant (active, inactive)\n    \"status\": \"active\",\n\n    // Número máximo de usuários permitidos\n    \"maxUsers\": 100,\n\n    // Número máximo de conexões permitidas\n    \"maxConnections\": 10,\n\n    // Gateway de pagamento (none, asaas, mercadopago, stripe, pagarme)\n    \"paymentGateway\": \"asaas\",\n\n    // Credenciais do gateway (OPCIONAL) — envie o par correspondente ao paymentGateway.\n    // Ao trocar para um gateway nao-Asaas, o modo Asaas legado e desligado automaticamente.\n    //   Stripe:       \"stripeCustomerId\": \"cus_xxx\",      \"stripeToken\": \"sk_live_xxx\"\n    //   Pagar.me:     \"pagarmeCustomerId\": \"cus_xxx\",     \"pagarmeToken\": \"sk_xxx\"\n    //   Mercado Pago: \"mercadopagoCustomerId\": \"123456\",  \"mercadopagoToken\": \"APP_USR-xxx\"\n\n    // Chat de suporte habilitado (enabled, disabled)\n    \"supportChatEnabled\": \"enabled\",\n\n    // Menus visíveis — array de strings com os menus habilitados\n    // Opções: Groups, MassDispatch, Kanban, Tasks, Api, ChatBot, Reports, Campaigns, PrivateChat, Teams, AllowedChannels\n    \"menuVisibility\": [\"Groups\", \"MassDispatch\", \"Kanban\", \"Tasks\", \"Api\", \"ChatBot\", \"Reports\", \"Campaigns\", \"PrivateChat\", \"Teams\", \"AllowedChannels\"],\n\n    // Canais permitidos — array de strings com os canais habilitados\n    // Opções: waba, baileys, whatsapp, meow, evo, evogo, zapi, uazapi, zapo, telegram, hub, webchat, mercadolivre, olx, linkedin, youtube, tiktok, woocommerce, nuvemshop, webmail, email, waba_oauth, dialog360, gupshup, instagram_oauth, facebook_oauth\n    // WhatsApp Oficial via login = waba_oauth, Instagram Oficial = instagram_oauth, Facebook Oficial = facebook_oauth\n    \"allowedChannels\": [\"waba\", \"baileys\", \"whatsapp\", \"meow\", \"evo\", \"evogo\", \"zapi\", \"uazapi\", \"zapo\", \"telegram\", \"hub\", \"webchat\", \"mercadolivre\", \"olx\", \"linkedin\", \"youtube\", \"tiktok\", \"woocommerce\", \"nuvemshop\", \"webmail\", \"email\", \"waba_oauth\", \"dialog360\", \"gupshup\", \"instagram_oauth\", \"facebook_oauth\"],\n\n    // Limite máximo de conexões por tipo de canal. Use 0 para ilimitado. waba e waba_oauth valem para o mesmo tipo real (a chave waba vence quando presente); hub cobre todos os canais do Hub\n    \"channelConnectionLimits\": {\n        \"waba\": 0,\n        \"waba_oauth\": 0,\n        \"instagram_oauth\": 0,\n        \"facebook_oauth\": 0,\n        \"hub\": 0,\n        \"baileys\": 0,\n        \"zapo\": 0,\n        \"telegram\": 0,\n        \"webchat\": 0,\n        \"webmail\": 0\n    },\n\n    // OAuth (Meta Embedded Signup)\n    // OAuth habilitado (true/false)\n    \"oauthEnabled\": false,\n\n    // URL do Proxy OAuth\n    \"oauthProxyUrl\": \"https://proxy.exemplo.com/oauth\",\n\n    // URL do Proxy de Webhook Instagram\n    \"instagramWebhookProxyUrl\": \"https://proxy.exemplo.com/instagram/webhook\",\n\n    // Segredo do Proxy Instagram\n    \"instagramWebhookProxySecret\": \"secret_instagram\",\n\n    // URL do Proxy de Webhook Messenger\n    \"messengerWebhookProxyUrl\": \"https://proxy.exemplo.com/messenger/webhook\",\n\n    // Segredo do Proxy Messenger\n    \"messengerWebhookProxySecret\": \"secret_messenger\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -8574,7 +9205,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // ID do ticket que terá o canal alterado\n    \"ticketId\": 1262,\n    \n    // ID do novo canal (WhatsApp)\n    \"whatsappId\": 1,\n    \n    // Tipo do canal (whatsapp, baileys, waba, etc)\n    \"channel\": \"whatsapp\"\n}",
+              "raw": "{\n    // ID do ticket que terá o canal alterado\n    \"ticketId\": 1262,\n    \n    // ID do novo canal (WhatsApp)\n    \"whatsappId\": 1,\n    \n    // Tipo do canal (whatsapp, baileys, zapo, waba, etc)\n    \"channel\": \"whatsapp\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
