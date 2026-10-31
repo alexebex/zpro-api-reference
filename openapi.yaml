@@ -1092,11 +1092,11 @@ paths:
                 type:
                   type: string
                   description: Tipo da sessão
-                  example: baileys
+                  example: waba
             example:
               name: My WhatsApp Instance
               status: DISCONNECTED
-              type: baileys
+              type: waba
       responses:
         '200':
           description: Requisição processada com sucesso.
@@ -2846,7 +2846,7 @@ paths:
                   example: '{{whatsappId}}'
                 whatsappType:
                   type: string
-                  example: baileys
+                  example: waba
                 arrayNumbers:
                   type: array
                   items:
@@ -2863,7 +2863,7 @@ paths:
                   example: 8
             example:
               whatsappId: '{{whatsappId}}'
-              whatsappType: baileys
+              whatsappType: waba
               arrayNumbers:
               - '5511999990001'
               - '5511999990002'
@@ -7006,8 +7006,8 @@ paths:
                   example: DISCONNECTED
                 type:
                   type: string
-                  description: Tipo da sessão (whatsapp, baileys, zapo, meow, evo, uazapi, zapi)
-                  example: baileys
+                  description: Tipo da sessão
+                  example: waba
             examples:
               CreateSessionTenant:
                 summary: CreateSessionTenant
@@ -7015,7 +7015,7 @@ paths:
                   tenant: 1
                   name: My WhatsApp Instance
                   status: DISCONNECTED
-                  type: baileys
+                  type: waba
               CreateSessionTenant_Híbrido:
                 summary: CreateSessionTenant (Híbrido)
                 value:
@@ -7292,10 +7292,10 @@ paths:
                 allowedChannels:
                   type: array
                   description: 'Canais permitidos — array de strings com os canais habilitados Opções:
-                    waba, baileys, whatsapp, meow, evo, evogo, zapi, uazapi, zapo, telegram, hub, webchat,
-                    mercadolivre, olx, linkedin, youtube, tiktok, woocommerce, nuvemshop, webmail, email,
-                    waba_oauth, dialog360, gupshup, instagram_oauth, facebook_oauth WhatsApp Oficial via
-                    login = waba_oauth, Instagram Oficial = instagram_oauth, Facebook Oficial = facebook_oauth'
+                    waba, telegram, hub, webchat, mercadolivre, olx, linkedin, youtube, tiktok, woocommerce,
+                    nuvemshop, webmail, email, waba_oauth, dialog360, gupshup, instagram_oauth, facebook_oauth
+                    WhatsApp Oficial via login = waba_oauth, Instagram Oficial = instagram_oauth, Facebook
+                    Oficial = facebook_oauth'
                   items:
                     type: string
                     example: waba
@@ -7318,12 +7318,6 @@ paths:
                       type: integer
                       example: 0
                     hub:
-                      type: integer
-                      example: 0
-                    baileys:
-                      type: integer
-                      example: 0
-                    zapo:
                       type: integer
                       example: 0
                     telegram:
@@ -7380,14 +7374,6 @@ paths:
               - AllowedChannels
               allowedChannels:
               - waba
-              - baileys
-              - whatsapp
-              - meow
-              - evo
-              - evogo
-              - zapi
-              - uazapi
-              - zapo
               - telegram
               - hub
               - webchat
@@ -7411,8 +7397,6 @@ paths:
                 instagram_oauth: 0
                 facebook_oauth: 0
                 hub: 0
-                baileys: 0
-                zapo: 0
                 telegram: 0
                 webchat: 0
                 webmail: 0
@@ -8233,12 +8217,12 @@ paths:
                   example: 1
                 channel:
                   type: string
-                  description: Tipo do canal (whatsapp, baileys, zapo, waba, etc)
-                  example: whatsapp
+                  description: Tipo do canal (waba, etc)
+                  example: waba
             example:
               ticketId: 1262
               whatsappId: 1
-              channel: whatsapp
+              channel: waba
       responses:
         '200':
           description: Requisição processada com sucesso.
